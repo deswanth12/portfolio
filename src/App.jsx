@@ -1,160 +1,151 @@
 import { motion } from "framer-motion";
-import { FaGithub } from "react-icons/fa";
 
 const profile = "/profile.jpeg";
 
 export default function App() {
-  return (
-    <div className="bg-[#0b0f19] text-white font-sans overflow-x-hidden">
+  const skills = [
+    { name: "HTML", value: 90 },
+    { name: "CSS", value: 85 },
+    { name: "JavaScript", value: 70 },
+    { name: "React", value: 80 },
+    { name: "Python", value: 85 },
+  ];
 
-      {/* NAVBAR */}
-      <nav className="flex justify-between items-center px-5 md:px-10 py-4 sticky top-0 bg-[#0b0f19]/80 backdrop-blur z-50">
-        <h1 className="text-lg md:text-xl font-bold text-purple-500">Deswanth</h1>
-      </nav>
+  const projects = [
+    {
+      title: "Student Database",
+      desc: "Manage student records with search, update, delete",
+      link: "https://github.com/deswanth12/studentdatabase",
+    },
+    {
+      title: "Staff Management",
+      desc: "Employee data system with SQLite",
+      link: "https://github.com/deswanth12/staffdatamanagement",
+    },
+    {
+      title: "Library System",
+      desc: "Book tracking and management system",
+      link: "https://github.com/deswanth12/Library-data-management-system",
+    },
+  ];
+
+  return (
+    <div className="bg-black text-white">
 
       {/* HERO */}
-      <section className="flex flex-col-reverse md:flex-row items-center justify-center px-5 md:px-10 py-16 gap-10">
+      <section className="min-h-screen flex flex-col md:flex-row items-center justify-between px-6 md:px-20">
+        
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="max-w-xl"
+        >
+          <p className="text-purple-400 mb-3">Full Stack Developer</p>
 
-        <div className="text-center md:text-left max-w-xl">
-          <p className="text-purple-400 mb-2 text-sm">Full Stack Developer</p>
-
-          <h1 className="text-3xl md:text-5xl font-bold">
-            I build real-world web apps
+          <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+            Hi, I'm <span className="text-purple-500">Deswanth</span>
           </h1>
 
-          <p className="text-gray-400 mt-4">
-            Diploma CSE student. Built 3 management systems using Python and databases.
+          <h2 className="text-xl md:text-2xl mt-3 text-gray-300">
+            I build modern web applications.
+          </h2>
+
+          <p className="mt-4 text-gray-400">
+            I create clean, fast, and user-friendly systems using React and Python.
           </p>
 
-          <div className="mt-6 flex flex-col sm:flex-row gap-3">
-            <a href="#projects" className="bg-purple-600 px-6 py-2 rounded-lg text-center">
+          <div className="flex gap-4 mt-6">
+            <a href="#projects" className="px-6 py-3 bg-purple-600 rounded-lg hover:bg-purple-700">
               View Work
             </a>
 
-            <a href="/Deswanth_CV.pdf" download className="border px-6 py-2 rounded-lg text-center">
+            <a href="/cv.pdf" className="px-6 py-3 border border-gray-500 rounded-lg">
               Download CV
             </a>
           </div>
-        </div>
+        </motion.div>
 
         <motion.img
           src={profile}
-          className="w-40 h-40 md:w-80 md:h-80 object-cover rounded-full md:rounded-xl border-4 border-purple-500"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8 }}
+          className="w-64 h-64 md:w-80 md:h-80 mt-10 md:mt-0 object-cover rounded-full border-4 border-purple-500 shadow-[0_0_40px_#a855f7]"
         />
       </section>
 
-      {/* PROOF */}
-      <section className="px-5 md:px-10 py-10 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-        {[
-          ["3+", "Projects"],
-          ["Python", "Core"],
-          ["SQLite", "DB"],
-          ["React", "Frontend"],
-        ].map(([n, l], i) => (
-          <div key={i} className="bg-[#111827] p-4 rounded-xl">
-            <h3 className="text-xl font-bold text-purple-500">{n}</h3>
-            <p className="text-gray-400 text-sm">{l}</p>
+      {/* ABOUT */}
+      <section className="px-6 md:px-20 py-20 bg-[#0a0a0a]">
+        <h2 className="text-3xl font-bold mb-6">About Me</h2>
+
+        <p className="text-gray-400 mb-4">
+          I am a passionate Full Stack Developer with strong knowledge in React and Python.
+          I enjoy building real-world applications that solve problems and improve user experience.
+        </p>
+
+        <p className="text-gray-400">
+          I have built multiple projects including student, staff, and library management systems.
+          I continuously learn new technologies to improve my development skills.
+        </p>
+      </section>
+
+      {/* SKILLS */}
+      <section className="px-6 md:px-20 py-20 bg-black">
+        <h2 className="text-3xl font-bold mb-10">Skills</h2>
+
+        {skills.map((skill, i) => (
+          <div key={i} className="mb-6">
+            <div className="flex justify-between">
+              <span>{skill.name}</span>
+              <span>{skill.value}%</span>
+            </div>
+            <div className="w-full bg-gray-700 h-2 rounded">
+              <div
+                className="bg-purple-500 h-2 rounded"
+                style={{ width: `${skill.value}%` }}
+              ></div>
+            </div>
           </div>
         ))}
       </section>
 
       {/* PROJECTS */}
-      <section id="projects" className="px-5 md:px-10 py-16">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">
-          Projects
-        </h2>
+      <section id="projects" className="px-6 md:px-20 py-20 bg-[#0a0a0a]">
+        <h2 className="text-3xl font-bold mb-10">Projects</h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-
-          {[
-            {
-              name: "Library Management",
-              img: "/assets/library.png",
-              desc: "Built full CRUD system with issue/return tracking and SQLite database.",
-              link: "https://github.com/deswanth12/Library-data-management-system"
-            },
-            {
-              name: "Student Database",
-              img: "/assets/student.png",
-              desc: "Developed system to manage student records with search and database storage.",
-              link: "https://github.com/deswanth12/studentdatabase"
-            },
-            {
-              name: "Staff Management",
-              img: "/assets/staff.png",
-              desc: "Created employee management system with CRUD operations and secure storage.",
-              link: "https://github.com/deswanth12/staffdatamanagement"
-            }
-          ].map((p, i) => (
-            <div key={i} className="bg-[#111827] p-4 rounded-xl">
-              <img src={p.img} className="rounded-lg mb-3" />
-              <h3 className="font-semibold">{p.name}</h3>
-              <p className="text-gray-400 text-sm mt-2">{p.desc}</p>
-
-              <a href={p.link} target="_blank" className="text-purple-400 text-sm mt-3 inline-flex items-center gap-2">
-                <FaGithub /> GitHub
-              </a>
-            </div>
-          ))}
-
-        </div>
-      </section>
-
-      {/* SKILLS */}
-      <section className="px-5 md:px-10 py-16 bg-[#0f172a]">
-        <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">
-          Skills
-        </h2>
-
-        <div className="space-y-4 max-w-3xl mx-auto">
-          {[
-            ["HTML", "90%"],
-            ["CSS", "85%"],
-            ["JavaScript", "60%"],
-            ["React", "80%"],
-            ["Python", "85%"],
-          ].map(([n, v], i) => (
-            <div key={i}>
-              <div className="flex justify-between text-sm">
-                <span>{n}</span>
-                <span>{v}</span>
-              </div>
-
-              <div className="bg-gray-700 h-2 rounded">
-                <motion.div
-                  className="bg-purple-500 h-2 rounded"
-                  initial={{ width: 0 }}
-                  whileInView={{ width: v }}
-                />
-              </div>
-            </div>
+        <div className="grid md:grid-cols-3 gap-6">
+          {projects.map((p, i) => (
+            <a
+              key={i}
+              href={p.link}
+              target="_blank"
+              className="p-6 border border-gray-700 rounded-xl hover:border-purple-500 hover:shadow-lg"
+            >
+              <h3 className="text-xl font-semibold">{p.title}</h3>
+              <p className="text-gray-400 mt-2">{p.desc}</p>
+            </a>
           ))}
         </div>
-      </section>
-
-      {/* RESUME */}
-      <section className="text-center py-12">
-        <h2 className="text-xl font-bold mb-4">Ready to Work</h2>
-        <a href="/Deswanth_CV.pdf" download className="bg-purple-600 px-6 py-2 rounded-lg">
-          Download Resume
-        </a>
       </section>
 
       {/* CONTACT */}
-      <section className="text-center py-12">
-        <h2 className="text-xl font-bold mb-4">Contact</h2>
+      <section className="px-6 md:px-20 py-20 bg-black">
+        <h2 className="text-3xl font-bold mb-6">Contact</h2>
+
         <p>📞 8374646073</p>
-        <p>✉️ kdeswanth@gmail.com</p>
-        <a href="https://github.com/deswanth12" className="text-purple-400">
-          GitHub Profile
-        </a>
+        <p>📧 kdeswanth@gmail.com</p>
+        <p>
+          🔗{" "}
+          <a href="https://github.com/deswanth12" className="text-purple-400">
+            GitHub Profile
+          </a>
+        </p>
       </section>
 
       {/* FOOTER */}
-      <footer className="text-center py-6 text-gray-500">
-        © 2026 Deswanth
+      <footer className="text-center py-6 text-gray-500 bg-[#0a0a0a]">
+        © 2026 Deswanth. All rights reserved.
       </footer>
 
     </div>
