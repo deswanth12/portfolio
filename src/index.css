@@ -11,12 +11,7 @@
 }
 
 .card {
-  @apply bg-gray-900 p-5 rounded-xl border border-gray-800 transition;
-}
-
-.card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 25px rgba(168,85,247,0.7);
+  @apply bg-gray-900 p-5 rounded-xl border border-gray-800;
 }
 
 .section-title {
@@ -24,5 +19,5 @@
 }
 
 .shadow-glow {
-  box-shadow: 0 0 20px rgba(168,85,247,0.6);
+  box-shadow: 0 0 25px rgba(168,85,247,0.7);
 }
