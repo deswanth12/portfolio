@@ -1,65 +1,40 @@
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { useTypewriter, Cursor } from "react-simple-typewriter";
-import { FaGithub, FaEnvelope } from "react-icons/fa";
+import { FaGithub, FaEnvelope, FaLinkedin } from "react-icons/fa";
 
 const profile = "/profile.jpeg";
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
-
-  const [text] = useTypewriter({
-    words: ["Full Stack Developer", "React Developer", "Python Developer", "LLMs Explorer"],
-    loop: true,
-  });
-
-  useEffect(() => {
-    setTimeout(() => setLoading(false), 1200);
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="loader-screen">
-        <div className="loader"></div>
-      </div>
-    );
-  }
-
   return (
-    <div className="app">
+    <div className="bg">
 
       {/* NAVBAR */}
       <nav className="nav">
-        <h1 className="logo">Deswanth.dev</h1>
-        <div className="nav-links">
-          <a href="#home">Home</a>
-          <a href="#skills">Skills</a>
-          <a href="#projects">Projects</a>
-          <a href="#contact">Contact</a>
+        <div className="container nav-inner">
+          <h1 className="logo">Deswanth.dev</h1>
+          <div className="nav-links">
+            <a href="#home">Home</a>
+            <a href="#skills">Skills</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+          </div>
         </div>
       </nav>
 
       {/* HERO */}
-      <section id="home" className="hero">
+      <section id="home" className="container hero">
+        <div className="hero-left">
+          <p className="tag">Full Stack Developer</p>
 
-        <motion.div
-          className="hero-left"
-          initial={{ opacity: 0, x: -40 }}
-          animate={{ opacity: 1, x: 0 }}
-        >
-          <h1>
-            Hi, I'm <span>Deswanth</span>
+          <h1 className="title">
+            Building real-world software <br />
+            <span>with clean UI & logic</span>
           </h1>
 
-          <p className="typing">
-            {text} <Cursor />
-          </p>
-
           <p className="desc">
-            I build modern, scalable, high-performance web applications.
+            I build fast, scalable applications using Python and React.
+            Focused on performance and usability.
           </p>
 
-          <div className="buttons">
+          <div className="btns">
             <a href="#projects" className="btn">View Work</a>
             <a href="/Deswanth_CV.pdf" download className="btn-outline">
               Download CV
@@ -67,23 +42,27 @@ export default function App() {
           </div>
 
           <div className="icons">
-            <a href="https://github.com/deswanth12"><FaGithub /></a>
-            <a href="mailto:kdeswanth@gmail.com"><FaEnvelope /></a>
+            <a href="https://github.com/deswanth12" target="_blank">
+              <FaGithub />
+            </a>
+            <a href="mailto:kdeswanth@gmail.com">
+              <FaEnvelope />
+            </a>
+            <a href="#">
+              <FaLinkedin />
+            </a>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div
-          className="hero-right"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-        >
-          <img src={profile} alt="profile" />
-        </motion.div>
-
+        <div className="hero-right">
+          <div className="image-wrap">
+            <img src={profile} alt="profile" />
+          </div>
+        </div>
       </section>
 
       {/* SKILLS */}
-      <section id="skills" className="section">
+      <section id="skills" className="container section">
         <h2>Skills</h2>
 
         {[
@@ -93,55 +72,65 @@ export default function App() {
           ["React", 80],
           ["Python", 85],
           ["LLMs", 70],
-        ].map(([name, val], i) => (
-          <div key={i} className="skill">
+        ].map(([name, val]) => (
+          <div key={name} className="skill">
             <div className="skill-top">
               <span>{name}</span>
               <span>{val}%</span>
             </div>
-
-            <div className="skill-bar">
-              <motion.div
-                className="skill-fill"
-                initial={{ width: 0 }}
-                whileInView={{ width: `${val}%` }}
-              />
+            <div className="bar">
+              <div style={{ width: val + "%" }} />
             </div>
           </div>
         ))}
       </section>
 
       {/* PROJECTS */}
-      <section id="projects" className="section">
+      <section id="projects" className="container section">
         <h2>Projects</h2>
 
         <div className="grid">
-          {[
-            ["Student DB", "/assets/student.png", "studentdatabase"],
-            ["Staff System", "/assets/staff.png", "staffdatamanagement"],
-            ["Library System", "/assets/library.png", "Library-data-management-system"],
-          ].map(([title, img, repo], i) => (
-            <motion.div key={i} className="card" whileHover={{ scale: 1.05 }}>
-              <img src={img} />
-              <h3>{title}</h3>
-              <p>Python • SQLite • Tkinter</p>
 
-              <a href={`https://github.com/deswanth12/${repo}`}>
-                GitHub →
-              </a>
-            </motion.div>
-          ))}
+          <a href="https://github.com/deswanth12/studentdatabase" target="_blank" className="card">
+            <div className="card-img">
+              <img src="/assets/student.png" />
+              <div className="overlay"><span>View Project →</span></div>
+            </div>
+            <h3>Student DB</h3>
+            <p>Python • SQLite • Tkinter</p>
+          </a>
+
+          <a href="https://github.com/deswanth12/staffdatamanagement" target="_blank" className="card">
+            <div className="card-img">
+              <img src="/assets/staff.png" />
+              <div className="overlay"><span>View Project →</span></div>
+            </div>
+            <h3>Staff System</h3>
+            <p>Python • SQLite • Tkinter</p>
+          </a>
+
+          <a href="https://github.com/deswanth12/Library-data-management-system" target="_blank" className="card">
+            <div className="card-img">
+              <img src="/assets/library.png" />
+              <div className="overlay"><span>View Project →</span></div>
+            </div>
+            <h3>Library System</h3>
+            <p>Python • SQLite • Tkinter</p>
+          </a>
+
         </div>
       </section>
 
       {/* CONTACT */}
-      <section id="contact" className="section center">
+      <section id="contact" className="container section center">
         <h2>Contact</h2>
         <p>📞 8374646073</p>
         <p>📧 kdeswanth@gmail.com</p>
       </section>
 
-      <footer>© 2026 Deswanth</footer>
+      <footer className="footer">
+        © 2026 Deswanth
+      </footer>
 
     </div>
   );
