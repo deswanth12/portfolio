@@ -8,7 +8,6 @@ const profile = "/profile.jpeg";
 export default function App() {
   const [loading, setLoading] = useState(true);
   const [scroll, setScroll] = useState(0);
-  const [mouse, setMouse] = useState({ x: 0, y: 0 });
 
   const [text] = useTypewriter({
     words: ["Full Stack Developer", "React Developer", "Python Developer"],
@@ -16,16 +15,21 @@ export default function App() {
   });
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 1200);
+    const timer = setTimeout(() => setLoading(false), 1000);
 
-    window.addEventListener("scroll", () => {
-      const sc = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+    const onScroll = () => {
+      const sc =
+        window.scrollY /
+        (document.documentElement.scrollHeight - window.innerHeight);
       setScroll(sc);
-    });
+    };
 
-    window.addEventListener("mousemove", (e) => {
-      setMouse({ x: e.clientX, y: e.clientY });
-    });
+    window.addEventListener("scroll", onScroll);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   if (loading) {
@@ -37,18 +41,15 @@ export default function App() {
   }
 
   return (
-    <div className="bg-black text-white font-sans overflow-x-hidden">
+    <div className="bg-black text-white font-sans">
 
-      {/* Cursor Glow */}
+      {/* Scroll Progress */}
       <div
-        className="cursor-glow"
-        style={{ left: mouse.x, top: mouse.y }}
+        className="fixed top-0 left-0 h-1 bg-purple-500 z-50"
+        style={{ width: `${scroll * 100}%` }}
       />
 
-      {/* Scroll Bar */}
-      <div style={{ width: `${scroll * 100}%` }} className="scroll-bar" />
-
-      {/* NAV */}
+      {/* NAVBAR */}
       <nav className="nav">
         <h1 className="logo">Deswanth.dev</h1>
         <div className="nav-links">
@@ -60,22 +61,30 @@ export default function App() {
 
       {/* HERO */}
       <section id="home" className="hero">
-        <motion.div initial={{ opacity: 0, x: -40 }} animate={{ opacity: 1, x: 0 }}>
+
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          animate={{ opacity: 1, x: 0 }}
+        >
           <h1 className="title">
-            Hi, I'm <span>Deswanth</span>
+            Building real-world software
+            <br />
+            <span>with clean UI & logic</span>
           </h1>
 
           <p className="typing">
             {text} <Cursor />
           </p>
 
-          <p className="desc">
-            I build fast, scalable, real-world applications.
+          <p className="sub">
+            3+ systems built • Python + React • Focus on performance
           </p>
 
           <div className="buttons">
             <a href="#projects" className="btn">View Work</a>
-            <a href="/Deswanth_CV.pdf" className="btn-outline">Download CV</a>
+            <a href="/Deswanth_CV.pdf" download className="btn-outline">
+              Download CV
+            </a>
           </div>
 
           <div className="icons">
@@ -92,6 +101,9 @@ export default function App() {
         />
       </section>
 
+      {/* DIVIDER */}
+      <div className="divider"></div>
+
       {/* SKILLS */}
       <section className="section">
         <h2>Skills</h2>
@@ -102,7 +114,7 @@ export default function App() {
           ["JavaScript", 65],
           ["React", 80],
           ["Python", 85],
-          ["LLMs", 70],
+          ["LLMs (ChatGPT, Prompting)", 70],
         ].map(([name, val], i) => (
           <div key={i} className="skill">
             <div className="skill-top">
@@ -120,23 +132,27 @@ export default function App() {
         ))}
       </section>
 
+      {/* DIVIDER */}
+      <div className="divider"></div>
+
       {/* PROJECTS */}
       <section id="projects" className="section">
         <h2>Projects</h2>
 
         <div className="grid">
           {[
-            ["Student DB", "/assets/student.png", "studentdatabase"],
-            ["Staff System", "/assets/staff.png", "staffdatamanagement"],
+            ["Student Database", "/assets/student.png", "studentdatabase"],
+            ["Staff Management", "/assets/staff.png", "staffdatamanagement"],
             ["Library System", "/assets/library.png", "Library-data-management-system"],
           ].map(([title, img, repo], i) => (
-            <motion.div
-              key={i}
-              className="card"
-              whileHover={{ rotateX: 5, rotateY: 5 }}
-            >
+            <motion.div key={i} className="card" whileHover={{ scale: 1.04 }}>
               <img src={img} />
               <h3>{title}</h3>
+
+              <p className="tech">
+                Python • SQLite • Tkinter
+              </p>
+
               <a href={`https://github.com/deswanth12/${repo}`}>
                 GitHub →
               </a>
@@ -144,6 +160,9 @@ export default function App() {
           ))}
         </div>
       </section>
+
+      {/* DIVIDER */}
+      <div className="divider"></div>
 
       {/* CONTACT */}
       <section id="contact" className="section center">
