@@ -1,153 +1,188 @@
 import { motion } from "framer-motion";
+import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
 
 const profile = "/profile.jpeg";
 
+const projects = [
+  {
+    title: "Student Database",
+    desc: "CRUD system to manage student records with fast search.",
+    tech: "Python • SQLite • Tkinter",
+    img: "/assets/student.png",
+    link: "https://github.com/deswanth12/studentdatabase",
+  },
+  {
+    title: "Staff Management",
+    desc: "Employee data system with secure storage and updates.",
+    tech: "Python • SQLite",
+    img: "/assets/staff.png",
+    link: "https://github.com/deswanth12/staffdatamanagement",
+  },
+  {
+    title: "Library System",
+    desc: "Book tracking system with issue/return logic.",
+    tech: "Python • SQLite",
+    img: "/assets/library.png",
+    link: "https://github.com/deswanth12/Library-data-management-system",
+  },
+];
+
+const skills = [
+  { name: "HTML", level: 90 },
+  { name: "CSS", level: 85 },
+  { name: "JavaScript", level: 65 },
+  { name: "React", level: 80 },
+  { name: "Python", level: 85 },
+  { name: "SQLite", level: 75 },
+  { name: "Git & GitHub", level: 80 },
+  { name: "AI Tools (ChatGPT, Prompting)", level: 70 },
+];
+
 export default function App() {
-  const skills = [
-    { name: "HTML", value: 90 },
-    { name: "CSS", value: 85 },
-    { name: "JavaScript", value: 70 },
-    { name: "React", value: 80 },
-    { name: "Python", value: 85 },
-  ];
-
-  const projects = [
-    {
-      title: "Student Database",
-      desc: "Manage student records with search, update, delete",
-      link: "https://github.com/deswanth12/studentdatabase",
-    },
-    {
-      title: "Staff Management",
-      desc: "Employee data system with SQLite",
-      link: "https://github.com/deswanth12/staffdatamanagement",
-    },
-    {
-      title: "Library System",
-      desc: "Book tracking and management system",
-      link: "https://github.com/deswanth12/Library-data-management-system",
-    },
-  ];
-
   return (
-    <div className="bg-black text-white">
+    <div className="bg-black text-white min-h-screen">
+
+      {/* NAV */}
+      <nav className="flex justify-between items-center px-4 md:px-10 py-4 border-b border-gray-800">
+        <h1 className="text-xl font-bold text-purple-400">Deswanth.dev</h1>
+        <a href="/Deswanth_CV.pdf" download className="btn">
+          Download CV
+        </a>
+      </nav>
 
       {/* HERO */}
-      <section className="min-h-screen flex flex-col md:flex-row items-center justify-between px-6 md:px-20">
-        
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="max-w-xl"
-        >
-          <p className="text-purple-400 mb-3">Full Stack Developer</p>
+      <section className="grid md:grid-cols-2 gap-10 items-center px-4 md:px-10 py-16">
 
-          <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          animate={{ opacity: 1, x: 0 }}
+        >
+          <h1 className="text-4xl md:text-5xl font-bold">
             Hi, I'm <span className="text-purple-500">Deswanth</span>
           </h1>
 
-          <h2 className="text-xl md:text-2xl mt-3 text-gray-300">
-            I build modern web applications.
-          </h2>
-
           <p className="mt-4 text-gray-400">
-            I create clean, fast, and user-friendly systems using React and Python.
+            Full Stack Developer
           </p>
 
-          <div className="flex gap-4 mt-6">
-            <a href="#projects" className="px-6 py-3 bg-purple-600 rounded-lg hover:bg-purple-700">
-              View Work
-            </a>
+          <p className="mt-2 text-gray-500">
+            I build fast, scalable applications using React and Python.
+          </p>
 
-            <a href="/cv.pdf" className="px-6 py-3 border border-gray-500 rounded-lg">
-              Download CV
-            </a>
+          <p className="mt-2 text-purple-400 text-sm">
+            Available for opportunities
+          </p>
+
+          <div className="mt-6 flex gap-4">
+            <a href="#projects" className="btn">View Work</a>
+            <a href="#contact" className="btn-outline">Contact</a>
+          </div>
+
+          <div className="flex gap-4 mt-6 text-xl">
+            <a href="https://github.com/deswanth12"><FaGithub /></a>
+            <a href="#"><FaLinkedin /></a>
+            <a href="mailto:kdeswanth@gmail.com"><FaEnvelope /></a>
           </div>
         </motion.div>
 
-        <motion.img
-          src={profile}
+        <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="w-64 h-64 md:w-80 md:h-80 mt-10 md:mt-0 object-cover rounded-full border-4 border-purple-500 shadow-[0_0_40px_#a855f7]"
-        />
+          className="flex justify-center"
+        >
+          <img
+            src={profile}
+            className="w-40 md:w-60 h-40 md:h-60 rounded-full border-4 border-purple-500 shadow-glow object-cover"
+          />
+        </motion.div>
       </section>
 
       {/* ABOUT */}
-      <section className="px-6 md:px-20 py-20 bg-[#0a0a0a]">
-        <h2 className="text-3xl font-bold mb-6">About Me</h2>
+      <motion.section
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        className="px-4 md:px-10 py-10 max-w-4xl mx-auto text-center"
+      >
+        <h2 className="section-title">About Me</h2>
 
-        <p className="text-gray-400 mb-4">
-          I am a passionate Full Stack Developer with strong knowledge in React and Python.
-          I enjoy building real-world applications that solve problems and improve user experience.
+        <p className="text-gray-400 mt-4">
+          I am a Computer Science diploma student focused on building real systems.
+          I enjoy solving problems and creating clean, functional applications.
         </p>
 
-        <p className="text-gray-400">
-          I have built multiple projects including student, staff, and library management systems.
-          I continuously learn new technologies to improve my development skills.
+        <p className="text-gray-400 mt-3">
+          I have built student, staff, and library management systems.
+          I also use AI tools to improve productivity and development speed.
         </p>
-      </section>
+      </motion.section>
 
       {/* SKILLS */}
-      <section className="px-6 md:px-20 py-20 bg-black">
-        <h2 className="text-3xl font-bold mb-10">Skills</h2>
+      <motion.section
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        className="px-4 md:px-10 py-10 max-w-4xl mx-auto"
+      >
+        <h2 className="section-title">Skills</h2>
 
-        {skills.map((skill, i) => (
-          <div key={i} className="mb-6">
-            <div className="flex justify-between">
-              <span>{skill.name}</span>
-              <span>{skill.value}%</span>
+        <div className="mt-6 space-y-4">
+          {skills.map((s, i) => (
+            <div key={i}>
+              <div className="flex justify-between text-sm">
+                <span>{s.name}</span>
+                <span>{s.level}%</span>
+              </div>
+
+              <div className="w-full bg-gray-800 h-2 rounded">
+                <motion.div
+                  initial={{ width: 0 }}
+                  whileInView={{ width: `${s.level}%` }}
+                  transition={{ duration: 1 }}
+                  className="h-2 bg-purple-500 rounded shadow-glow"
+                />
+              </div>
             </div>
-            <div className="w-full bg-gray-700 h-2 rounded">
-              <div
-                className="bg-purple-500 h-2 rounded"
-                style={{ width: `${skill.value}%` }}
-              ></div>
-            </div>
-          </div>
-        ))}
-      </section>
+          ))}
+        </div>
+      </motion.section>
 
       {/* PROJECTS */}
-      <section id="projects" className="px-6 md:px-20 py-20 bg-[#0a0a0a]">
-        <h2 className="text-3xl font-bold mb-10">Projects</h2>
+      <section id="projects" className="px-4 md:px-10 py-10">
+        <h2 className="section-title text-center">Projects</h2>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-6 mt-8">
           {projects.map((p, i) => (
-            <a
+            <motion.div
               key={i}
-              href={p.link}
-              target="_blank"
-              className="p-6 border border-gray-700 rounded-xl hover:border-purple-500 hover:shadow-lg"
+              whileHover={{ scale: 1.05 }}
+              className="card"
             >
-              <h3 className="text-xl font-semibold">{p.title}</h3>
-              <p className="text-gray-400 mt-2">{p.desc}</p>
-            </a>
+              <img src={p.img} className="rounded-lg mb-4" />
+              <h3 className="text-lg font-semibold">{p.title}</h3>
+
+              <p className="text-gray-400 text-sm mt-2">{p.desc}</p>
+
+              <p className="text-purple-400 text-xs mt-2">{p.tech}</p>
+
+              <a href={p.link} className="text-purple-400 mt-3 inline-block">
+                GitHub →
+              </a>
+            </motion.div>
           ))}
         </div>
       </section>
 
       {/* CONTACT */}
-      <section className="px-6 md:px-20 py-20 bg-black">
-        <h2 className="text-3xl font-bold mb-6">Contact</h2>
+      <section id="contact" className="px-4 md:px-10 py-10 text-center">
+        <h2 className="section-title">Contact</h2>
 
-        <p>📞 8374646073</p>
-        <p>📧 kdeswanth@gmail.com</p>
-        <p>
-          🔗{" "}
-          <a href="https://github.com/deswanth12" className="text-purple-400">
-            GitHub Profile
-          </a>
-        </p>
+        <p className="mt-4 text-gray-400">📞 8374646073</p>
+        <p className="text-gray-400">📧 kdeswanth@gmail.com</p>
       </section>
 
       {/* FOOTER */}
-      <footer className="text-center py-6 text-gray-500 bg-[#0a0a0a]">
-        © 2026 Deswanth. All rights reserved.
+      <footer className="text-center py-6 text-gray-500">
+        © 2026 Deswanth
       </footer>
-
     </div>
   );
 }
