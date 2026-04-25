@@ -1,17 +1,24 @@
 import { FaGithub, FaEnvelope, FaLinkedin } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 const profile = "/profile.jpeg";
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 40 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7 } }
+};
+
 export default function App() {
   return (
-    <div className="bg">
+    <div>
 
-      {/* NAVBAR */}
+      {/* NAV */}
       <nav className="nav">
         <div className="container nav-inner">
           <h1 className="logo">Deswanth.dev</h1>
           <div className="nav-links">
             <a href="#home">Home</a>
+            <a href="#about">About</a>
             <a href="#skills">Skills</a>
             <a href="#projects">Projects</a>
             <a href="#contact">Contact</a>
@@ -21,7 +28,12 @@ export default function App() {
 
       {/* HERO */}
       <section id="home" className="container hero">
-        <div className="hero-left">
+
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          animate="show"
+        >
           <p className="tag">Full Stack Developer</p>
 
           <h1 className="title">
@@ -31,7 +43,6 @@ export default function App() {
 
           <p className="desc">
             I build fast, scalable applications using Python and React.
-            Focused on performance and usability.
           </p>
 
           <div className="btns">
@@ -42,23 +53,35 @@ export default function App() {
           </div>
 
           <div className="icons">
-            <a href="https://github.com/deswanth12" target="_blank">
-              <FaGithub />
-            </a>
-            <a href="mailto:kdeswanth@gmail.com">
-              <FaEnvelope />
-            </a>
-            <a href="#">
-              <FaLinkedin />
-            </a>
+            <a href="https://github.com/deswanth12" target="_blank"><FaGithub /></a>
+            <a href="mailto:kdeswanth@gmail.com"><FaEnvelope /></a>
+            <a href="#"><FaLinkedin /></a>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="hero-right">
-          <div className="image-wrap">
-            <img src={profile} alt="profile" />
-          </div>
-        </div>
+        <motion.div
+          className="image-wrap"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+        >
+          <img src={profile} alt="profile" />
+        </motion.div>
+
+      </section>
+
+      {/* ABOUT */}
+      <section id="about" className="container section">
+        <motion.h2 variants={fadeUp} initial="hidden" whileInView="show">
+          About Me
+        </motion.h2>
+
+        <motion.p variants={fadeUp}>
+          I am a passionate Full Stack Developer focused on building real-world applications using Python and React. I enjoy solving problems, writing clean code, and creating fast, user-friendly systems.
+        </motion.p>
+
+        <motion.p variants={fadeUp}>
+          I have built projects like Student Database, Staff Management, and Library Systems. I am currently exploring AI and LLMs to build smarter applications.
+        </motion.p>
       </section>
 
       {/* SKILLS */}
@@ -72,16 +95,27 @@ export default function App() {
           ["React", 80],
           ["Python", 85],
           ["LLMs", 70],
-        ].map(([name, val]) => (
-          <div key={name} className="skill">
+        ].map(([name, val], i) => (
+          <motion.div
+            key={name}
+            className="skill"
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            transition={{ delay: i * 0.1 }}
+          >
             <div className="skill-top">
               <span>{name}</span>
               <span>{val}%</span>
             </div>
             <div className="bar">
-              <div style={{ width: val + "%" }} />
+              <motion.div
+                initial={{ width: 0 }}
+                whileInView={{ width: val + "%" }}
+                transition={{ duration: 1 }}
+              />
             </div>
-          </div>
+          </motion.div>
         ))}
       </section>
 
@@ -90,34 +124,31 @@ export default function App() {
         <h2>Projects</h2>
 
         <div className="grid">
-
-          <a href="https://github.com/deswanth12/studentdatabase" target="_blank" className="card">
-            <div className="card-img">
-              <img src="/assets/student.png" />
-              <div className="overlay"><span>View Project →</span></div>
-            </div>
-            <h3>Student DB</h3>
-            <p>Python • SQLite • Tkinter</p>
-          </a>
-
-          <a href="https://github.com/deswanth12/staffdatamanagement" target="_blank" className="card">
-            <div className="card-img">
-              <img src="/assets/staff.png" />
-              <div className="overlay"><span>View Project →</span></div>
-            </div>
-            <h3>Staff System</h3>
-            <p>Python • SQLite • Tkinter</p>
-          </a>
-
-          <a href="https://github.com/deswanth12/Library-data-management-system" target="_blank" className="card">
-            <div className="card-img">
-              <img src="/assets/library.png" />
-              <div className="overlay"><span>View Project →</span></div>
-            </div>
-            <h3>Library System</h3>
-            <p>Python • SQLite • Tkinter</p>
-          </a>
-
+          {[
+            { img: "/assets/student.png", title: "Student DB", link: "https://github.com/deswanth12/studentdatabase" },
+            { img: "/assets/staff.png", title: "Staff System", link: "https://github.com/deswanth12/staffdatamanagement" },
+            { img: "/assets/library.png", title: "Library System", link: "https://github.com/deswanth12/Library-data-management-system" }
+          ].map((p, i) => (
+            <motion.a
+              key={i}
+              href={p.link}
+              target="_blank"
+              className="card"
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="show"
+              transition={{ delay: i * 0.2 }}
+            >
+              <div className="card-img">
+                <img src={p.img} />
+                <div className="overlay">
+                  <span>View Project →</span>
+                </div>
+              </div>
+              <h3>{p.title}</h3>
+              <p>Python • SQLite • Tkinter</p>
+            </motion.a>
+          ))}
         </div>
       </section>
 
