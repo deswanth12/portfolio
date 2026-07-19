@@ -1,26 +1,28 @@
-# 🚀 Deswanth Portfolio
+# Deswanth Portfolio
 
 ## Overview
-This is my personal portfolio website built using React and Tailwind CSS.  
-It showcases my projects, skills, and contact details.
+Personal portfolio website built with React and Vite. It highlights my projects,
+skills, contact details, and downloadable CV.
 
 ## Features
-- Modern responsive design  
-- Smooth animations  
-- Projects showcase  
-- Skills with progress bars  
-- Contact section  
-- Download CV option  
+- Responsive portfolio layout
+- Animated hero, skill, and project sections
+- Project showcase with GitHub links
+- Contact links for email and phone
+- Download CV option
 
 ## Tech Stack
-- React.js  
-- Tailwind CSS  
-- Vite  
+- React
+- Vite
+- Framer Motion
+- React Icons
+- CSS
 
 ## Projects Included
-- Student Database Management System  
-- Staff Data Management System  
-- Library Management System  
+- Cyber Security Toolkit
+- Student Database System
+- Staff Management System
+- Library Management System
 
 ## Live Demo
 https://portfolio-plum-sigma-etfrkmq5t9.vercel.app/
