@@ -264,11 +264,8 @@ https://github.com/deswanth12
 
 📧 Email
 
-Add your email here
+kdesvanth@gmail.com
 
-💼 LinkedIn
-
-Add your LinkedIn profile here
 
 ---
 
