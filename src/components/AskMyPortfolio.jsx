@@ -255,41 +255,6 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
           </div>
         </div>
 
-        {/* Quick Shortcut Toolbar */}
-        <div className="rag-shortcuts-bar">
-          <a href="#projects" onClick={onClose} className="shortcut-btn">
-            <FaExternalLinkAlt className="shortcut-icon" /> Projects
-          </a>
-          <a href="/Deswanth_CV.pdf" download className="shortcut-btn">
-            <FaDownload className="shortcut-icon" /> Download CV
-          </a>
-          <a href="mailto:kdeswanth@gmail.com" className="shortcut-btn">
-            <FaEnvelope className="shortcut-icon" /> Email Deswanth
-          </a>
-        </div>
-
-        {/* Preset Prompt Recommendations */}
-        <div className="rag-presets-bar">
-          <div className="presets-label">
-            <FaLightbulb className="preset-icon" /> Ask Jannu:
-          </div>
-          <div className="presets-scroll">
-            {PRESET_CATEGORIES.map((cat) => {
-              const Icon = cat.icon;
-              return (
-                <button
-                  key={cat.text}
-                  className="preset-pill jannu-pill"
-                  onClick={() => handleSend(cat.text)}
-                  disabled={isTyping}
-                >
-                  <Icon className="pill-icon" /> {cat.text}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
         {/* Messages Body */}
         <div className="rag-messages-body">
           {messages.map((msg) => (
@@ -371,6 +336,41 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
           )}
 
           <div ref={messagesEndRef} />
+        </div>
+
+        {/* Preset Prompt Recommendations (Positioned at the BOTTOM above input) */}
+        <div className="rag-presets-bar">
+          <div className="presets-label">
+            <FaLightbulb className="preset-icon" /> Ask Jannu:
+          </div>
+          <div className="presets-scroll">
+            {PRESET_CATEGORIES.map((cat) => {
+              const Icon = cat.icon;
+              return (
+                <button
+                  key={cat.text}
+                  className="preset-pill jannu-pill"
+                  onClick={() => handleSend(cat.text)}
+                  disabled={isTyping}
+                >
+                  <Icon className="pill-icon" /> {cat.text}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Quick Shortcut Toolbar (Positioned at the BOTTOM above input) */}
+        <div className="rag-shortcuts-bar">
+          <a href="#projects" onClick={onClose} className="shortcut-btn">
+            <FaExternalLinkAlt className="shortcut-icon" /> Projects
+          </a>
+          <a href="/Deswanth_CV.pdf" download className="shortcut-btn">
+            <FaDownload className="shortcut-icon" /> Download CV
+          </a>
+          <a href="mailto:kdeswanth@gmail.com" className="shortcut-btn">
+            <FaEnvelope className="shortcut-icon" /> Email Deswanth
+          </a>
         </div>
 
         {/* Input Footer */}
