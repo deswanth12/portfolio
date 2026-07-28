@@ -377,41 +377,6 @@ export default function App() {
         <span>Copyright 2026 Deswanth. All rights reserved.</span>
       </footer>
 
-      <details
-        className="pet-companion"
-        aria-label="Portfolio quick assistant"
-      >
-        <summary className="pet-toggle" aria-label="Open quick actions">
-          <span className="pet-bubble">Need a shortcut?</span>
-          <span className="pet" aria-hidden="true">
-            <span className="pet-ear pet-ear-left" />
-            <span className="pet-ear pet-ear-right" />
-            <span className="pet-face">
-              <span className="pet-eye pet-eye-left" />
-              <span className="pet-eye pet-eye-right" />
-              <span className="pet-nose" />
-            </span>
-            <span className="pet-tail" />
-          </span>
-        </summary>
-
-        <div className="pet-menu">
-          <strong>Quick paths</strong>
-          <a href="#projects">
-            <FaExternalLinkAlt aria-hidden="true" />
-            View projects
-          </a>
-          <a href="#contact">
-            <FaEnvelope aria-hidden="true" />
-            Contact me
-          </a>
-          <a href="/Deswanth_CV.pdf" download>
-            <FaDownload aria-hidden="true" />
-            Download CV
-          </a>
-        </div>
-      </details>
-
       {/* Floating RAG Trigger Button */}
       {!isRagOpen && (
         <button
