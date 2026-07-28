@@ -121,7 +121,7 @@ export function searchClientKnowledge(query) {
   let answer = "";
   if (qLower.includes("who is") || (qLower.includes("about") && qLower.includes("deswanth"))) {
     answer =
-      "K Deswanth is a Full Stack Developer and Python/AI Systems Builder based in India. He specializes in building practical web applications with React, backend systems with FastAPI and SQLite, autonomous robotics with ROS2, and RAG (Retrieval-Augmented Generation) applications.";
+      "Hey there! I'm Jannu 🤖, Deswanth's AI companion. K Deswanth is a Full Stack Developer and Python/AI Systems Builder based in India. He specializes in building practical web applications with React, backend systems with FastAPI and SQLite, autonomous robotics with ROS2, and RAG (Retrieval-Augmented Generation) applications.";
   } else if (qLower.includes("janai")) {
     answer =
       "JanAI is an AI-powered civic scheme discovery platform built by Deswanth. It enables citizens to match with government welfare schemes using multi-lingual RAG semantic search, natural language eligibility analysis, and step-by-step document guidance.";
@@ -130,7 +130,7 @@ export function searchClientKnowledge(query) {
       "Zeus Robot is an autonomous multipurpose robotics system engineered by Deswanth. It combines ROS2, SLAM navigation, real-time edge AI object detection with YOLO & OpenCV, and a WebSockets live telemetry dashboard.";
   } else if (qLower.includes("react") || qLower.includes("frontend")) {
     answer =
-      "Yes, Deswanth has strong React experience! He builds responsive web applications using React 19, Vite, Framer Motion, Tailwind CSS, and WebSockets. He designed both this portfolio website and the JanAI platform interface.";
+      "Yes! Deswanth has strong React experience! He builds responsive web applications using React 19, Vite, Framer Motion, Tailwind CSS, and WebSockets. He designed both this portfolio website and the JanAI platform interface.";
   } else if (qLower.includes("project") || qLower.includes("work")) {
     answer =
       "Deswanth has created multiple impactful projects:\n\n• **JanAI**: Multi-lingual RAG Civic Scheme Discovery Platform\n• **Zeus Robot**: Autonomous ROS2 Robotics System with Edge AI Vision\n• **Cyber Security Toolkit**: Python network security & audit utility\n• **Desktop Database Apps**: Student, Staff, and Library Management Systems in Python/SQLite";

@@ -11,17 +11,23 @@ import {
   FaCopy,
   FaVolumeUp,
   FaCompress,
-  FaExpand
+  FaExpand,
+  FaThumbsUp,
+  FaUserAlt,
+  FaCode,
+  FaRocket,
+  FaEnvelope,
+  FaMagic
 } from "react-icons/fa";
 import { searchClientKnowledge } from "../services/clientRAG";
 
-const PRESET_QUESTIONS = [
-  "Who is Deswanth?",
-  "What is JanAI?",
-  "Describe Zeus Robot",
-  "Skills in React?",
-  "Show me AI projects",
-  "How can I contact him?"
+const PRESET_CATEGORIES = [
+  { icon: FaUserAlt, text: "Who is Deswanth?" },
+  { icon: FaRocket, text: "What is JanAI?" },
+  { icon: FaRobot, text: "Describe Zeus Robot" },
+  { icon: FaCode, text: "Skills in React?" },
+  { icon: FaMagic, text: "Show me AI projects" },
+  { icon: FaEnvelope, text: "How can I contact him?" }
 ];
 
 export default function AskMyPortfolio({ isOpen, onClose }) {
@@ -29,7 +35,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
     {
       id: "welcome-1",
       sender: "bot",
-      text: "Hi! I'm Deswanth's AI Assistant. Ask me anything about his projects (JanAI, Zeus Robot, Security Toolkit), technical skills, resume, or background!",
+      text: "Hi! I'm Jannu 🤖, Deswanth's AI companion. Ask me anything about his projects (JanAI, Zeus Robot, Security Toolkit), technical skills, resume, or background!",
       sources: ["Resume", "Portfolio Data"],
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     }
@@ -38,6 +44,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
   const [isTyping, setIsTyping] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
+  const [likedIds, setLikedIds] = useState([]);
   const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
@@ -77,17 +84,14 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
         botResponse = await response.json();
       }
     } catch (e) {
-      // Backend not running, use Client RAG
-      console.log("Using Client-side RAG Vector Engine");
+      console.log("Jannu AI using Client-side RAG Vector Engine");
     }
 
     if (!botResponse) {
-      // Simulate vector search processing delay
-      await new Promise((resolve) => setTimeout(resolve, 400));
+      await new Promise((resolve) => setTimeout(resolve, 350));
       botResponse = searchClientKnowledge(textToSend);
     }
 
-    // Stream bot response typing effect
     const botMsgId = "bot-" + Date.now();
     const fullText = botResponse.answer;
     const sources = botResponse.sources || [];
@@ -122,7 +126,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
         )
       );
       
-      await new Promise((resolve) => setTimeout(resolve, 25));
+      await new Promise((resolve) => setTimeout(resolve, 22));
     }
   };
 
@@ -131,7 +135,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
       {
         id: "welcome-reset",
         sender: "bot",
-        text: "Conversation reset! What else would you like to know about K Deswanth?",
+        text: "Hey! I'm Jannu 🤖. Conversation reset! What else would you like to know about K Deswanth?",
         sources: ["Portfolio Data"],
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       }
@@ -144,6 +148,12 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
+  const handleLike = (id) => {
+    setLikedIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+
   const handleSpeak = (text) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
@@ -151,6 +161,14 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
       utterance.rate = 1.0;
       window.speechSynthesis.speak(utterance);
     }
+  };
+
+  const getSourceIcon = (src) => {
+    if (src.includes("JanAI")) return "🚀";
+    if (src.includes("Zeus")) return "🤖";
+    if (src.includes("Resume")) return "📄";
+    if (src.includes("GitHub")) return "💻";
+    return "💡";
   };
 
   if (!isOpen) return null;
@@ -167,17 +185,17 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
         {/* Chat Header */}
         <div className="rag-header">
           <div className="rag-header-info">
-            <div className="rag-avatar">
-              <FaRobot />
+            <div className="rag-avatar jannu-avatar">
+              <span className="jannu-emoji">🤖</span>
               <span className="online-indicator"></span>
             </div>
             <div>
               <div className="rag-title-row">
-                <h3>Ask About Me</h3>
-                <span className="rag-badge">RAG Vector DB</span>
+                <h3>Ask Jannu</h3>
+                <span className="rag-badge jannu-badge">Jannu AI</span>
               </div>
               <p className="rag-subtitle">
-                Powered by Embeddings & Semantic Vector Search
+                Deswanth's RAG Vector Assistant
               </p>
             </div>
           </div>
@@ -213,19 +231,22 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
         {/* Preset Prompt Recommendations */}
         <div className="rag-presets-bar">
           <div className="presets-label">
-            <FaLightbulb className="preset-icon" /> Suggested Questions:
+            <FaLightbulb className="preset-icon" /> Ask Jannu:
           </div>
           <div className="presets-scroll">
-            {PRESET_QUESTIONS.map((q) => (
-              <button
-                key={q}
-                className="preset-pill"
-                onClick={() => handleSend(q)}
-                disabled={isTyping}
-              >
-                {q}
-              </button>
-            ))}
+            {PRESET_CATEGORIES.map((cat) => {
+              const Icon = cat.icon;
+              return (
+                <button
+                  key={cat.text}
+                  className="preset-pill jannu-pill"
+                  onClick={() => handleSend(cat.text)}
+                  disabled={isTyping}
+                >
+                  <Icon className="pill-icon" /> {cat.text}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -237,8 +258,8 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
               className={`rag-message-row ${msg.sender === "user" ? "user-row" : "bot-row"}`}
             >
               {msg.sender === "bot" && (
-                <div className="bot-msg-avatar">
-                  <FaRobot />
+                <div className="bot-msg-avatar jannu-msg-avatar">
+                  🤖
                 </div>
               )}
 
@@ -255,8 +276,8 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
                       <FaBookOpen /> Sources:
                     </span>
                     {msg.sources.map((src) => (
-                      <span key={src} className="source-tag">
-                        • {src}
+                      <span key={src} className="source-tag jannu-tag">
+                        {getSourceIcon(src)} {src}
                       </span>
                     ))}
                   </div>
@@ -266,6 +287,13 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
                 {msg.sender === "bot" && (
                   <div className="bubble-actions">
                     <span className="timestamp">{msg.timestamp}</span>
+                    <button
+                      onClick={() => handleLike(msg.id)}
+                      className={`mini-action-btn ${likedIds.includes(msg.id) ? "liked" : ""}`}
+                      title="Helpful response"
+                    >
+                      <FaThumbsUp style={{ color: likedIds.includes(msg.id) ? "#39d3c7" : "inherit" }} />
+                    </button>
                     <button
                       onClick={() => handleCopy(msg.id, msg.text)}
                       className="mini-action-btn"
@@ -288,8 +316,8 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
 
           {isTyping && (
             <div className="rag-message-row bot-row">
-              <div className="bot-msg-avatar">
-                <FaRobot />
+              <div className="bot-msg-avatar jannu-msg-avatar">
+                🤖
               </div>
               <div className="rag-msg-bubble bot typing-bubble">
                 <div className="typing-dots">
@@ -297,7 +325,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
                   <span></span>
                   <span></span>
                 </div>
-                <span className="typing-status">Searching Vector Database...</span>
+                <span className="typing-status">Jannu is searching vector DB...</span>
               </div>
             </div>
           )}
@@ -316,23 +344,23 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
           <input
             type="text"
             className="rag-text-input"
-            placeholder="Ask anything about Deswanth..."
+            placeholder="Ask Jannu anything about Deswanth..."
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             disabled={isTyping}
           />
           <button
             type="submit"
-            className="rag-send-btn"
+            className="rag-send-btn jannu-send-btn"
             disabled={!inputValue.trim() || isTyping}
-            aria-label="Send message"
+            aria-label="Send message to Jannu"
           >
             <FaPaperPlane />
           </button>
         </form>
 
         <div className="rag-footer-note">
-          <FaLayerGroup /> RAG Architecture: Chunking ➔ Embeddings ➔ Vector DB ➔ Semantic Search ➔ Sources Citation
+          <FaLayerGroup /> Jannu RAG System: Chunking ➔ Embeddings ➔ Vector DB ➔ Semantic Search ➔ Cited Sources
         </div>
       </div>
     </div>

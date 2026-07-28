@@ -128,7 +128,7 @@ class RAGEngine:
         
         if not results:
             return {
-                "answer": "I couldn't find specific information matching your question in K Deswanth's portfolio documentation. Feel free to contact him directly at kdeswanth@gmail.com!",
+                "answer": "I'm Jannu 🤖! I couldn't find specific details matching your question in Deswanth's portfolio documentation, but you can get in touch with him directly at kdeswanth@gmail.com!",
                 "sources": [],
                 "retrieved_chunks_count": 0
             }
@@ -144,7 +144,6 @@ class RAGEngine:
         context_str = "\n\n".join(context_parts)
         
         # Synthesize smart response from context
-        # (Support calling LLM API if key exists, or generate high-fidelity structured synthesized RAG response)
         openai_key = os.environ.get("OPENAI_API_KEY")
         gemini_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
         
@@ -167,39 +166,35 @@ class RAGEngine:
         """
         q_lower = query.lower()
         
-        # Special query handling for direct questions
-        if "who is" in q_lower or "about" in q_lower and "deswanth" in q_lower:
-            return "K Deswanth is a Full Stack Developer and Python/AI Systems Builder based in India. He specializes in building practical web applications with React, backend systems with FastAPI and SQLite, autonomous robotics with ROS2, and RAG (Retrieval-Augmented Generation) applications."
+        if "who is" in q_lower or ("about" in q_lower and "deswanth" in q_lower):
+            return "Hey there! I'm Jannu 🤖. K Deswanth is a Full Stack Developer and Python/AI Systems Builder based in India. He specializes in building practical web apps with React, backend services with FastAPI and SQLite, autonomous robotics with ROS2, and RAG AI applications."
         
         if "janai" in q_lower:
             for c in chunks:
                 if "janai" in c["text"].lower():
-                    return f"JanAI is an AI-powered civic scheme discovery platform developed by Deswanth. It helps citizens discover and match with government welfare schemes using multi-lingual RAG semantic search, natural language eligibility checking, and step-by-step application guidance."
+                    return "JanAI is an AI-powered civic scheme discovery platform developed by Deswanth. It helps citizens discover and match with government welfare schemes using multi-lingual RAG semantic search, natural language eligibility checking, and step-by-step application guidance."
         
         if "zeus" in q_lower:
             for c in chunks:
                 if "zeus" in c["text"].lower():
-                    return f"Zeus Robot is an autonomous multipurpose robotics platform engineered by Deswanth. It features ROS2 navigation, SLAM mapping, real-time edge AI object detection with YOLO and OpenCV, and a WebSockets live telemetry dashboard."
+                    return "Zeus Robot is an autonomous multipurpose robotics platform engineered by Deswanth. It features ROS2 navigation, SLAM mapping, real-time edge AI object detection with YOLO & OpenCV, and a WebSockets live telemetry dashboard."
                     
         if "react" in q_lower or "frontend" in q_lower:
-            return "Yes, Deswanth has extensive React experience! He builds modern responsive interfaces using React, Vite, Framer Motion, Tailwind CSS, and WebSockets. He built this portfolio application and the interactive JanAI platform frontend using React."
+            return "Yes! Deswanth has strong React experience! He builds modern responsive interfaces using React, Vite, Framer Motion, Tailwind CSS, and WebSockets. He built both this portfolio website and the interactive JanAI platform frontend using React."
 
-        if "project" in q_lower:
-            return "Deswanth has built several key projects including:\n- **JanAI**: Multi-lingual RAG Civic Scheme Discovery Platform\n- **Zeus Robot**: Autonomous ROS2 Robotics System with Edge AI Vision\n- **Cyber Security Toolkit**: Python network security & audit toolkit\n- **Student & Staff Database Systems**: Desktop SQLite management apps\n- **Library Data Management System**: Automated book tracking desktop app"
+        if "project" in q_lower or "work" in q_lower:
+            return "Deswanth has built several key projects:\n- **JanAI**: Multi-lingual RAG Civic Scheme Discovery Platform\n- **Zeus Robot**: Autonomous ROS2 Robotics System with Edge AI Vision\n- **Cyber Security Toolkit**: Python network security & audit toolkit\n- **Student & Staff Database Systems**: Desktop SQLite management apps\n- **Library Data Management System**: Automated book tracking desktop app"
 
         if "contact" in q_lower or "email" in q_lower or "phone" in q_lower:
-            return "You can reach K Deswanth via Email at **kdeswanth@gmail.com**, Phone at **+91 8374646073**, or check his code on GitHub at **github.com/deswanth12**."
+            return "You can reach K Deswanth via Email at **kdeswanth@gmail.com**, Phone at **+91 8374646073**, or check his projects on GitHub at **github.com/deswanth12**."
 
-        # General synthesis combining top match snippets
         primary_text = chunks[0]["text"]
-        # Clean markdown headers from primary text
         clean_text = re.sub(r'#{1,4}\s*', '', primary_text).strip()
         
-        # Truncate if overly long
         if len(clean_text) > 400:
             clean_text = clean_text[:400] + "..."
             
-        return f"Based on Deswanth's portfolio data:\n\n{clean_text}"
+        return f"Based on Deswanth's portfolio documentation:\n\n{clean_text}"
 
     def _call_openai_llm(self, query: str, context: str) -> str:
         import requests
@@ -210,7 +205,7 @@ class RAGEngine:
         payload = {
             "model": "gpt-4o-mini",
             "messages": [
-                {"role": "system", "content": "You are Ask My Portfolio, an AI assistant representing K Deswanth. Answer questions accurately using ONLY the provided context. Keep answers concise, enthusiastic, and factual."},
+                {"role": "system", "content": "You are Jannu, a friendly and intelligent AI assistant representing K Deswanth. Answer questions accurately using ONLY the provided context. Keep answers concise, enthusiastic, and factual."},
                 {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {query}"}
             ],
             "temperature": 0.3
@@ -227,7 +222,7 @@ class RAGEngine:
         payload = {
             "contents": [{
                 "parts": [{
-                    "text": f"You are Ask My Portfolio, an AI assistant representing K Deswanth. Answer questions accurately using ONLY the provided context.\n\nContext:\n{context}\n\nQuestion: {query}"
+                    "text": f"You are Jannu, a friendly and intelligent AI assistant representing K Deswanth. Answer questions accurately using ONLY the provided context.\n\nContext:\n{context}\n\nQuestion: {query}"
                 }]
             }]
         }

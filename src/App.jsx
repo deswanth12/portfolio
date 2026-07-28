@@ -137,7 +137,7 @@ export default function App() {
               }}
             >
               <FaRobot aria-hidden="true" />
-              Ask About Me
+              Ask Jannu 🤖
             </button>
           </div>
         </div>
@@ -169,7 +169,7 @@ export default function App() {
                 }}
               >
                 <FaRobot aria-hidden="true" />
-                Ask My Portfolio
+                Ask Jannu 🤖
               </button>
 
               <a href="#projects" className="btn btn-secondary">
@@ -417,12 +417,12 @@ export default function App() {
         <button
           className="floating-rag-trigger"
           onClick={() => setIsRagOpen(true)}
-          title="Ask My Portfolio AI Chatbot"
-          aria-label="Open Ask My Portfolio Chatbot"
+          title="Ask Jannu AI Chatbot"
+          aria-label="Open Ask Jannu Chatbot"
         >
           <span className="pulse-dot"></span>
           <FaRobot className="trigger-icon" />
-          <span>Ask About Me 🤖</span>
+          <span>Ask Jannu 🤖</span>
         </button>
       )}
 

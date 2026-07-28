@@ -918,6 +918,62 @@ a:focus-visible {
   box-shadow: 0 4px 14px rgba(57, 211, 199, 0.3);
 }
 
+.jannu-avatar {
+  background: linear-gradient(135deg, #00f2fe, #4facfe, #00c6ff);
+  box-shadow: 0 0 20px rgba(0, 242, 254, 0.4), 0 0 40px rgba(79, 172, 254, 0.2);
+  animation: jannuGlow 3s infinite alternate ease-in-out;
+}
+
+@keyframes jannuGlow {
+  0% { box-shadow: 0 0 15px rgba(57, 211, 199, 0.4); }
+  100% { box-shadow: 0 0 25px rgba(155, 109, 255, 0.6); }
+}
+
+.jannu-emoji {
+  font-size: 1.35rem;
+}
+
+.jannu-badge {
+  background: linear-gradient(135deg, rgba(57, 211, 199, 0.2), rgba(155, 109, 255, 0.2));
+  border-color: rgba(57, 211, 199, 0.4);
+  color: #39d3c7;
+}
+
+.jannu-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(57, 211, 199, 0.2);
+  transition: all 0.25s ease;
+}
+
+.jannu-pill .pill-icon {
+  color: var(--cyan);
+  font-size: 0.75rem;
+}
+
+.jannu-pill:hover:not(:disabled) {
+  background: linear-gradient(135deg, rgba(57, 211, 199, 0.25), rgba(155, 109, 255, 0.25));
+  border-color: var(--cyan);
+  box-shadow: 0 4px 15px rgba(57, 211, 199, 0.3);
+}
+
+.jannu-tag {
+  background: rgba(57, 211, 199, 0.12);
+  border-color: rgba(57, 211, 199, 0.3);
+  color: #e2e8f0;
+}
+
+.jannu-msg-avatar {
+  background: linear-gradient(135deg, #00f2fe, #4facfe);
+  font-size: 1.1rem;
+}
+
+.jannu-send-btn {
+  background: linear-gradient(135deg, #39d3c7, #9b6dff);
+}
+
 .online-indicator {
   position: absolute;
   bottom: -2px;
