@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   FaArrowRight,
   FaDownload,
@@ -10,8 +11,10 @@ import {
   FaShieldAlt,
   FaTools,
   FaDatabase,
+  FaRobot,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
+import AskMyPortfolio from "./components/AskMyPortfolio";
 
 const profile = "/profile.jpeg";
 
@@ -105,6 +108,8 @@ const stats = [
 ];
 
 export default function App() {
+  const [isRagOpen, setIsRagOpen] = useState(false);
+
   return (
     <div className="site-shell">
       <nav className="nav" aria-label="Primary navigation">
@@ -118,6 +123,22 @@ export default function App() {
             <a href="#skills">Skills</a>
             <a href="#projects">Projects</a>
             <a href="#contact">Contact</a>
+            <button
+              onClick={() => setIsRagOpen(true)}
+              className="btn btn-primary"
+              style={{
+                padding: "6px 14px",
+                fontSize: "0.84rem",
+                background: "linear-gradient(135deg, var(--cyan), var(--violet))",
+                color: "#0a0d12",
+                fontWeight: 700,
+                border: "none",
+                borderRadius: "20px"
+              }}
+            >
+              <FaRobot aria-hidden="true" />
+              Ask About Me
+            </button>
           </div>
         </div>
       </nav>
@@ -138,7 +159,20 @@ export default function App() {
             </p>
 
             <div className="hero-actions" aria-label="Portfolio actions">
-              <a href="#projects" className="btn btn-primary">
+              <button
+                onClick={() => setIsRagOpen(true)}
+                className="btn btn-primary"
+                style={{
+                  background: "linear-gradient(135deg, var(--cyan), var(--violet))",
+                  color: "#0a0d12",
+                  fontWeight: 700
+                }}
+              >
+                <FaRobot aria-hidden="true" />
+                Ask My Portfolio
+              </button>
+
+              <a href="#projects" className="btn btn-secondary">
                 View Work
                 <FaArrowRight aria-hidden="true" />
               </a>
@@ -377,6 +411,26 @@ export default function App() {
           </a>
         </div>
       </details>
+
+      {/* Floating RAG Trigger Button */}
+      {!isRagOpen && (
+        <button
+          className="floating-rag-trigger"
+          onClick={() => setIsRagOpen(true)}
+          title="Ask My Portfolio AI Chatbot"
+          aria-label="Open Ask My Portfolio Chatbot"
+        >
+          <span className="pulse-dot"></span>
+          <FaRobot className="trigger-icon" />
+          <span>Ask About Me 🤖</span>
+        </button>
+      )}
+
+      {/* RAG Chatbot Modal */}
+      <AskMyPortfolio
+        isOpen={isRagOpen}
+        onClose={() => setIsRagOpen(false)}
+      />
     </div>
   );
 }
