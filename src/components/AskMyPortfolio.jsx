@@ -17,7 +17,9 @@ import {
   FaCode,
   FaRocket,
   FaEnvelope,
-  FaMagic
+  FaMagic,
+  FaDownload,
+  FaExternalLinkAlt
 } from "react-icons/fa";
 import { searchClientKnowledge } from "../services/clientRAG";
 
@@ -46,10 +48,25 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
   const [copiedId, setCopiedId] = useState(null);
   const [likedIds, setLikedIds] = useState([]);
   const messagesEndRef = useRef(null);
+  const inputRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
+
+  // Keyboard accessibility: ESC key to close modal & auto-focus input
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    if (isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 100);
+    }
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
 
   useEffect(() => {
     scrollToBottom();
@@ -71,7 +88,6 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
     setInputValue("");
     setIsTyping(true);
 
-    // Try FastAPI backend SSE streaming first, fallback to client RAG
     let botResponse = null;
     try {
       const response = await fetch("http://localhost:8000/api/chat", {
@@ -88,7 +104,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
     }
 
     if (!botResponse) {
-      await new Promise((resolve) => setTimeout(resolve, 350));
+      await new Promise((resolve) => setTimeout(resolve, 250));
       botResponse = searchClientKnowledge(textToSend);
     }
 
@@ -110,7 +126,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
 
     setIsTyping(false);
 
-    // Character-by-character typing animation
+    // Fast character streaming animation
     let currentText = "";
     const words = fullText.split(" ");
     
@@ -126,7 +142,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
         )
       );
       
-      await new Promise((resolve) => setTimeout(resolve, 22));
+      await new Promise((resolve) => setTimeout(resolve, 18));
     }
   };
 
@@ -157,7 +173,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
   const handleSpeak = (text) => {
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
+      const utterance = new SpeechSynthesisUtterance(text.replace(/\*\*/g, ''));
       utterance.rate = 1.0;
       window.speechSynthesis.speak(utterance);
     }
@@ -169,6 +185,17 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
     if (src.includes("Resume")) return "📄";
     if (src.includes("GitHub")) return "💻";
     return "💡";
+  };
+
+  // Helper to format bold **text** into JSX
+  const renderFormattedText = (text) => {
+    const parts = text.split(/(\*\*.*?\*\*)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        return <strong key={i} style={{ color: "#39d3c7" }}>{part.slice(2, -2)}</strong>;
+      }
+      return part;
+    });
   };
 
   if (!isOpen) return null;
@@ -204,7 +231,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
             <button
               onClick={() => setIsExpanded(!isExpanded)}
               className="icon-btn"
-              title={isExpanded ? "Compress window" : "Expand window"}
+              title={isExpanded ? "Compress window (Esc)" : "Expand window (Esc)"}
               aria-label="Toggle size"
             >
               {isExpanded ? <FaCompress /> : <FaExpand />}
@@ -220,12 +247,25 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
             <button
               onClick={onClose}
               className="icon-btn close-btn"
-              title="Close chat"
+              title="Close chat (Esc)"
               aria-label="Close modal"
             >
               <FaChevronDown />
             </button>
           </div>
+        </div>
+
+        {/* Quick Shortcut Toolbar */}
+        <div className="rag-shortcuts-bar">
+          <a href="#projects" onClick={onClose} className="shortcut-btn">
+            <FaExternalLinkAlt className="shortcut-icon" /> Projects
+          </a>
+          <a href="/Deswanth_CV.pdf" download className="shortcut-btn">
+            <FaDownload className="shortcut-icon" /> Download CV
+          </a>
+          <a href="mailto:kdeswanth@gmail.com" className="shortcut-btn">
+            <FaEnvelope className="shortcut-icon" /> Email Deswanth
+          </a>
         </div>
 
         {/* Preset Prompt Recommendations */}
@@ -265,7 +305,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
 
               <div className="rag-msg-bubble-wrap">
                 <div className={`rag-msg-bubble ${msg.sender}`}>
-                  <div className="msg-text">{msg.text}</div>
+                  <div className="msg-text">{renderFormattedText(msg.text)}</div>
                   {msg.isStreaming && <span className="typing-cursor">▌</span>}
                 </div>
 
@@ -342,6 +382,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
           }}
         >
           <input
+            ref={inputRef}
             type="text"
             className="rag-text-input"
             placeholder="Ask Jannu anything about Deswanth..."
