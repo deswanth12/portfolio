@@ -10,6 +10,7 @@ import {
   FaLayerGroup,
   FaCopy,
   FaVolumeUp,
+  FaVolumeMute,
   FaCompress,
   FaExpand,
   FaThumbsUp,
@@ -47,6 +48,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
   const [likedIds, setLikedIds] = useState([]);
+  const [speakingId, setSpeakingId] = useState(null);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
 
@@ -54,10 +56,13 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Keyboard accessibility: ESC key to close modal & auto-focus input
+  // Keyboard accessibility & speech cleanup on unmount/close
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape" && isOpen) {
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+        }
         onClose();
       }
     };
@@ -65,7 +70,12 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 100);
     }
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    };
   }, [isOpen, onClose]);
 
   useEffect(() => {
@@ -75,6 +85,12 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
   const handleSend = async (queryText) => {
     const textToSend = queryText || inputValue;
     if (!textToSend.trim() || isTyping) return;
+
+    // Cancel active speech when sending new query
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      setSpeakingId(null);
+    }
 
     const userMsgId = "user-" + Date.now();
     const userMsg = {
@@ -147,6 +163,10 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
   };
 
   const handleClearHistory = () => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      setSpeakingId(null);
+    }
     setMessages([
       {
         id: "welcome-reset",
@@ -170,13 +190,48 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
     );
   };
 
-  const handleSpeak = (text) => {
-    if ('speechSynthesis' in window) {
+  const handleSpeak = (id, text) => {
+    if (!('speechSynthesis' in window)) return;
+
+    if (speakingId === id) {
       window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text.replace(/\*\*/g, ''));
-      utterance.rate = 1.0;
-      window.speechSynthesis.speak(utterance);
+      setSpeakingId(null);
+      return;
     }
+
+    window.speechSynthesis.cancel();
+
+    // Clean text into readable sentences for SpeechSynthesis
+    const cleanText = text
+      .replace(/\*\*/g, '')
+      .replace(/https?:\/\/\S+/g, '')
+      .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
+      .replace(/•/g, '')
+      .replace(/#{1,6}\s*/g, '')
+      .replace(/\n+/g, ' ')
+      .trim();
+
+    if (!cleanText) return;
+
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.0;
+
+    // Pick natural English voice if available
+    const voices = window.speechSynthesis.getVoices();
+    const englishVoice = voices.find(
+      (v) => v.lang.includes("en") && (v.name.includes("Natural") || v.name.includes("Google") || v.name.includes("David") || v.name.includes("Zira"))
+    ) || voices.find((v) => v.lang.startsWith("en"));
+
+    if (englishVoice) {
+      utterance.voice = englishVoice;
+    }
+
+    utterance.onend = () => setSpeakingId(null);
+    utterance.onerror = () => setSpeakingId(null);
+
+    setSpeakingId(id);
+    window.speechSynthesis.speak(utterance);
   };
 
   const getSourceIcon = (src) => {
@@ -307,11 +362,15 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
                       {copiedId === msg.id ? <FaCheckCircle style={{ color: '#10b981' }} /> : <FaCopy />}
                     </button>
                     <button
-                      onClick={() => handleSpeak(msg.text)}
-                      className="mini-action-btn"
-                      title="Read aloud"
+                      onClick={() => handleSpeak(msg.id, msg.text)}
+                      className={`mini-action-btn ${speakingId === msg.id ? "speaking" : ""}`}
+                      title={speakingId === msg.id ? "Stop reading" : "Read aloud"}
                     >
-                      <FaVolumeUp />
+                      {speakingId === msg.id ? (
+                        <FaVolumeMute style={{ color: "#ef4444" }} />
+                      ) : (
+                        <FaVolumeUp />
+                      )}
                     </button>
                   </div>
                 )}
