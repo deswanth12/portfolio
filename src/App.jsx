@@ -29,6 +29,8 @@ import MissionControlPanel from "./components/MissionControlPanel";
 import RagPipelineVisualizer from "./components/RagPipelineVisualizer";
 import InteractiveCodeViewer from "./components/InteractiveCodeViewer";
 import InteractiveSkillMatrix from "./components/InteractiveSkillMatrix";
+import JanAiSimulator from "./components/JanAiSimulator";
+import ParticleCanvas from "./components/ParticleCanvas";
 
 const profile = "/profile.jpeg";
 
@@ -188,6 +190,9 @@ export default function App() {
 
   return (
     <div className="site-shell">
+      {/* Interactive Mouse-Reactive Particle Canvas Background */}
+      <ParticleCanvas />
+
       {/* Background Ambient Mesh Glows */}
       <div className="bg-glow bg-glow-1" />
       <div className="bg-glow bg-glow-2" />
@@ -201,9 +206,10 @@ export default function App() {
 
           <div className="nav-links">
             <a href="#about">About</a>
+            <a href="#demo">Live Demo</a>
             <a href="#pipeline">RAG Flow</a>
-            <a href="#code">Code Snippets</a>
-            <a href="#skills">Skill Matrix</a>
+            <a href="#code">Code</a>
+            <a href="#skills">Skills</a>
             <a href="#projects">Products</a>
             <a href="#contact">Contact</a>
 
@@ -349,6 +355,11 @@ export default function App() {
         {/* AI Mission Control Telemetry Panel */}
         <section id="about" className="container section">
           <MissionControlPanel />
+        </section>
+
+        {/* Live JanAI RAG Simulator Playground Section */}
+        <section id="demo" className="container section">
+          <JanAiSimulator />
         </section>
 
         {/* Interactive RAG Pipeline Visualization Section */}

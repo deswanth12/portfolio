@@ -2558,3 +2558,213 @@ button:focus-visible {
   color: var(--muted);
 }
 
+/* ==========================================================================
+   JanAI Simulator CSS Rules
+   ========================================================================== */
+
+.simulator-card {
+  background: rgba(14, 19, 29, 0.9);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.simulator-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.sim-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sim-sparkle-icon {
+  color: var(--cyan);
+}
+
+.sim-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--cyan);
+  letter-spacing: 0.5px;
+}
+
+.sim-title-wrap h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #fff;
+  margin-top: 2px;
+}
+
+.sim-badge {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--emerald);
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.sim-presets {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.preset-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.preset-btn {
+  background: rgba(8, 9, 11, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #e2e8f0;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.preset-btn:hover {
+  background: rgba(0, 212, 255, 0.12);
+  border-color: rgba(0, 212, 255, 0.4);
+  color: #fff;
+}
+
+.sim-input-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #05080c;
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 12px;
+  padding: 8px 14px;
+  margin-bottom: 20px;
+}
+
+.sim-search-icon {
+  color: var(--cyan);
+}
+
+.sim-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.sim-run-btn {
+  background: linear-gradient(135deg, var(--cyan), var(--emerald));
+  color: #090c10;
+  font-weight: 800;
+  font-size: 0.82rem;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sim-run-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(0, 212, 255, 0.4);
+}
+
+.sim-output-box {
+  background: #090d14;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sim-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding-bottom: 10px;
+}
+
+.sim-scheme-name {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--cyan);
+}
+
+.sim-stats-pills {
+  display: flex;
+  gap: 12px;
+}
+
+.sim-stat {
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.sim-stat strong {
+  color: var(--emerald);
+}
+
+.sim-answer {
+  font-size: 0.92rem;
+  color: #e2e8f0;
+  line-height: 1.6;
+}
+
+.sim-sources-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.sources-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--emerald);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.src-pill {
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.spin-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
