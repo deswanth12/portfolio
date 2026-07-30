@@ -160,6 +160,17 @@ export default function App() {
 
   const categories = ["All", "AI & RAG", "Robotics", "Python & Desktop", "Security"];
 
+  useEffect(() => {
+    const handleGlobalKeyDown = (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setIsCmdOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleGlobalKeyDown);
+    return () => window.removeEventListener("keydown", handleGlobalKeyDown);
+  }, []);
+
   const filteredProjects =
     activeFilter === "All"
       ? projects

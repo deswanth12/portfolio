@@ -222,6 +222,16 @@ export const CASE_STUDIES = {
 };
 
 export default function CaseStudyModal({ caseStudyId, onClose }) {
+  React.useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape" && caseStudyId) {
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [caseStudyId, onClose]);
+
   if (!caseStudyId || !CASE_STUDIES[caseStudyId]) return null;
 
   const data = CASE_STUDIES[caseStudyId];
