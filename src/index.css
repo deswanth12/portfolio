@@ -134,18 +134,22 @@ button:focus-visible {
 }
 
 .brand-logo-img {
-  height: 32px;
-  width: 32px;
+  height: 38px;
+  width: 38px;
   object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
-  transition: transform 0.25s ease;
+  object-position: center top;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 212, 255, 0.4);
+  box-shadow: 0 0 12px rgba(0, 212, 255, 0.35);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   flex-shrink: 0;
+  background: #08090b;
 }
 
 .logo:hover .brand-logo-img {
-  transform: scale(1.08);
+  transform: scale(1.1);
+  border-color: var(--cyan);
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.6);
 }
 
 .logo-accent {
