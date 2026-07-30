@@ -3,12 +3,9 @@ import {
   FaArrowRight,
   FaDownload,
   FaEnvelope,
-  FaExternalLinkAlt,
   FaGithub,
   FaMapMarkerAlt,
   FaPhoneAlt,
-  FaProjectDiagram,
-  FaShieldAlt,
   FaTools,
   FaDatabase,
   FaRobot,
@@ -18,19 +15,18 @@ import {
   FaTerminal,
   FaMicrochip,
   FaMagic,
-  FaLayerGroup,
   FaSearch,
   FaChartLine,
-  FaCheckCircle,
-  FaGraduationCap,
   FaServer,
-  FaBookOpen
+  FaShieldAlt
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import AskMyPortfolio from "./components/AskMyPortfolio";
 import CommandMenu from "./components/CommandMenu";
 import TerminalModal from "./components/TerminalModal";
 import CaseStudyModal from "./components/CaseStudyModal";
+import MissionControlPanel from "./components/MissionControlPanel";
+import RagPipelineVisualizer from "./components/RagPipelineVisualizer";
 
 const profile = "/profile.jpeg";
 
@@ -177,7 +173,13 @@ export default function App() {
       : projects.filter((p) => p.category === activeFilter);
 
   const handleCopyEmail = () => {
-    navigator.clipboard.writeText("kdeswanth@gmail.com");
+    try {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText("kdeswanth@gmail.com");
+      }
+    } catch (e) {
+      console.log("Copy failed");
+    }
     setCopiedEmail(true);
     setTimeout(() => setCopiedEmail(false), 2000);
   };
@@ -197,6 +199,7 @@ export default function App() {
 
           <div className="nav-links">
             <a href="#about">About</a>
+            <a href="#pipeline">RAG Flow</a>
             <a href="#workflow">Workflow</a>
             <a href="#services">Services</a>
             <a href="#projects">Products</a>
@@ -229,12 +232,12 @@ export default function App() {
       </nav>
 
       <main>
-        {/* Hero Section */}
+        {/* Hero Section — AI Engineering Lab & Mission Control */}
         <section id="home" className="container hero">
           <motion.div variants={fadeUp} initial="hidden" animate="show">
             <div className="availability-badge">
               <span className="status-dot"></span>
-              Open for AI Product & Full Stack Engineering Roles
+              AI Engineering Workspace • Mission Control Active
             </div>
 
             <h1 className="title">
@@ -340,6 +343,16 @@ export default function App() {
               </span>
             </div>
           </motion.aside>
+        </section>
+
+        {/* AI Mission Control Telemetry Panel */}
+        <section id="about" className="container section">
+          <MissionControlPanel />
+        </section>
+
+        {/* Interactive RAG Pipeline Visualization Section */}
+        <section id="pipeline" className="container section">
+          <RagPipelineVisualizer />
         </section>
 
         {/* Engineering Workflow Pipeline Section */}
