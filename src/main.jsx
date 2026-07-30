@@ -32,16 +32,16 @@ class ErrorBoundary extends Component {
           fontFamily: 'system-ui, -apple-system, sans-serif',
           textAlign: 'center'
         }}>
-          <h1 style={{ fontSize: '2rem', color: '#39d3c7', marginBottom: '12px' }}>
+          <h1 style={{ fontSize: '2rem', color: '#00d4ff', marginBottom: '12px' }}>
             Deswanth Portfolio
           </h1>
-          <p style={{ color: '#94a3b8', maxWidth: '500px', marginBottom: '24px', lineHeight: '1.6' }}>
-            Something went wrong while rendering. Please click below to reload.
+          <p style={{ color: '#94a3b8', maxWidth: '600px', marginBottom: '16px', lineHeight: '1.6' }}>
+            {this.state.error ? String(this.state.error.message || this.state.error) : "Rendering error occurred."}
           </p>
           <button
             onClick={() => window.location.reload()}
             style={{
-              background: 'linear-gradient(135deg, #39d3c7, #9b6dff)',
+              background: 'linear-gradient(135deg, #00d4ff, #10b981)',
               color: '#090c10',
               border: 'none',
               padding: '12px 24px',
