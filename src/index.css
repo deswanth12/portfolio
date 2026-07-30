@@ -2982,3 +2982,153 @@ button:focus-visible {
   color: var(--cyan);
 }
 
+/* ==========================================================================
+   Mobile & Tablet Responsiveness Overhaul (320px - 900px)
+   ========================================================================== */
+
+@media (max-width: 900px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding: 40px 0 60px;
+    text-align: center;
+  }
+
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .hero-subheadline {
+    font-size: 1.05rem;
+    margin: 0 auto 20px;
+  }
+
+  .building-now-box {
+    justify-content: center;
+  }
+
+  .hero-actions {
+    justify-content: center;
+  }
+
+  .hero-metrics-bar {
+    margin: 28px auto 0;
+    grid-template-columns: repeat(2, 1fr);
+    display: grid;
+    width: 100%;
+    gap: 16px;
+  }
+
+  .metric-divider {
+    display: none;
+  }
+
+  .icons {
+    justify-content: center;
+  }
+
+  .profile-panel {
+    order: -1;
+  }
+
+  .profile-img-wrap {
+    max-width: 260px;
+  }
+
+  .zeus-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-inner {
+    padding: 10px 0;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav-links {
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+  }
+
+  .nav-links a {
+    font-size: 0.8rem;
+    padding: 5px 8px;
+  }
+
+  .nav-cmd-btn span, .sound-toggle-btn span {
+    display: none;
+  }
+
+  .section {
+    padding: 60px 0;
+  }
+
+  .section h2 {
+    font-size: 1.75rem;
+  }
+
+  .sim-input-box {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .sim-run-btn {
+    justify-content: center;
+  }
+
+  .rag-vis-steps-track {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .code-viewer-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .code-tab-list {
+    flex-wrap: wrap;
+  }
+
+  .matrix-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .matrix-tabs {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .rag-vis-steps-track {
+    grid-template-columns: 1fr;
+  }
+
+  .floating-rag-trigger {
+    bottom: 16px;
+    right: 16px;
+    padding: 10px 18px;
+    font-size: 0.84rem;
+  }
+}
+
