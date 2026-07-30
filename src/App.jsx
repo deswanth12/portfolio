@@ -27,6 +27,8 @@ import TerminalModal from "./components/TerminalModal";
 import CaseStudyModal from "./components/CaseStudyModal";
 import MissionControlPanel from "./components/MissionControlPanel";
 import RagPipelineVisualizer from "./components/RagPipelineVisualizer";
+import InteractiveCodeViewer from "./components/InteractiveCodeViewer";
+import InteractiveSkillMatrix from "./components/InteractiveSkillMatrix";
 
 const profile = "/profile.jpeg";
 
@@ -200,10 +202,9 @@ export default function App() {
           <div className="nav-links">
             <a href="#about">About</a>
             <a href="#pipeline">RAG Flow</a>
-            <a href="#workflow">Workflow</a>
-            <a href="#services">Services</a>
+            <a href="#code">Code Snippets</a>
+            <a href="#skills">Skill Matrix</a>
             <a href="#projects">Products</a>
-            <a href="#performance">Performance</a>
             <a href="#contact">Contact</a>
 
             {/* Command Menu Pill */}
@@ -353,6 +354,16 @@ export default function App() {
         {/* Interactive RAG Pipeline Visualization Section */}
         <section id="pipeline" className="container section">
           <RagPipelineVisualizer />
+        </section>
+
+        {/* Interactive Code Viewer Section */}
+        <section id="code" className="container section">
+          <InteractiveCodeViewer />
+        </section>
+
+        {/* Interactive Skill Matrix Section */}
+        <section id="skills" className="container section">
+          <InteractiveSkillMatrix />
         </section>
 
         {/* Engineering Workflow Pipeline Section */}

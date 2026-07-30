@@ -2368,3 +2368,193 @@ button:focus-visible {
   color: var(--emerald);
 }
 
+/* ==========================================================================
+   Interactive Code Viewer CSS Rules
+   ========================================================================== */
+
+.code-viewer-card {
+  background: #090d14;
+  border: 1px solid rgba(0, 212, 255, 0.25);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.code-viewer-header {
+  padding: 14px 20px;
+  background: #111722;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.code-tab-list {
+  display: flex;
+  gap: 8px;
+}
+
+.code-tab {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.code-tab.active, .code-tab:hover {
+  background: rgba(0, 212, 255, 0.12);
+  color: #fff;
+  border-color: rgba(0, 212, 255, 0.4);
+}
+
+.code-copy-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--muted);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.code-copy-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.code-viewer-body {
+  padding: 20px;
+  background: #05080c;
+}
+
+.code-file-bar {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--cyan);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.code-pre {
+  margin: 0;
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: 0.84rem;
+  line-height: 1.5;
+  color: #e2e8f0;
+}
+
+/* ==========================================================================
+   Interactive Skill Matrix CSS Rules
+   ========================================================================== */
+
+.skill-matrix-card {
+  background: rgba(14, 19, 29, 0.9);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.matrix-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.matrix-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--emerald);
+  letter-spacing: 0.5px;
+}
+
+.matrix-header h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #fff;
+  margin-top: 4px;
+}
+
+.matrix-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.matrix-tab {
+  background: rgba(8, 9, 11, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.matrix-tab.active, .matrix-tab:hover {
+  background: rgba(16, 185, 129, 0.15);
+  color: #fff;
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.matrix-skills-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.skill-bar-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skill-bar-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.skill-name {
+  color: #fff;
+}
+
+.skill-level {
+  color: var(--cyan);
+  font-family: var(--font-mono);
+}
+
+.skill-progress-track {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.skill-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--cyan), var(--emerald));
+  border-radius: 4px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.skill-exp {
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
