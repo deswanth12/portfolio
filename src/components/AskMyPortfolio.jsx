@@ -27,9 +27,9 @@ import { searchClientKnowledge } from "../services/clientRAG";
 const PRESET_CATEGORIES = [
   { icon: FaUserAlt, text: "Who is Deswanth?" },
   { icon: FaRocket, text: "What is JanAI?" },
+  { icon: FaMagic, text: "Describe EvalMesh" },
   { icon: FaRobot, text: "Describe Zeus Robot" },
   { icon: FaCode, text: "Skills in React?" },
-  { icon: FaMagic, text: "Show me AI projects" },
   { icon: FaEnvelope, text: "How can I contact him?" }
 ];
 
@@ -236,6 +236,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
 
   const getSourceIcon = (src) => {
     if (src.includes("JanAI")) return "🚀";
+    if (src.includes("EvalMesh")) return "📊";
     if (src.includes("Zeus")) return "🤖";
     if (src.includes("Resume")) return "📄";
     if (src.includes("GitHub")) return "💻";

@@ -15,6 +15,16 @@ export const KNOWLEDGE_BASE = [
     text: "JanAI is built with React.js, Tailwind CSS, Python FastAPI, LangChain/LlamaIndex, OpenAI/Gemini models, Pinecone/FAISS vector database, and Web Speech API for voice interactions."
   },
   {
+    source: "EvalMesh Project",
+    heading: "AI Evaluation & RAG Benchmarking",
+    text: "EvalMesh is an automated AI evaluation and RAG benchmarking framework engineered by K Deswanth. It evaluates vector retrieval precision, context recall, hallucination detection, prompt regression testing, and LLM response latency across OpenAI, Gemini, and local models."
+  },
+  {
+    source: "EvalMesh Project",
+    heading: "Tech Stack & Dashboard",
+    text: "EvalMesh is built using Python, FastAPI, React, Ragas, Pandas, Scikit-Learn, and Chart.js to provide interactive benchmark visualization, radar charts, and safety guardrails enforcement."
+  },
+  {
     source: "Zeus Robot Documentation",
     heading: "Autonomous Robotics System",
     text: "Zeus Robot is an autonomous multipurpose robotics platform designed by Deswanth. It features SLAM navigation, real-time edge AI object detection with YOLO and OpenCV, sensor fusion (LiDAR, Ultrasonic, IMU), and a React WebSockets telemetry dashboard."
@@ -27,12 +37,12 @@ export const KNOWLEDGE_BASE = [
   {
     source: "Resume",
     heading: "Profile & Summary",
-    text: "K Deswanth is a Full Stack Developer and Python/AI Systems Builder based in India. He specializes in Python, React, vector databases, RAG architecture, SQLite desktop application engineering, and cybersecurity utilities. Contact: kdeswanth@gmail.com, Phone: +91 8374646073."
+    text: "K Deswanth is a Full Stack Developer and Python/AI Systems Builder based in India. He specializes in Python, React, vector databases, RAG architecture, LLM evaluation (EvalMesh), SQLite desktop application engineering, and cybersecurity utilities. Contact: kdeswanth@gmail.com, Phone: +91 8374646073."
   },
   {
     source: "Resume",
     heading: "Technical Skills",
-    text: "Languages: Python, JavaScript (ES6+), SQL, HTML5, CSS3. Frontend: React, Vite, Tailwind CSS, Framer Motion. Backend & AI: FastAPI, Node.js/Express, Python Tkinter, RAG Pipelines, Vector DBs (FAISS, Pinecone), Prompt Engineering, Document Processing."
+    text: "Languages: Python, JavaScript (ES6+), SQL, HTML5, CSS3. Frontend: React, Vite, Tailwind CSS, Framer Motion. Backend & AI: FastAPI, Node.js/Express, Python Tkinter, RAG Pipelines, Vector DBs (FAISS, Pinecone), EvalMesh, Prompt Engineering, Document Processing."
   },
   {
     source: "Portfolio Projects",
@@ -47,12 +57,12 @@ export const KNOWLEDGE_BASE = [
   {
     source: "GitHub README",
     heading: "Repositories & Open Source",
-    text: "Deswanth maintains open source repositories on GitHub at github.com/deswanth12 including Cyber Security Toolkit, studentdatabase, staffdatamanagement, and Library-data-management-system."
+    text: "Deswanth maintains open source repositories on GitHub at github.com/deswanth12 including JanAI, EvalMesh, Cyber Security Toolkit, studentdatabase, staffdatamanagement, and Library-data-management-system."
   },
   {
     source: "Certificates & Blogs",
     heading: "RAG & AI Publications",
-    text: "Deswanth authored articles on 'Building RAG Applications: From Vector DBs to Prompt Engineering' and holds certifications in Full Stack Web Development, Python Desktop Systems, and Network Security."
+    text: "Deswanth authored articles on 'Building RAG Applications: From Vector DBs to Prompt Engineering' and 'LLM Evaluation with EvalMesh', holding certifications in Full Stack Web Development, Python Desktop Systems, and Network Security."
   }
 ];
 
@@ -132,19 +142,22 @@ export function searchClientKnowledge(query) {
   let answer = "";
   if (normalizedQuery.includes("who is") || (normalizedQuery.includes("about") && normalizedQuery.includes("deswanth"))) {
     answer =
-      "Hey there! I'm Jannu 🤖, Deswanth's AI companion. K Deswanth is a Full Stack Developer and Python/AI Systems Builder based in India. He specializes in building practical web applications with React, backend services with FastAPI and SQLite, autonomous robotics with ROS2, and RAG (Retrieval-Augmented Generation) applications.";
+      "Hey there! I'm Jannu 🤖, Deswanth's AI companion. K Deswanth is a Full Stack Developer and Python/AI Systems Builder based in India. He specializes in building practical web applications with React, backend services with FastAPI and SQLite, AI evaluation systems (EvalMesh), autonomous robotics with ROS2, and RAG applications.";
   } else if (normalizedQuery.includes("janai")) {
     answer =
       "JanAI is an AI-powered civic scheme discovery platform built by Deswanth. It enables citizens to match with government welfare schemes using multi-lingual RAG semantic search, natural language eligibility analysis, and step-by-step document guidance.";
+  } else if (normalizedQuery.includes("evalmesh")) {
+    answer =
+      "EvalMesh is an automated AI evaluation and RAG benchmarking framework engineered by Deswanth. It evaluates RAG retrieval precision, context recall, hallucination detection, prompt regression testing, and LLM response latency with an interactive visual dashboard.";
   } else if (normalizedQuery.includes("zeus")) {
     answer =
       "Zeus Robot is an autonomous multipurpose robotics system engineered by Deswanth. It combines ROS2, SLAM navigation, real-time edge AI object detection with YOLO & OpenCV, and a WebSockets live telemetry dashboard.";
   } else if (normalizedQuery.includes("react") || normalizedQuery.includes("frontend")) {
     answer =
-      "Yes! Deswanth has strong React experience! He builds responsive web applications using React 19, Vite, Framer Motion, Tailwind CSS, and WebSockets. He designed both this portfolio website and the JanAI platform interface.";
+      "Yes! Deswanth has strong React experience! He builds responsive web applications using React 19, Vite, Framer Motion, Tailwind CSS, and WebSockets. He designed this portfolio website, JanAI, and the EvalMesh benchmark dashboard.";
   } else if (normalizedQuery.includes("project") || normalizedQuery.includes("work")) {
     answer =
-      "Deswanth has created multiple impactful projects:\n\n• **JanAI**: Multi-lingual RAG Civic Scheme Discovery Platform\n• **Zeus Robot**: Autonomous ROS2 Robotics System with Edge AI Vision\n• **Cyber Security Toolkit**: Python network security & audit utility\n• **Desktop Database Apps**: Student, Staff, and Library Management Systems in Python/SQLite";
+      "Deswanth has created multiple impactful projects:\n\n• **JanAI**: Multi-lingual RAG Civic Scheme Discovery Platform\n• **EvalMesh**: AI Evaluation & RAG Benchmarking Framework\n• **Zeus Robot**: Autonomous ROS2 Robotics System with Edge AI Vision\n• **Cyber Security Toolkit**: Python network security & audit utility\n• **Desktop Database Apps**: Student, Staff, and Library Management Systems in Python/SQLite";
   } else if (normalizedQuery.includes("contact") || normalizedQuery.includes("email") || normalizedQuery.includes("phone")) {
     answer =
       "You can get in touch with K Deswanth via Email at **kdeswanth@gmail.com**, Phone at **+91 8374646073**, or view his projects on GitHub at **github.com/deswanth12**.";

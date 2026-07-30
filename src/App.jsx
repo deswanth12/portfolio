@@ -80,6 +80,19 @@ const projects = [
     badge: "Featured AI Project"
   },
   {
+    id: "evalmesh",
+    category: "AI & RAG",
+    img: "/assets/cybertoolkit.png",
+    title: "EvalMesh — AI & RAG Evaluation Framework",
+    description:
+      "Automated evaluation, benchmarking, and guardrails framework that measures LLM response accuracy, RAG retrieval precision, context recall, and hallucination rates.",
+    impact:
+      "Provides automated prompt regression suites and real-time latency & quality dashboards across OpenAI, Gemini, and local models.",
+    tech: ["Python", "FastAPI", "React", "Ragas", "Pandas", "LLM Evaluation"],
+    link: "https://github.com/deswanth12",
+    badge: "AI Guardrails & Eval"
+  },
+  {
     id: "zeus",
     category: "Robotics",
     img: "/assets/cybertoolkit.png",
