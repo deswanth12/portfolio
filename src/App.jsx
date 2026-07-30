@@ -31,6 +31,8 @@ import InteractiveCodeViewer from "./components/InteractiveCodeViewer";
 import InteractiveSkillMatrix from "./components/InteractiveSkillMatrix";
 import JanAiSimulator from "./components/JanAiSimulator";
 import ParticleCanvas from "./components/ParticleCanvas";
+import SoundEffects from "./components/SoundEffects";
+import ZeusVisualizer from "./components/ZeusVisualizer";
 
 const profile = "/profile.jpeg";
 
@@ -206,12 +208,15 @@ export default function App() {
 
           <div className="nav-links">
             <a href="#about">About</a>
-            <a href="#demo">Live Demo</a>
-            <a href="#pipeline">RAG Flow</a>
+            <a href="#robotics">ROS 2 Radar</a>
+            <a href="#demo">RAG Demo</a>
             <a href="#code">Code</a>
             <a href="#skills">Skills</a>
             <a href="#projects">Products</a>
             <a href="#contact">Contact</a>
+
+            {/* Sound FX Synthesizer Toggle */}
+            <SoundEffects />
 
             {/* Command Menu Pill */}
             <button
@@ -355,6 +360,11 @@ export default function App() {
         {/* AI Mission Control Telemetry Panel */}
         <section id="about" className="container section">
           <MissionControlPanel />
+        </section>
+
+        {/* Zeus Robot ROS 2 360° LiDAR Telemetry Radar Section */}
+        <section id="robotics" className="container section">
+          <ZeusVisualizer />
         </section>
 
         {/* Live JanAI RAG Simulator Playground Section */}

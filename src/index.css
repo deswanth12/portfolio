@@ -2768,3 +2768,155 @@ button:focus-visible {
   100% { transform: rotate(360deg); }
 }
 
+/* ==========================================================================
+   SoundEffects Toggle & ZeusVisualizer CSS Rules
+   ========================================================================== */
+
+.sound-toggle-btn {
+  background: rgba(8, 9, 11, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--muted);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.sound-toggle-btn.active, .sound-toggle-btn:hover {
+  background: rgba(0, 212, 255, 0.12);
+  border-color: rgba(0, 212, 255, 0.4);
+  color: #fff;
+}
+
+.zeus-vis-card {
+  background: rgba(14, 19, 29, 0.9);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.zeus-vis-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.zeus-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.zeus-eyebrow {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--cyan);
+  letter-spacing: 0.5px;
+}
+
+.zeus-title-wrap h3 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #fff;
+  margin-top: 2px;
+}
+
+.zeus-status-badge {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--emerald);
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.zeus-grid {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 24px;
+  align-items: center;
+}
+
+.zeus-canvas-wrap {
+  width: 100%;
+  height: 240px;
+  background: #05080c;
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.zeus-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.zeus-controls-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.telemetry-box {
+  background: #090d14;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.t-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.86rem;
+}
+
+.t-label {
+  color: var(--muted);
+}
+
+.t-val {
+  font-weight: 700;
+  color: #fff;
+  font-family: var(--font-mono);
+}
+
+.zeus-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.zeus-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.zeus-btn:hover {
+  background: rgba(0, 212, 255, 0.15);
+  border-color: rgba(0, 212, 255, 0.4);
+  color: var(--cyan);
+}
+
