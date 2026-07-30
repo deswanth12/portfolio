@@ -209,10 +209,8 @@ export default function App() {
 
           <div className="nav-links">
             <a href="#about">About</a>
-            <a href="#robotics">ROS 2 Radar</a>
-            <a href="#demo">RAG Demo</a>
-            <a href="#code">Code</a>
-            <a href="#skills">Skills</a>
+            <a href="#demo">RAG AI</a>
+            <a href="#robotics">Robotics</a>
             <a href="#projects">Products</a>
             <a href="#contact">Contact</a>
 

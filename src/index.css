@@ -117,8 +117,8 @@ button:focus-visible {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 74px;
-  gap: 24px;
+  min-height: 70px;
+  gap: 16px;
 }
 
 .logo {
@@ -126,18 +126,22 @@ button:focus-visible {
   align-items: center;
   gap: 10px;
   color: var(--text);
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-weight: 800;
   letter-spacing: -0.3px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .brand-logo-img {
-  height: 36px;
-  width: auto;
-  object-fit: contain;
+  height: 32px;
+  width: 32px;
+  object-fit: cover;
   border-radius: 8px;
-  filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.4));
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
   transition: transform 0.25s ease;
+  flex-shrink: 0;
 }
 
 .logo:hover .brand-logo-img {
@@ -151,15 +155,17 @@ button:focus-visible {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .nav-links a {
-  padding: 8px 14px;
+  padding: 6px 10px;
   color: var(--muted);
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 600;
   border-radius: 8px;
+  white-space: nowrap;
   transition: all 0.2s ease;
 }
 
