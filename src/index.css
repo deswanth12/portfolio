@@ -122,10 +122,26 @@ button:focus-visible {
 }
 
 .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   color: var(--text);
   font-size: 1.15rem;
   font-weight: 800;
   letter-spacing: -0.3px;
+}
+
+.brand-logo-img {
+  height: 36px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.4));
+  transition: transform 0.25s ease;
+}
+
+.logo:hover .brand-logo-img {
+  transform: scale(1.08);
 }
 
 .logo-accent {

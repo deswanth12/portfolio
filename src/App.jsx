@@ -203,7 +203,8 @@ export default function App() {
       <nav className="nav" aria-label="Primary navigation">
         <div className="container nav-inner">
           <a className="logo" href="#home" aria-label="Deswanth portfolio home">
-            Deswanth<span className="logo-accent">.dev</span>
+            <img src="/logo.png" alt="KD Logo" className="brand-logo-img" />
+            <span>Deswanth<span className="logo-accent">.dev</span></span>
           </a>
 
           <div className="nav-links">
