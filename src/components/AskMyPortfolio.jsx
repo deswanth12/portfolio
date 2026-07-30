@@ -33,6 +33,14 @@ const PRESET_CATEGORIES = [
   { icon: FaEnvelope, text: "How can I contact him?" }
 ];
 
+const formatTimestamp = () => {
+  try {
+    return new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
+  } catch (e) {
+    return "Just now";
+  }
+};
+
 export default function AskMyPortfolio({ isOpen, onClose }) {
   const [messages, setMessages] = useState([
     {
@@ -40,7 +48,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
       sender: "bot",
       text: "Hi! I'm Jannu 🤖, Deswanth's AI companion. Ask me anything about his projects (JanAI, Zeus Robot, Security Toolkit), technical skills, resume, or background!",
       sources: ["Resume", "Portfolio Data"],
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      timestamp: formatTimestamp()
     }
   ]);
   const [inputValue, setInputValue] = useState("");
@@ -97,7 +105,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
       id: userMsgId,
       sender: "user",
       text: textToSend,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      timestamp: formatTimestamp()
     };
 
     setMessages((prev) => [...prev, userMsg]);
@@ -135,7 +143,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
         sender: "bot",
         text: "",
         sources: sources,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        timestamp: formatTimestamp(),
         isStreaming: true
       }
     ]);
@@ -173,13 +181,19 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
         sender: "bot",
         text: "Hey! I'm Jannu 🤖. Conversation reset! What else would you like to know about K Deswanth?",
         sources: ["Portfolio Data"],
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        timestamp: formatTimestamp()
       }
     ]);
   };
 
   const handleCopy = (id, text) => {
-    navigator.clipboard.writeText(text);
+    try {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text);
+      }
+    } catch (e) {
+      console.log("Clipboard write failed:", e);
+    }
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };
@@ -218,13 +232,17 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
     utterance.pitch = 1.0;
 
     // Pick natural English voice if available
-    const voices = window.speechSynthesis.getVoices();
-    const englishVoice = voices.find(
-      (v) => v.lang.includes("en") && (v.name.includes("Natural") || v.name.includes("Google") || v.name.includes("David") || v.name.includes("Zira"))
-    ) || voices.find((v) => v.lang.startsWith("en"));
+    try {
+      const voices = window.speechSynthesis.getVoices();
+      const englishVoice = voices.find(
+        (v) => v.lang.includes("en") && (v.name.includes("Natural") || v.name.includes("Google") || v.name.includes("David") || v.name.includes("Zira"))
+      ) || voices.find((v) => v.lang && v.lang.startsWith("en"));
 
-    if (englishVoice) {
-      utterance.voice = englishVoice;
+      if (englishVoice) {
+        utterance.voice = englishVoice;
+      }
+    } catch (e) {
+      console.log("Voice selection fallback");
     }
 
     utterance.onend = () => setSpeakingId(null);
