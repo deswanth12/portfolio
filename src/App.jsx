@@ -422,11 +422,10 @@ export default function App() {
             </div>
 
             {/* Projects Grid */}
-            <motion.div className="project-grid" layout>
+            <div className="project-grid">
               <AnimatePresence>
                 {filteredProjects.map((project, i) => (
                   <motion.div
-                    layout
                     key={project.id}
                     className="project-card"
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -460,7 +459,7 @@ export default function App() {
                   </motion.div>
                 ))}
               </AnimatePresence>
-            </motion.div>
+            </div>
           </div>
         </section>
 
