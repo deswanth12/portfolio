@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, lazy, Suspense } from "react";
 import {
   FaArrowRight,
   FaDownload,
@@ -21,10 +21,6 @@ import {
   FaShieldAlt
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
-import AskMyPortfolio from "./components/AskMyPortfolio";
-import CommandMenu from "./components/CommandMenu";
-import TerminalModal from "./components/TerminalModal";
-import CaseStudyModal from "./components/CaseStudyModal";
 import MissionControlPanel from "./components/MissionControlPanel";
 import RagPipelineVisualizer from "./components/RagPipelineVisualizer";
 import InteractiveCodeViewer from "./components/InteractiveCodeViewer";
@@ -33,6 +29,12 @@ import JanAiSimulator from "./components/JanAiSimulator";
 import ParticleCanvas from "./components/ParticleCanvas";
 import SoundEffects from "./components/SoundEffects";
 import ZeusVisualizer from "./components/ZeusVisualizer";
+
+// Lazy-loaded Modals for Code Splitting & Instant Initial Load
+const AskMyPortfolio = lazy(() => import("./components/AskMyPortfolio"));
+const CommandMenu = lazy(() => import("./components/CommandMenu"));
+const TerminalModal = lazy(() => import("./components/TerminalModal"));
+const CaseStudyModal = lazy(() => import("./components/CaseStudyModal"));
 
 const profile = "/profile.jpeg";
 
@@ -203,7 +205,7 @@ export default function App() {
       <nav className="nav" aria-label="Primary navigation">
         <div className="container nav-inner">
           <a className="logo" href="#home" aria-label="Deswanth portfolio home">
-            <img src="/logo.png" alt="KD Logo" className="brand-logo-img" />
+            <img src="/logo.png" alt="KD Logo" className="brand-logo-img" width="32" height="32" />
             <span>Deswanth<span className="logo-accent">.dev</span></span>
           </a>
 
@@ -344,7 +346,7 @@ export default function App() {
             aria-label="Profile summary"
           >
             <div className="profile-img-wrap">
-              <img src={profile} alt="Deswanth" />
+              <img src={profile} alt="Deswanth" loading="eager" fetchPriority="high" decoding="async" />
               <div className="img-border-glow"></div>
             </div>
             <div className="profile-card">
@@ -478,7 +480,7 @@ export default function App() {
                     transition={{ duration: 0.3, delay: i * 0.05 }}
                   >
                     <div className="card-img">
-                      <img src={project.img} alt={`${project.title} preview`} />
+                      <img src={project.img} alt={`${project.title} preview`} loading="lazy" decoding="async" />
                       {project.badge && <span className="project-badge">{project.badge}</span>}
                     </div>
 
@@ -602,30 +604,32 @@ export default function App() {
         </button>
       )}
 
-      {/* Modals & Overlays */}
-      <AskMyPortfolio
-        isOpen={isRagOpen}
-        onClose={() => setIsRagOpen(false)}
-      />
+      {/* Lazy-Loaded Modals & Overlays wrapped in Suspense */}
+      <Suspense fallback={null}>
+        <AskMyPortfolio
+          isOpen={isRagOpen}
+          onClose={() => setIsRagOpen(false)}
+        />
 
-      <CommandMenu
-        isOpen={isCmdOpen}
-        onClose={() => setIsCmdOpen(false)}
-        onOpenJannu={() => setIsRagOpen(true)}
-        onOpenTerminal={() => setIsTerminalOpen(true)}
-        onOpenCaseStudy={(id) => setActiveCaseStudy(id)}
-      />
+        <CommandMenu
+          isOpen={isCmdOpen}
+          onClose={() => setIsCmdOpen(false)}
+          onOpenJannu={() => setIsRagOpen(true)}
+          onOpenTerminal={() => setIsTerminalOpen(true)}
+          onOpenCaseStudy={(id) => setActiveCaseStudy(id)}
+        />
 
-      <TerminalModal
-        isOpen={isTerminalOpen}
-        onClose={() => setIsTerminalOpen(false)}
-        onOpenCaseStudy={(id) => setActiveCaseStudy(id)}
-      />
+        <TerminalModal
+          isOpen={isTerminalOpen}
+          onClose={() => setIsTerminalOpen(false)}
+          onOpenCaseStudy={(id) => setActiveCaseStudy(id)}
+        />
 
-      <CaseStudyModal
-        caseStudyId={activeCaseStudy}
-        onClose={() => setActiveCaseStudy(null)}
-      />
+        <CaseStudyModal
+          caseStudyId={activeCaseStudy}
+          onClose={() => setActiveCaseStudy(null)}
+        />
+      </Suspense>
     </div>
   );
 }
