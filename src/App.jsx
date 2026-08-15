@@ -18,7 +18,8 @@ import {
   FaSearch,
   FaChartLine,
   FaServer,
-  FaShieldAlt
+  FaShieldAlt,
+  FaLinkedin
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import MissionControlPanel from "./components/MissionControlPanel";
@@ -326,6 +327,16 @@ export default function App() {
                 title="GitHub"
               >
                 <FaGithub />
+              </a>
+
+              <a
+                href="https://in.linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn profile"
+                title="LinkedIn"
+              >
+                <FaLinkedin />
               </a>
 
               <a
