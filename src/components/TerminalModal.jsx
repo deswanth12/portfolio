@@ -53,7 +53,7 @@ export default function TerminalModal({ isOpen, onClose, onOpenCaseStudy }) {
   deswanth contact    - Get email, phone, & GitHub links
   clear               - Clear terminal output screen`;
     } else if (cmd === "deswanth bio") {
-      outputText = `K Deswanth — AI Product Builder & Full Stack Engineer
+      outputText = `Kuchi Deswanth (K Deswanth / Kuchi Desvanth) — AI Product Builder & Full Stack Engineer
 Location: India
 Focus: Building AI products, autonomous systems, and production-ready full-stack applications.
 Key Tech: Python, React 19, FastAPI, RAG / Vector DBs, ROS 2 Humble, SQLite.`;

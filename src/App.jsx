@@ -361,7 +361,7 @@ export default function App() {
               <div className="img-border-glow"></div>
             </div>
             <div className="profile-card">
-              <strong>K Deswanth</strong>
+              <strong>Kuchi Deswanth</strong>
               <span>
                 AI Product Builder • RAG & Vector DBs • ROS 2 Robotics • Full Stack React/Python
               </span>
@@ -596,7 +596,7 @@ export default function App() {
 
       <footer className="footer">
         <div className="container footer-inner">
-          <span>Copyright 2026 K Deswanth. All rights reserved.</span>
+          <span>Copyright 2026 Kuchi Deswanth. All rights reserved.</span>
           <span className="footer-built">Built with React 19, TypeScript & RAG AI</span>
         </div>
       </footer>
