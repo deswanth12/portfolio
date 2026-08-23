@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Cpu, Radio, Shield, Zap, RefreshCcw, Crosshair, Terminal } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Radio, Zap, RefreshCcw, Crosshair, Terminal } from "lucide-react";
 
 export default function ZeusVisualizer() {
   const canvasRef = useRef(null);
@@ -15,12 +15,19 @@ export default function ZeusVisualizer() {
     let animId;
     let sweepAngle = 0;
 
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const render = () => {
-      const w = (canvas.width = canvas.clientWidth);
-      const h = (canvas.height = canvas.clientHeight);
+      if (document.hidden) {
+        animId = requestAnimationFrame(render);
+        return;
+      }
+
+      const w = (canvas.width = canvas.clientWidth || 300);
+      const h = (canvas.height = canvas.clientHeight || 300);
       const cx = w / 2;
       const cy = h / 2;
-      const maxRadius = Math.min(w, h) / 2 - 25;
+      const maxRadius = Math.max(Math.min(w, h) / 2 - 25, 20);
 
       ctx.clearRect(0, 0, w, h);
 
@@ -51,10 +58,8 @@ export default function ZeusVisualizer() {
       ctx.fillStyle = "rgba(0, 212, 255, 0.6)";
       for (let a = 0; a < 360; a += 3) {
         const rad = (a * Math.PI) / 180;
-        // Room boundary shape equation
         let distFactor = 0.75 + Math.sin(a * 0.05) * 0.15;
         
-        // If laser ray hits obstacle near target angle
         const angleDiff = Math.abs((a % 360) - (targetObstacle.theta % 360));
         if (angleDiff < 15 || angleDiff > 345) {
           distFactor = targetObstacle.r;
@@ -69,7 +74,12 @@ export default function ZeusVisualizer() {
       }
 
       // 4. Rotating LiDAR Laser Sweep Wedge
-      sweepAngle = (sweepAngle + 0.05) % (Math.PI * 2);
+      if (!prefersReducedMotion) {
+        sweepAngle = (sweepAngle + 0.04) % (Math.PI * 2);
+      } else {
+        sweepAngle = Math.PI / 4;
+      }
+
       ctx.beginPath();
       ctx.moveTo(cx, cy);
       ctx.arc(cx, cy, maxRadius, sweepAngle - 0.3, sweepAngle);
@@ -143,7 +153,7 @@ export default function ZeusVisualizer() {
     <div className="zeus-vis-card">
       <div className="zeus-vis-header">
         <div className="zeus-title-wrap">
-          <Radio className="pulse-cyan-icon" size={18} />
+          <Radio className="pulse-cyan-icon" size={18} aria-hidden="true" />
           <div>
             <span className="zeus-eyebrow">Real LiDAR Point-Cloud Sensor Fusion</span>
             <h3>Zeus Robot — 360° LiDAR SLAM Navigator (ROS 2 Humble)</h3>
@@ -153,13 +163,26 @@ export default function ZeusVisualizer() {
       </div>
 
       <div className="zeus-grid">
-        <div className="zeus-canvas-wrap" onClick={handleCanvasClick} title="Click anywhere inside radar to place obstacle!">
+        <div
+          className="zeus-canvas-wrap"
+          onClick={handleCanvasClick}
+          role="button"
+          tabIndex={0}
+          aria-label="Radar scan interactive view. Click or press Enter to place obstacle"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              handleSimulateObstacle();
+            }
+          }}
+          title="Click anywhere inside radar to place obstacle!"
+        >
           <canvas ref={canvasRef} className="zeus-canvas" />
-          <span className="radar-hint"><Crosshair size={12} /> Click Radar to Place Obstacle</span>
+          <span className="radar-hint"><Crosshair size={12} aria-hidden="true" /> Click Radar to Place Obstacle</span>
         </div>
 
         <div className="zeus-controls-panel">
-          <div className="telemetry-box">
+          <div className="telemetry-box" role="region" aria-label="Robot Telemetry">
             <div className="t-row">
               <span className="t-label">Path Status:</span>
               <span className="t-val" style={{ color: status.includes("WARN") ? "#f59e0b" : "#10b981" }}>
@@ -181,18 +204,18 @@ export default function ZeusVisualizer() {
           </div>
 
           {/* ROS 2 Live Topic Payload Terminal Bar */}
-          <div className="ros-terminal-bar">
-            <Terminal size={13} className="ros-term-icon" />
+          <div className="ros-terminal-bar" role="status" aria-live="polite">
+            <Terminal size={13} className="ros-term-icon" aria-hidden="true" />
             <code>{latestTopic}</code>
           </div>
 
           <div className="zeus-actions">
-            <button onClick={handleSimulateObstacle} className="zeus-btn">
-              <Zap size={14} />
+            <button onClick={handleSimulateObstacle} className="zeus-btn" aria-label="Simulate obstacle detection">
+              <Zap size={14} aria-hidden="true" />
               <span>Simulate Obstacle</span>
             </button>
-            <button onClick={() => setMode(mode.includes("SLAM") ? "NAVIGATION (NAV2)" : "NAVIGATION (SLAM)")} className="zeus-btn">
-              <RefreshCcw size={14} />
+            <button onClick={() => setMode(mode.includes("SLAM") ? "NAVIGATION (NAV2)" : "NAVIGATION (SLAM)")} className="zeus-btn" aria-label="Toggle navigation mode">
+              <RefreshCcw size={14} aria-hidden="true" />
               <span>Mode: {mode}</span>
             </button>
           </div>

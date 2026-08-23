@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { MessageSquare, Layers, Binary, Search, ShieldCheck, CheckCircle2, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { MessageSquare, Layers, Binary, Search, ShieldCheck, CheckCircle2 } from "lucide-react";
 
 export default function RagPipelineVisualizer() {
   const [activeStep, setActiveStep] = useState(0);
@@ -60,7 +60,7 @@ export default function RagPipelineVisualizer() {
       </div>
 
       {/* Steps Track */}
-      <div className="rag-vis-steps-track">
+      <div className="rag-vis-steps-track" role="tablist" aria-label="RAG Architecture Steps">
         {steps.map((step, idx) => {
           const Icon = step.icon;
           const isActive = idx === activeStep;
@@ -68,11 +68,13 @@ export default function RagPipelineVisualizer() {
           return (
             <button
               key={step.id}
+              role="tab"
+              aria-selected={isActive}
               className={`rag-vis-step-btn ${isActive ? "active" : ""}`}
               onClick={() => setActiveStep(idx)}
             >
               <div className="vis-icon-wrap">
-                <Icon size={16} />
+                <Icon size={16} aria-hidden="true" />
               </div>
               <span className="vis-step-title">{step.title}</span>
             </button>
@@ -81,7 +83,7 @@ export default function RagPipelineVisualizer() {
       </div>
 
       {/* Active Step Interactive Detail Card */}
-      <div className="rag-vis-detail-box">
+      <div className="rag-vis-detail-box" role="tabpanel">
         <div className="detail-step-header">
           <h4>{steps[activeStep].title}</h4>
           <span className="step-counter">Step {activeStep + 1} of 6</span>

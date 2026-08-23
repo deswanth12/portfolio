@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Code, Cpu, Database, Zap, CheckCircle2 } from "lucide-react";
+import { useState } from "react";
 
 export default function InteractiveSkillMatrix() {
   const [activeCategory, setActiveCategory] = useState("AI & RAG");
@@ -39,10 +38,12 @@ export default function InteractiveSkillMatrix() {
           <h3>Interactive Technical Proficiency</h3>
         </div>
 
-        <div className="matrix-tabs">
+        <div className="matrix-tabs" role="tablist" aria-label="Skill Categories">
           {categories.map((cat) => (
             <button
               key={cat}
+              role="tab"
+              aria-selected={activeCategory === cat}
               className={`matrix-tab ${activeCategory === cat ? "active" : ""}`}
               onClick={() => setActiveCategory(cat)}
             >
@@ -52,14 +53,14 @@ export default function InteractiveSkillMatrix() {
         </div>
       </div>
 
-      <div className="matrix-skills-grid">
+      <div className="matrix-skills-grid" role="tabpanel">
         {currentSkills.map((s) => (
           <div key={s.name} className="skill-bar-row">
             <div className="skill-bar-info">
               <span className="skill-name">{s.name}</span>
               <span className="skill-level">{s.level}</span>
             </div>
-            <div className="skill-progress-track">
+            <div className="skill-progress-track" role="progressbar" aria-valuenow={parseInt(s.level, 10)} aria-valuemin={0} aria-valuemax={100} aria-label={s.name}>
               <div className="skill-progress-fill" style={{ width: s.level }}></div>
             </div>
             <span className="skill-exp">{s.exp}</span>

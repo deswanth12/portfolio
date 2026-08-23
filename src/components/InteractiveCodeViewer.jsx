@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Code, Copy, Check, Terminal, Play } from "lucide-react";
+import { useState } from "react";
+import { Copy, Check, Terminal } from "lucide-react";
 
 export default function InteractiveCodeViewer() {
   const [activeTab, setActiveTab] = useState("rag");
@@ -92,7 +92,9 @@ class ZeusNavigationNode(Node):
       if (navigator.clipboard) {
         navigator.clipboard.writeText(current.code);
       }
-    } catch (e) {}
+    } catch (err) {
+      console.error("Copy failed", err);
+    }
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -100,20 +102,26 @@ class ZeusNavigationNode(Node):
   return (
     <div className="code-viewer-card">
       <div className="code-viewer-header">
-        <div className="code-tab-list">
+        <div className="code-tab-list" role="tablist" aria-label="Code Snippets">
           <button
+            role="tab"
+            aria-selected={activeTab === "rag"}
             className={`code-tab ${activeTab === "rag" ? "active" : ""}`}
             onClick={() => setActiveTab("rag")}
           >
             JanAI RAG Engine
           </button>
           <button
+            role="tab"
+            aria-selected={activeTab === "evalmesh"}
             className={`code-tab ${activeTab === "evalmesh" ? "active" : ""}`}
             onClick={() => setActiveTab("evalmesh")}
           >
             EvalMesh Guardrails
           </button>
           <button
+            role="tab"
+            aria-selected={activeTab === "zeus"}
             className={`code-tab ${activeTab === "zeus" ? "active" : ""}`}
             onClick={() => setActiveTab("zeus")}
           >
@@ -121,15 +129,15 @@ class ZeusNavigationNode(Node):
           </button>
         </div>
 
-        <button onClick={handleCopy} className="code-copy-btn" title="Copy code snippet">
-          {copied ? <Check size={14} style={{ color: "#10b981" }} /> : <Copy size={14} />}
+        <button onClick={handleCopy} className="code-copy-btn" title="Copy code snippet" aria-label="Copy snippet code">
+          {copied ? <Check size={14} style={{ color: "#10b981" }} aria-hidden="true" /> : <Copy size={14} aria-hidden="true" />}
           <span>{copied ? "Copied" : "Copy Code"}</span>
         </button>
       </div>
 
-      <div className="code-viewer-body">
+      <div className="code-viewer-body" role="tabpanel">
         <div className="code-file-bar">
-          <Terminal size={14} className="code-file-icon" />
+          <Terminal size={14} className="code-file-icon" aria-hidden="true" />
           <span>{current.file}</span>
         </div>
         <pre className="code-pre">

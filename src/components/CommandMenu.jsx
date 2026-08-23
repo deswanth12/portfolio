@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   Search,
   Terminal,
   Bot,
   Code,
   Briefcase,
-  User,
   Zap,
   Mail,
   FileText,
@@ -25,6 +24,14 @@ export default function CommandMenu({
 }) {
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const navigateToSection = (sectionId) => {
+    onClose();
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   const commandItems = [
     {
@@ -88,10 +95,7 @@ export default function CommandMenu({
       subtitle: "Agentic AI, RAG Systems, MCP, & Full Stack Dev",
       icon: Briefcase,
       category: "Navigation",
-      action: () => {
-        onClose();
-        window.location.hash = "#services";
-      }
+      action: () => navigateToSection("services")
     },
     {
       id: "nav-workflow",
@@ -99,10 +103,7 @@ export default function CommandMenu({
       subtitle: "Idea ➔ Research ➔ Architecture ➔ Testing ➔ Deployment",
       icon: Shield,
       category: "Navigation",
-      action: () => {
-        onClose();
-        window.location.hash = "#workflow";
-      }
+      action: () => navigateToSection("workflow")
     },
     {
       id: "nav-performance",
@@ -110,10 +111,7 @@ export default function CommandMenu({
       subtitle: "Lighthouse 98+, FCP, LCP, & Web Vitals audit",
       icon: BarChart2,
       category: "Navigation",
-      action: () => {
-        onClose();
-        window.location.hash = "#performance";
-      }
+      action: () => navigateToSection("performance")
     },
     {
       id: "action-cv",
@@ -125,7 +123,7 @@ export default function CommandMenu({
         onClose();
         const a = document.createElement("a");
         a.href = "/Deswanth_CV.pdf";
-        a.download = true;
+        a.download = "Deswanth_CV.pdf";
         a.click();
       }
     },
@@ -137,7 +135,7 @@ export default function CommandMenu({
       category: "Actions",
       action: () => {
         onClose();
-        window.open("https://github.com/deswanth12", "_blank");
+        window.open("https://github.com/deswanth12", "_blank", "noopener,noreferrer");
       }
     },
     {
@@ -146,10 +144,7 @@ export default function CommandMenu({
       subtitle: "kdeswanth@gmail.com • +91 8374646073",
       icon: Mail,
       category: "Navigation",
-      action: () => {
-        onClose();
-        window.location.hash = "#contact";
-      }
+      action: () => navigateToSection("contact")
     }
   ];
 
@@ -160,9 +155,10 @@ export default function CommandMenu({
       item.category.toLowerCase().includes(query.toLowerCase())
   );
 
-  useEffect(() => {
+  const handleQueryChange = (e) => {
+    setQuery(e.target.value);
     setSelectedIndex(0);
-  }, [query]);
+  };
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -171,7 +167,6 @@ export default function CommandMenu({
         if (isOpen) {
           onClose();
         } else {
-          // Open menu via parent
           const trigger = document.getElementById("cmd-menu-trigger");
           if (trigger) trigger.click();
         }
@@ -204,18 +199,19 @@ export default function CommandMenu({
   if (!isOpen) return null;
 
   return (
-    <div className="cmd-backdrop" onClick={onClose}>
+    <div className="cmd-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-label="Command Menu">
       <div className="cmd-dialog" onClick={(e) => e.stopPropagation()}>
         {/* Search Header */}
         <div className="cmd-search-header">
-          <Search className="cmd-search-icon" size={18} />
+          <Search className="cmd-search-icon" size={18} aria-hidden="true" />
           <input
             type="text"
             className="cmd-input"
             placeholder="Type a command or search (e.g. Jannu, JanAI, Services, Terminal)..."
             value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            onChange={handleQueryChange}
             autoFocus
+            aria-label="Search commands"
           />
           <button onClick={onClose} className="cmd-close-btn" aria-label="Close menu">
             <X size={16} />
@@ -223,7 +219,7 @@ export default function CommandMenu({
         </div>
 
         {/* Command Items List */}
-        <div className="cmd-list">
+        <div className="cmd-list" role="listbox" aria-label="Commands">
           {filteredItems.length === 0 ? (
             <div className="cmd-empty">No commands found matching "{query}"</div>
           ) : (
@@ -234,13 +230,22 @@ export default function CommandMenu({
               return (
                 <div
                   key={item.id}
+                  role="option"
+                  aria-selected={isSelected}
+                  tabIndex={0}
                   className={`cmd-item ${isSelected ? "selected" : ""}`}
                   onClick={item.action}
                   onMouseEnter={() => setSelectedIndex(idx)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      item.action();
+                    }
+                  }}
                 >
                   <div className="cmd-item-left">
                     <div className="cmd-item-icon">
-                      <Icon size={16} />
+                      <Icon size={16} aria-hidden="true" />
                     </div>
                     <div>
                       <div className="cmd-item-title">{item.title}</div>
@@ -249,7 +254,7 @@ export default function CommandMenu({
                   </div>
                   <div className="cmd-item-right">
                     <span className="cmd-category-badge">{item.category}</span>
-                    <ArrowRight size={14} className="cmd-arrow" />
+                    <ArrowRight size={14} className="cmd-arrow" aria-hidden="true" />
                   </div>
                 </div>
               );

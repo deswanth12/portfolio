@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Terminal, X, CornerDownLeft, Sparkles } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Terminal, X, CornerDownLeft } from "lucide-react";
 
-export default function TerminalModal({ isOpen, onClose, onOpenCaseStudy }) {
+export default function TerminalModal({ isOpen, onClose }) {
   const [inputVal, setInputVal] = useState("");
   const [history, setHistory] = useState([
     {
@@ -43,7 +43,7 @@ export default function TerminalModal({ isOpen, onClose, onOpenCaseStudy }) {
       return;
     }
 
-    let outputText = "";
+    let outputText;
 
     if (cmd === "deswanth --help" || cmd === "help" || cmd === "deswanth") {
       outputText = `Available Deswanth CLI Commands:
@@ -88,17 +88,17 @@ Key Tech: Python, React 19, FastAPI, RAG / Vector DBs, ROS 2 Humble, SQLite.`;
   if (!isOpen) return null;
 
   return (
-    <div className="terminal-backdrop" onClick={onClose}>
+    <div className="terminal-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-label="Interactive Terminal">
       <div className="terminal-dialog" onClick={(e) => e.stopPropagation()}>
         {/* Terminal Header */}
         <div className="terminal-header">
           <div className="terminal-dots">
-            <span className="dot red" onClick={onClose}></span>
+            <span className="dot red" onClick={onClose} role="button" aria-label="Close terminal"></span>
             <span className="dot yellow"></span>
             <span className="dot green"></span>
           </div>
           <div className="terminal-title">
-            <Terminal size={14} /> deswanth@portfolio:~ (zsh)
+            <Terminal size={14} aria-hidden="true" /> deswanth@portfolio:~ (zsh)
           </div>
           <button onClick={onClose} className="terminal-close-btn" aria-label="Close terminal">
             <X size={16} />
@@ -106,7 +106,7 @@ Key Tech: Python, React 19, FastAPI, RAG / Vector DBs, ROS 2 Humble, SQLite.`;
         </div>
 
         {/* Terminal Body */}
-        <div className="terminal-body">
+        <div className="terminal-body" role="log" aria-live="polite">
           {history.map((item, idx) => (
             <div key={idx} className={`terminal-line ${item.type}`}>
               <pre>{item.content}</pre>
@@ -131,8 +131,9 @@ Key Tech: Python, React 19, FastAPI, RAG / Vector DBs, ROS 2 Humble, SQLite.`;
             value={inputVal}
             onChange={(e) => setInputVal(e.target.value)}
             placeholder="Type command (e.g. deswanth --help)..."
+            aria-label="Terminal command input"
           />
-          <button type="submit" className="terminal-enter-btn" title="Execute command">
+          <button type="submit" className="terminal-enter-btn" title="Execute command" aria-label="Execute command">
             <CornerDownLeft size={14} />
           </button>
         </form>

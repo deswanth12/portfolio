@@ -66,7 +66,6 @@ export const KNOWLEDGE_BASE = [
   }
 ];
 
-// Helper to tokenize and normalize string
 function tokenize(text) {
   return text
     .toLowerCase()
@@ -75,7 +74,6 @@ function tokenize(text) {
     .filter((word) => word.length > 2);
 }
 
-// Pre-index knowledge base chunks once on startup (O(1) search execution)
 const INDEXED_CHUNKS = KNOWLEDGE_BASE.map((chunk) => {
   const tokens = tokenize(`${chunk.source} ${chunk.heading} ${chunk.text}`);
   const tokenFreq = {};
@@ -91,7 +89,6 @@ const INDEXED_CHUNKS = KNOWLEDGE_BASE.map((chunk) => {
   };
 });
 
-// Cache query results for instant response
 const QUERY_CACHE = new Map();
 
 export function searchClientKnowledge(query) {
@@ -108,7 +105,6 @@ export function searchClientKnowledge(query) {
     };
   }
 
-  // Fast score computation using token frequency lookup
   const scored = INDEXED_CHUNKS.map((chunk) => {
     let score = 0;
 
@@ -139,34 +135,34 @@ export function searchClientKnowledge(query) {
 
   const sources = Array.from(new Set(topMatches.map((m) => m.chunk.source)));
 
-  let answer = "";
+  let generatedAnswer;
   if (normalizedQuery.includes("who is") || (normalizedQuery.includes("about") && normalizedQuery.includes("deswanth"))) {
-    answer =
+    generatedAnswer =
       "Hey there! I'm Jannu 🤖, Deswanth's AI companion. K Deswanth is a Full Stack Developer and Python/AI Systems Builder based in India. He specializes in building practical web applications with React, backend services with FastAPI and SQLite, AI evaluation systems (EvalMesh), autonomous robotics with ROS2, and RAG applications.";
   } else if (normalizedQuery.includes("janai")) {
-    answer =
+    generatedAnswer =
       "JanAI is an AI-powered civic scheme discovery platform built by Deswanth. It enables citizens to match with government welfare schemes using multi-lingual RAG semantic search, natural language eligibility analysis, and step-by-step document guidance.";
   } else if (normalizedQuery.includes("evalmesh")) {
-    answer =
+    generatedAnswer =
       "EvalMesh is an automated AI evaluation and RAG benchmarking framework engineered by Deswanth. It evaluates RAG retrieval precision, context recall, hallucination detection, prompt regression testing, and LLM response latency with an interactive visual dashboard.";
   } else if (normalizedQuery.includes("zeus")) {
-    answer =
+    generatedAnswer =
       "Zeus Robot is an autonomous multipurpose robotics system engineered by Deswanth. It combines ROS2, SLAM navigation, real-time edge AI object detection with YOLO & OpenCV, and a WebSockets live telemetry dashboard.";
   } else if (normalizedQuery.includes("react") || normalizedQuery.includes("frontend")) {
-    answer =
+    generatedAnswer =
       "Yes! Deswanth has strong React experience! He builds responsive web applications using React 19, Vite, Framer Motion, Tailwind CSS, and WebSockets. He designed this portfolio website, JanAI, and the EvalMesh benchmark dashboard.";
   } else if (normalizedQuery.includes("project") || normalizedQuery.includes("work")) {
-    answer =
+    generatedAnswer =
       "Deswanth has created multiple impactful projects:\n\n• **JanAI**: Multi-lingual RAG Civic Scheme Discovery Platform\n• **EvalMesh**: AI Evaluation & RAG Benchmarking Framework\n• **Zeus Robot**: Autonomous ROS2 Robotics System with Edge AI Vision\n• **Cyber Security Toolkit**: Python network security & audit utility\n• **Desktop Database Apps**: Student, Staff, and Library Management Systems in Python/SQLite";
   } else if (normalizedQuery.includes("contact") || normalizedQuery.includes("email") || normalizedQuery.includes("phone")) {
-    answer =
+    generatedAnswer =
       "You can get in touch with K Deswanth via Email at **kdeswanth@gmail.com**, Phone at **+91 8374646073**, or view his projects on GitHub at **github.com/deswanth12**.";
   } else {
     const topText = topMatches[0].chunk.text;
-    answer = `Based on Deswanth's portfolio documentation:\n\n${topText}`;
+    generatedAnswer = `Based on Deswanth's portfolio documentation:\n\n${topText}`;
   }
 
-  const result = { answer, sources };
+  const result = { answer: generatedAnswer, sources };
   QUERY_CACHE.set(normalizedQuery, result);
   return result;
 }

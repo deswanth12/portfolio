@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Sparkles, Search, CheckCircle2, ShieldCheck, ArrowRight, RefreshCw } from "lucide-react";
+import { useState } from "react";
+import { Sparkles, Search, ShieldCheck, ArrowRight, RefreshCw } from "lucide-react";
 
 export default function JanAiSimulator() {
   const [query, setQuery] = useState("What agricultural subsidies are available for small farmers in AP?");
@@ -54,14 +54,14 @@ export default function JanAiSimulator() {
         });
       }
       setIsSimulating(false);
-    }, 600);
+    }, 450);
   };
 
   return (
     <div className="simulator-card">
       <div className="simulator-header">
         <div className="sim-title-wrap">
-          <Sparkles className="sim-sparkle-icon" size={18} />
+          <Sparkles className="sim-sparkle-icon" size={18} aria-hidden="true" />
           <div>
             <span className="sim-eyebrow">Interactive Live Playground</span>
             <h3>JanAI RAG Semantic Search Simulator</h3>
@@ -86,27 +86,29 @@ export default function JanAiSimulator() {
 
       {/* Input Bar */}
       <div className="sim-input-box">
-        <Search size={16} className="sim-search-icon" />
+        <Search size={16} className="sim-search-icon" aria-hidden="true" />
         <input
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Ask any civic scheme question..."
           className="sim-input"
+          aria-label="Civic scheme search query"
           onKeyDown={(e) => e.key === "Enter" && handleSimulate()}
         />
         <button
           onClick={() => handleSimulate()}
           disabled={isSimulating}
           className="sim-run-btn"
+          aria-label="Run RAG Search"
         >
-          {isSimulating ? <RefreshCw size={14} className="spin-icon" /> : <ArrowRight size={14} />}
+          {isSimulating ? <RefreshCw size={14} className="spin-icon" aria-hidden="true" /> : <ArrowRight size={14} aria-hidden="true" />}
           <span>{isSimulating ? "Retrieving..." : "Run RAG"}</span>
         </button>
       </div>
 
       {/* RAG Result Output */}
-      <div className="sim-output-box">
+      <div className="sim-output-box" role="region" aria-label="Search Result" aria-live="polite">
         <div className="sim-meta-row">
           <span className="sim-scheme-name">🎯 {activeResult.scheme}</span>
           <div className="sim-stats-pills">
@@ -118,7 +120,7 @@ export default function JanAiSimulator() {
         <p className="sim-answer">{activeResult.answer}</p>
 
         <div className="sim-sources-row">
-          <span className="sources-label"><ShieldCheck size={14} /> Grounded Sources:</span>
+          <span className="sources-label"><ShieldCheck size={14} aria-hidden="true" /> Grounded Sources:</span>
           {activeResult.sources.map((src) => (
             <span key={src} className="src-pill">{src}</span>
           ))}

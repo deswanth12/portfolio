@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Volume2, VolumeX } from "lucide-react";
 
 export default function SoundEffects() {
@@ -9,14 +9,21 @@ export default function SoundEffects() {
 
     let audioCtx;
     try {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    } catch (e) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass) {
+        audioCtx = new AudioContextClass();
+      }
+    } catch (err) {
+      console.error("Web Audio initialization failed", err);
       return;
     }
 
     const playClick = () => {
       if (!audioCtx) return;
       try {
+        if (audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
 
@@ -32,17 +39,24 @@ export default function SoundEffects() {
 
         osc.start();
         osc.stop(audioCtx.currentTime + 0.05);
-      } catch (e) {}
+      } catch (err) {
+        console.error("Audio playback error", err);
+      }
     };
 
     const handleClick = (e) => {
-      if (e.target.closest("button") || e.target.closest("a")) {
+      if (e.target && (e.target.closest("button") || e.target.closest("a"))) {
         playClick();
       }
     };
 
     window.addEventListener("click", handleClick);
-    return () => window.removeEventListener("click", handleClick);
+    return () => {
+      window.removeEventListener("click", handleClick);
+      if (audioCtx && typeof audioCtx.close === "function") {
+        audioCtx.close().catch(() => {});
+      }
+    };
   }, [enabled]);
 
   return (
@@ -50,8 +64,9 @@ export default function SoundEffects() {
       onClick={() => setEnabled((prev) => !prev)}
       className={`sound-toggle-btn ${enabled ? "active" : ""}`}
       title={enabled ? "Mute High-Tech Audio SFX" : "Enable High-Tech Audio SFX"}
+      aria-label={enabled ? "Mute audio effects" : "Enable audio effects"}
     >
-      {enabled ? <Volume2 size={15} style={{ color: "#00d4ff" }} /> : <VolumeX size={15} />}
+      {enabled ? <Volume2 size={15} style={{ color: "#00d4ff" }} aria-hidden="true" /> : <VolumeX size={15} aria-hidden="true" />}
       <span>{enabled ? "SFX: ON" : "SFX: OFF"}</span>
     </button>
   );

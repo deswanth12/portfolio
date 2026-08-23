@@ -1,4 +1,4 @@
-import React, { useState, useEffect, lazy, Suspense } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import {
   FaArrowRight,
   FaDownload,
@@ -18,7 +18,6 @@ import {
   FaSearch,
   FaChartLine,
   FaServer,
-  FaShieldAlt,
   FaLinkedin
 } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
@@ -186,7 +185,7 @@ export default function App() {
       if (navigator.clipboard) {
         navigator.clipboard.writeText("kdeswanth@gmail.com");
       }
-    } catch (e) {
+    } catch {
       console.log("Copy failed");
     }
     setCopiedEmail(true);

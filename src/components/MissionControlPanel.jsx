@@ -1,5 +1,4 @@
-import React from "react";
-import { Cpu, Activity, ShieldCheck, Database, CheckCircle2, Radio } from "lucide-react";
+import { Radio } from "lucide-react";
 
 export default function MissionControlPanel() {
   const nodes = [
@@ -37,7 +36,7 @@ export default function MissionControlPanel() {
     <div className="mission-control-panel">
       <div className="mission-header">
         <div className="mission-title-wrap">
-          <Radio size={16} className="pulse-cyan-icon" />
+          <Radio size={16} className="pulse-cyan-icon" aria-hidden="true" />
           <h3>AI Engineering Mission Control</h3>
         </div>
         <span className="live-status-pill">

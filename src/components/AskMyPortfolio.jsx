@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   FaRobot,
   FaPaperPlane,
@@ -36,10 +36,13 @@ const PRESET_CATEGORIES = [
 const formatTimestamp = () => {
   try {
     return new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
-  } catch (e) {
+  } catch {
     return "Just now";
   }
 };
+
+let msgCounter = 0;
+const generateId = (prefix) => `${prefix}-${++msgCounter}`;
 
 export default function AskMyPortfolio({ isOpen, onClose }) {
   const [messages, setMessages] = useState([
@@ -64,7 +67,6 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Keyboard accessibility & speech cleanup on unmount/close
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape" && isOpen) {
@@ -94,13 +96,12 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
     const textToSend = queryText || inputValue;
     if (!textToSend.trim() || isTyping) return;
 
-    // Cancel active speech when sending new query
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel();
       setSpeakingId(null);
     }
 
-    const userMsgId = "user-" + Date.now();
+    const userMsgId = generateId("user");
     const userMsg = {
       id: userMsgId,
       sender: "user",
@@ -123,7 +124,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
       if (response.ok) {
         botResponse = await response.json();
       }
-    } catch (e) {
+    } catch {
       console.log("Jannu AI using Client-side RAG Vector Engine");
     }
 
@@ -132,7 +133,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
       botResponse = searchClientKnowledge(textToSend);
     }
 
-    const botMsgId = "bot-" + Date.now();
+    const botMsgId = generateId("bot");
     const fullText = botResponse.answer;
     const sources = botResponse.sources || [];
 
@@ -150,7 +151,6 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
 
     setIsTyping(false);
 
-    // Fast character streaming animation
     let currentText = "";
     const words = fullText.split(" ");
     
@@ -191,8 +191,8 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
       if (navigator.clipboard) {
         navigator.clipboard.writeText(text);
       }
-    } catch (e) {
-      console.log("Clipboard write failed:", e);
+    } catch {
+      console.log("Clipboard write failed");
     }
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
@@ -215,7 +215,6 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
 
     window.speechSynthesis.cancel();
 
-    // Clean text into readable sentences for SpeechSynthesis
     const cleanText = text
       .replace(/\*\*/g, '')
       .replace(/https?:\/\/\S+/g, '')
@@ -231,7 +230,6 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
     utterance.rate = 1.0;
     utterance.pitch = 1.0;
 
-    // Pick natural English voice if available
     try {
       const voices = window.speechSynthesis.getVoices();
       const englishVoice = voices.find(
@@ -241,7 +239,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
       if (englishVoice) {
         utterance.voice = englishVoice;
       }
-    } catch (e) {
+    } catch {
       console.log("Voice selection fallback");
     }
 
@@ -261,7 +259,6 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
     return "💡";
   };
 
-  // Helper to format bold **text** into JSX
   const renderFormattedText = (text) => {
     const parts = text.split(/(\*\*.*?\*\*)/g);
     return parts.map((part, i) => {
@@ -278,6 +275,9 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
     <div
       className={`rag-modal-backdrop ${isExpanded ? "expanded" : ""}`}
       onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+      aria-label="Jannu AI Assistant"
     >
       <div
         className={`rag-chat-card ${isExpanded ? "expanded" : ""}`}
@@ -287,7 +287,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
         <div className="rag-header">
           <div className="rag-header-info">
             <div className="rag-avatar jannu-avatar">
-              <span className="jannu-emoji">🤖</span>
+              <span className="jannu-emoji" aria-hidden="true">🤖</span>
               <span className="online-indicator"></span>
             </div>
             <div>
@@ -330,14 +330,14 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
         </div>
 
         {/* Messages Body */}
-        <div className="rag-messages-body">
+        <div className="rag-messages-body" role="log" aria-live="polite">
           {messages.map((msg) => (
             <div
               key={msg.id}
               className={`rag-message-row ${msg.sender === "user" ? "user-row" : "bot-row"}`}
             >
               {msg.sender === "bot" && (
-                <div className="bot-msg-avatar jannu-msg-avatar">
+                <div className="bot-msg-avatar jannu-msg-avatar" aria-hidden="true">
                   🤖
                 </div>
               )}
@@ -370,6 +370,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
                       onClick={() => handleLike(msg.id)}
                       className={`mini-action-btn ${likedIds.includes(msg.id) ? "liked" : ""}`}
                       title="Helpful response"
+                      aria-label="Helpful response"
                     >
                       <FaThumbsUp style={{ color: likedIds.includes(msg.id) ? "#39d3c7" : "inherit" }} />
                     </button>
@@ -377,6 +378,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
                       onClick={() => handleCopy(msg.id, msg.text)}
                       className="mini-action-btn"
                       title="Copy response"
+                      aria-label="Copy response"
                     >
                       {copiedId === msg.id ? <FaCheckCircle style={{ color: '#10b981' }} /> : <FaCopy />}
                     </button>
@@ -384,6 +386,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
                       onClick={() => handleSpeak(msg.id, msg.text)}
                       className={`mini-action-btn ${speakingId === msg.id ? "speaking" : ""}`}
                       title={speakingId === msg.id ? "Stop reading" : "Read aloud"}
+                      aria-label={speakingId === msg.id ? "Stop reading" : "Read aloud"}
                     >
                       {speakingId === msg.id ? (
                         <FaVolumeMute style={{ color: "#ef4444" }} />
@@ -399,7 +402,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
 
           {isTyping && (
             <div className="rag-message-row bot-row">
-              <div className="bot-msg-avatar jannu-msg-avatar">
+              <div className="bot-msg-avatar jannu-msg-avatar" aria-hidden="true">
                 🤖
               </div>
               <div className="rag-msg-bubble bot typing-bubble">
@@ -416,7 +419,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Preset Prompt Recommendations (Positioned at the BOTTOM above input) */}
+        {/* Preset Prompt Recommendations */}
         <div className="rag-presets-bar">
           <div className="presets-label">
             <FaLightbulb className="preset-icon" /> Ask Jannu:
@@ -438,12 +441,12 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
           </div>
         </div>
 
-        {/* Quick Shortcut Toolbar (Positioned at the BOTTOM above input) */}
+        {/* Quick Shortcut Toolbar */}
         <div className="rag-shortcuts-bar">
           <a href="#projects" onClick={onClose} className="shortcut-btn">
             <FaExternalLinkAlt className="shortcut-icon" /> Projects
           </a>
-          <a href="/Deswanth_CV.pdf" download className="shortcut-btn">
+          <a href="/Deswanth_CV.pdf" download="Deswanth_CV.pdf" className="shortcut-btn">
             <FaDownload className="shortcut-icon" /> Download CV
           </a>
           <a href="mailto:kdeswanth@gmail.com" className="shortcut-btn">
@@ -467,6 +470,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             disabled={isTyping}
+            aria-label="Ask Jannu"
           />
           <button
             type="submit"
