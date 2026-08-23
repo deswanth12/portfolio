@@ -3,10 +3,27 @@ import { Radio, Zap, RefreshCcw, Crosshair, Terminal } from "lucide-react";
 
 export default function ZeusVisualizer() {
   const canvasRef = useRef(null);
+  const containerRef = useRef(null);
   const [mode, setMode] = useState("NAVIGATION (SLAM)");
-  const [targetObstacle, setTargetObstacle] = useState({ r: 0.45, theta: 45 }); // polar coords
+  const [targetObstacle, setTargetObstacle] = useState({ r: 0.45, theta: 45 });
   const [status, setStatus] = useState("CLEAR PATH • NAV2 ACTIVE");
   const [latestTopic, setLatestTopic] = useState("[INFO] /scan 360 ranges @ 30Hz");
+  const isIntersectingRef = useRef(true);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isIntersectingRef.current = entry.isIntersecting;
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(container);
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -18,21 +35,30 @@ export default function ZeusVisualizer() {
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const render = () => {
-      if (document.hidden) {
+      if (document.hidden || !isIntersectingRef.current) {
         animId = requestAnimationFrame(render);
         return;
       }
 
-      const w = (canvas.width = canvas.clientWidth || 300);
-      const h = (canvas.height = canvas.clientHeight || 300);
-      const cx = w / 2;
-      const cy = h / 2;
-      const maxRadius = Math.max(Math.min(w, h) / 2 - 25, 20);
+      const clientW = canvas.clientWidth || 300;
+      const clientH = canvas.clientHeight || 300;
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
-      ctx.clearRect(0, 0, w, h);
+      if (canvas.width !== clientW * dpr || canvas.height !== clientH * dpr) {
+        canvas.width = clientW * dpr;
+        canvas.height = clientH * dpr;
+      }
 
-      // 1. Concentric Distance Grid Circles (0.5m, 1.0m, 1.5m, 2.0m)
-      ctx.strokeStyle = "rgba(0, 212, 255, 0.12)";
+      ctx.save();
+      ctx.scale(dpr, dpr);
+      ctx.clearRect(0, 0, clientW, clientH);
+
+      const cx = clientW / 2;
+      const cy = clientH / 2;
+      const maxRadius = Math.max(Math.min(clientW, clientH) / 2 - 20, 20);
+
+      // 1. Concentric Distance Grid Circles
+      ctx.strokeStyle = "rgba(0, 212, 255, 0.14)";
       ctx.lineWidth = 1;
       for (let i = 1; i <= 4; i++) {
         const r = (maxRadius / 4) * i;
@@ -40,13 +66,12 @@ export default function ZeusVisualizer() {
         ctx.arc(cx, cy, r, 0, Math.PI * 2);
         ctx.stroke();
 
-        // Distance Labels
-        ctx.fillStyle = "rgba(148, 163, 184, 0.5)";
+        ctx.fillStyle = "rgba(148, 163, 184, 0.6)";
         ctx.font = "9px Fira Code, monospace";
         ctx.fillText(`${(i * 0.5).toFixed(1)}m`, cx + 4, cy - r + 12);
       }
 
-      // 2. Crosshair Grid Lines
+      // 2. Crosshairs
       ctx.beginPath();
       ctx.moveTo(cx - maxRadius, cy);
       ctx.lineTo(cx + maxRadius, cy);
@@ -54,9 +79,9 @@ export default function ZeusVisualizer() {
       ctx.lineTo(cx, cy + maxRadius);
       ctx.stroke();
 
-      // 3. 360-Degree Point Cloud Contour (Simulated Indoor Room Environment Boundary)
-      ctx.fillStyle = "rgba(0, 212, 255, 0.6)";
-      for (let a = 0; a < 360; a += 3) {
+      // 3. Point Cloud Boundary
+      ctx.fillStyle = "rgba(0, 212, 255, 0.75)";
+      for (let a = 0; a < 360; a += 4) {
         const rad = (a * Math.PI) / 180;
         let distFactor = 0.75 + Math.sin(a * 0.05) * 0.15;
         
@@ -73,7 +98,7 @@ export default function ZeusVisualizer() {
         ctx.fill();
       }
 
-      // 4. Rotating LiDAR Laser Sweep Wedge
+      // 4. Rotating Sweep Wedge
       if (!prefersReducedMotion) {
         sweepAngle = (sweepAngle + 0.04) % (Math.PI * 2);
       } else {
@@ -91,7 +116,7 @@ export default function ZeusVisualizer() {
       ctx.fillStyle = sweepGrad;
       ctx.fill();
 
-      // 5. Robot Center Base Node (base_link)
+      // 5. Robot Center Base Node
       ctx.beginPath();
       ctx.arc(cx, cy, 7, 0, Math.PI * 2);
       ctx.fillStyle = "#10b981";
@@ -100,6 +125,7 @@ export default function ZeusVisualizer() {
       ctx.lineWidth = 1.5;
       ctx.stroke();
 
+      ctx.restore();
       animId = requestAnimationFrame(render);
     };
 
@@ -107,16 +133,15 @@ export default function ZeusVisualizer() {
     return () => cancelAnimationFrame(animId);
   }, [targetObstacle]);
 
-  // Click on Canvas to place real obstacle
-  const handleCanvasClick = (e) => {
+  const updateObstacle = (clientX, clientY) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left - canvas.clientWidth / 2;
-    const y = e.clientY - rect.top - canvas.clientHeight / 2;
+    const x = clientX - rect.left - canvas.clientWidth / 2;
+    const y = clientY - rect.top - canvas.clientHeight / 2;
 
     const distPx = Math.sqrt(x * x + y * y);
-    const maxRadius = Math.min(canvas.clientWidth, canvas.clientHeight) / 2 - 25;
+    const maxRadius = Math.min(canvas.clientWidth, canvas.clientHeight) / 2 - 20;
     const rFactor = Math.min(Math.max(distPx / maxRadius, 0.15), 0.9);
 
     let angleDeg = (Math.atan2(y, x) * 180) / Math.PI;
@@ -131,6 +156,16 @@ export default function ZeusVisualizer() {
     } else {
       setStatus(`CLEAR PATH • NAV2 ACTIVE (${distMeters}m)`);
       setLatestTopic(`[INFO] /scan 360 ranges @ 30Hz • obstacle ${distMeters}m`);
+    }
+  };
+
+  const handleCanvasClick = (e) => {
+    updateObstacle(e.clientX, e.clientY);
+  };
+
+  const handleTouchStart = (e) => {
+    if (e.touches && e.touches.length > 0) {
+      updateObstacle(e.touches[0].clientX, e.touches[0].clientY);
     }
   };
 
@@ -150,7 +185,7 @@ export default function ZeusVisualizer() {
   const cartY = (targetObstacle.r * 2.0 * Math.sin((targetObstacle.theta * Math.PI) / 180)).toFixed(2);
 
   return (
-    <div className="zeus-vis-card">
+    <div ref={containerRef} className="zeus-vis-card">
       <div className="zeus-vis-header">
         <div className="zeus-title-wrap">
           <Radio className="pulse-cyan-icon" size={18} aria-hidden="true" />
@@ -166,19 +201,20 @@ export default function ZeusVisualizer() {
         <div
           className="zeus-canvas-wrap"
           onClick={handleCanvasClick}
+          onTouchStart={handleTouchStart}
           role="button"
           tabIndex={0}
-          aria-label="Radar scan interactive view. Click or press Enter to place obstacle"
+          aria-label="Radar scan interactive view. Click, tap, or press Enter to place obstacle"
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
               handleSimulateObstacle();
             }
           }}
-          title="Click anywhere inside radar to place obstacle!"
+          title="Click or tap inside radar to place obstacle"
         >
           <canvas ref={canvasRef} className="zeus-canvas" />
-          <span className="radar-hint"><Crosshair size={12} aria-hidden="true" /> Click Radar to Place Obstacle</span>
+          <span className="radar-hint"><Crosshair size={12} aria-hidden="true" /> Click or Tap Radar to Place Obstacle</span>
         </div>
 
         <div className="zeus-controls-panel">
