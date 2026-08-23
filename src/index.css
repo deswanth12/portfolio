@@ -2998,8 +2998,8 @@ button:focus-visible {
 @media (max-width: 900px) {
   .hero {
     grid-template-columns: 1fr;
-    gap: 40px;
-    padding: 40px 0 60px;
+    gap: 36px;
+    padding: 36px 0 54px;
     text-align: center;
   }
 
@@ -3021,11 +3021,12 @@ button:focus-visible {
   }
 
   .hero-metrics-bar {
-    margin: 28px auto 0;
+    margin: 24px auto 0;
     grid-template-columns: repeat(2, 1fr);
     display: grid;
     width: 100%;
-    gap: 16px;
+    gap: 12px;
+    padding: 14px 18px;
   }
 
   .metric-divider {
@@ -3041,7 +3042,7 @@ button:focus-visible {
   }
 
   .profile-img-wrap {
-    max-width: 260px;
+    max-width: 240px;
   }
 
   .zeus-grid {
@@ -3051,21 +3052,21 @@ button:focus-visible {
 
 @media (max-width: 768px) {
   .nav-inner {
-    padding: 10px 0;
+    padding: 8px 0;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
   }
 
   .nav-links {
     justify-content: center;
-    gap: 6px;
+    gap: 4px;
     width: 100%;
   }
 
   .nav-links a {
-    font-size: 0.8rem;
-    padding: 5px 8px;
+    font-size: 0.78rem;
+    padding: 4px 6px;
   }
 
   .nav-cmd-btn span, .sound-toggle-btn span {
@@ -3073,11 +3074,11 @@ button:focus-visible {
   }
 
   .section {
-    padding: 60px 0;
+    padding: 48px 0;
   }
 
   .section h2 {
-    font-size: 1.75rem;
+    font-size: 1.6rem;
   }
 
   .sim-input-box {
@@ -3116,7 +3117,7 @@ button:focus-visible {
 
 @media (max-width: 480px) {
   .title {
-    font-size: 2rem;
+    font-size: 1.95rem;
   }
 
   .btn {
@@ -3134,10 +3135,10 @@ button:focus-visible {
   }
 
   .floating-rag-trigger {
-    bottom: 16px;
-    right: 16px;
-    padding: 10px 18px;
-    font-size: 0.84rem;
+    bottom: 14px;
+    right: 14px;
+    padding: 8px 16px;
+    font-size: 0.8rem;
   }
 }
 
