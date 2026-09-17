@@ -23,6 +23,7 @@ export default function AskMyPortfolio({ isOpen, onClose, onOpenCaseStudy, trigg
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [sessionContext, setSessionContext] = useState({});
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
   const drawerRef = useRef(null);
@@ -79,7 +80,11 @@ export default function AskMyPortfolio({ isOpen, onClose, onOpenCaseStudy, trigg
     // Synchronous deterministic retrieval with a minimal 180ms delay for natural visual stability
     await new Promise((resolve) => setTimeout(resolve, 180));
 
-    const result = searchClientKnowledge(textToSend);
+    const result = searchClientKnowledge(textToSend, sessionContext);
+
+    if (result.context) {
+      setSessionContext(result.context);
+    }
 
     const botMsg = {
       id: getMsgId("jannu"),
@@ -95,6 +100,7 @@ export default function AskMyPortfolio({ isOpen, onClose, onOpenCaseStudy, trigg
 
   const handleClear = () => {
     setMessages([]);
+    setSessionContext({});
   };
 
   const handleSourceClick = (src) => {
