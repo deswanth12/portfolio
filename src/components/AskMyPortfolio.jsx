@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { X, CornerDownLeft, Trash2, ArrowUpRight, Search } from "lucide-react";
-import { searchClientKnowledge } from "../services/clientRAG";
+import { searchClientKnowledge } from "../services/clientRAG.js";
 
 const INITIAL_SUGGESTIONS = [
-  { label: "PROJECTS", query: "What projects has Deswanth built?" },
-  { label: "ZEUS", query: "Tell me about Zeus and ROS 2." },
-  { label: "JANAI", query: "What is JanAI and how does its RAG work?" },
-  { label: "SAGIRO", query: "What is Sagiro and why is it offline-first?" }
+  { label: "Zeus Robot", query: "Tell me about Zeus and ROS 2." },
+  { label: "JanAI Platform", query: "What is JanAI and why was it built?" },
+  { label: "Sagiro Ledger", query: "What is Sagiro and why is it offline-first?" },
+  { label: "Technical Stack", query: "What technologies does Deswanth work with?" }
 ];
 
 let msgIdCounter = 0;
@@ -46,7 +46,6 @@ export default function AskMyPortfolio({ isOpen, onClose, onOpenCaseStudy, trigg
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      // Return focus to trigger button if provided
       if (triggerEl) {
         triggerEl.focus();
       }
@@ -77,8 +76,8 @@ export default function AskMyPortfolio({ isOpen, onClose, onOpenCaseStudy, trigg
     setInputValue("");
     setIsLoading(true);
 
-    // Synchronous deterministic retrieval with a minimal 180ms delay for natural visual stability
-    await new Promise((resolve) => setTimeout(resolve, 180));
+    // Minimal 140ms delay for natural visual stability without sluggishness
+    await new Promise((resolve) => setTimeout(resolve, 140));
 
     const result = searchClientKnowledge(textToSend, sessionContext);
 
@@ -116,7 +115,7 @@ export default function AskMyPortfolio({ isOpen, onClose, onOpenCaseStudy, trigg
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label="Jannu Portfolio RAG Knowledge Tool"
+      aria-label="Jannu Portfolio Assistant"
       data-cursor="default"
     >
       <div
@@ -128,12 +127,9 @@ export default function AskMyPortfolio({ isOpen, onClose, onOpenCaseStudy, trigg
         {/* Drawer Masthead */}
         <header className="jannu-header">
           <div className="jannu-title-group">
-            <div className="jannu-eyebrow-row">
-              <span className="jannu-tag">[ TOOL // RAG-01 ]</span>
-              <span className="jannu-status">GROUNDED KNOWLEDGE BASE</span>
-            </div>
-            <h2 className="jannu-name">JANNU</h2>
-            <p className="jannu-sub">PORTFOLIO RAG — Ask questions about Deswanth's work.</p>
+            <span className="jannu-eyebrow">DESWANTH.DEV // ASSISTANT</span>
+            <h2 className="jannu-name">Jannu</h2>
+            <p className="jannu-sub">Ask about Deswanth's work, systems, or engineering.</p>
           </div>
 
           <div className="jannu-actions">
@@ -144,70 +140,43 @@ export default function AskMyPortfolio({ isOpen, onClose, onOpenCaseStudy, trigg
                 title="Clear conversation"
                 aria-label="Clear conversation history"
               >
-                <Trash2 size={14} aria-hidden="true" />
+                <Trash2 size={13} aria-hidden="true" />
               </button>
             )}
             <button
               onClick={onClose}
               className="jannu-close-btn"
-              aria-label="Close Jannu drawer (Esc)"
+              aria-label="Close assistant (Esc)"
             >
               <span className="close-text">CLOSE</span>
-              <X size={15} aria-hidden="true" />
+              <X size={14} aria-hidden="true" />
             </button>
           </div>
         </header>
 
         {/* Conversation Body */}
-        <div className="jannu-body" role="log" aria-live="polite">
+        <div className="jannu-body" role="log" aria-live="polite" aria-busy={isLoading}>
           {messages.length === 0 ? (
             <div className="jannu-empty-state">
-              <div className="empty-heading-block">
-                <span className="empty-indicator"></span>
-                <h3>Portfolio Knowledge System</h3>
-                <p>
-                  Direct vector retrieval over Deswanth's verified codebases, systems architecture, robotics telemetry, and technical decisions.
+              <div className="jannu-intro">
+                <p className="intro-lead">
+                  I know about Deswanth's robotics, AI systems, local-first applications, and engineering decisions.
                 </p>
+                <span className="intro-prompt">Explore a topic to begin:</span>
               </div>
 
-              <div className="jannu-prompt-suggestions">
-                <span className="suggestions-label">ASK ME ABOUT:</span>
-                <div className="suggestions-grid">
-                  {INITIAL_SUGGESTIONS.map((item) => (
-                    <button
-                      key={item.label}
-                      onClick={() => handleSend(item.query)}
-                      className="suggestion-chip"
-                      aria-label={`Ask: ${item.query}`}
-                    >
-                      <span>[ {item.label} ]</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="jannu-sample-queries">
-                <span className="sample-label">EXAMPLE QUERIES:</span>
-                <ul className="sample-list">
-                  <li onClick={() => handleSend("What did Deswanth build with ROS 2?")}>
-                    • "What did Deswanth build with ROS 2?"
-                  </li>
-                  <li onClick={() => handleSend("Tell me about Zeus.")}>
-                    • "Tell me about Zeus."
-                  </li>
-                  <li onClick={() => handleSend("What is JanAI?")}>
-                    • "What is JanAI?"
-                  </li>
-                  <li onClick={() => handleSend("Which projects use SQLite?")}>
-                    • "Which projects use SQLite?"
-                  </li>
-                  <li onClick={() => handleSend("What technologies does Deswanth use?")}>
-                    • "What technologies does Deswanth use?"
-                  </li>
-                  <li onClick={() => handleSend("What is Sagiro?")}>
-                    • "What is Sagiro?"
-                  </li>
-                </ul>
+              <div className="suggestions-grid">
+                {INITIAL_SUGGESTIONS.map((item) => (
+                  <button
+                    key={item.label}
+                    onClick={() => handleSend(item.query)}
+                    className="suggestion-chip"
+                    aria-label={`Ask: ${item.query}`}
+                  >
+                    <span className="chip-label">{item.label}</span>
+                    <ArrowUpRight size={12} className="chip-arrow" aria-hidden="true" />
+                  </button>
+                ))}
               </div>
             </div>
           ) : (
@@ -219,7 +188,7 @@ export default function AskMyPortfolio({ isOpen, onClose, onOpenCaseStudy, trigg
                 >
                   <div className="msg-meta-row">
                     <span className="msg-author">
-                      {msg.sender === "user" ? "YOU" : "JANNU // RETRIEVED"}
+                      {msg.sender === "user" ? "YOU" : "JANNU"}
                     </span>
                     <span className="msg-time">{msg.time}</span>
                   </div>
@@ -230,17 +199,17 @@ export default function AskMyPortfolio({ isOpen, onClose, onOpenCaseStudy, trigg
 
                   {msg.sender === "jannu" && msg.sources && msg.sources.length > 0 && (
                     <div className="msg-sources-row">
-                      <span className="sources-tag">SOURCES:</span>
+                      <span className="sources-tag">SOURCE:</span>
                       <div className="sources-list">
                         {msg.sources.map((src, sIdx) => (
                           <button
                             key={sIdx}
                             onClick={() => handleSourceClick(src)}
                             className={`source-chip ${src.caseStudyId ? "interactive" : ""}`}
-                            title={src.caseStudyId ? `Open ${src.label}` : src.label}
+                            title={src.caseStudyId ? `View ${src.label} case study` : src.label}
                             disabled={!src.caseStudyId}
                           >
-                            <span>[ {src.label} ]</span>
+                            <span>{src.label.replace(" CASE STUDY", "")}</span>
                             {src.caseStudyId && <ArrowUpRight size={11} aria-hidden="true" />}
                           </button>
                         ))}
@@ -253,11 +222,11 @@ export default function AskMyPortfolio({ isOpen, onClose, onOpenCaseStudy, trigg
               {isLoading && (
                 <div className="jannu-msg-block jannu-msg loading-msg">
                   <div className="msg-meta-row">
-                    <span className="msg-author">JANNU // SEARCHING</span>
+                    <span className="msg-author">JANNU</span>
                   </div>
                   <div className="loading-indicator-row">
-                    <span className="loading-pulse-dot"></span>
-                    <span className="loading-text">Scanning verified portfolio index...</span>
+                    <span className="loading-pulse-dot" aria-hidden="true"></span>
+                    <span className="loading-text">Thinking...</span>
                   </div>
                 </div>
               )}
@@ -282,7 +251,7 @@ export default function AskMyPortfolio({ isOpen, onClose, onOpenCaseStudy, trigg
                 ref={inputRef}
                 type="text"
                 className="jannu-input"
-                placeholder="Ask about my work..."
+                placeholder="Ask about projects, architecture, skills..."
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyDown={(e) => {
@@ -299,15 +268,15 @@ export default function AskMyPortfolio({ isOpen, onClose, onOpenCaseStudy, trigg
               type="submit"
               className="jannu-send-btn"
               disabled={!inputValue.trim() || isLoading}
-              aria-label="Submit query"
+              aria-label="Send query"
             >
               <span>SEND</span>
-              <CornerDownLeft size={13} aria-hidden="true" />
+              <CornerDownLeft size={12} aria-hidden="true" />
             </button>
           </form>
 
-          <div className="jannu-footer-guard">
-            <span>STRICT GROUNDING // NO SPECULATIVE RESPONSES</span>
+          <div className="jannu-footer-hint">
+            <span>Press Return ↵ to send • Esc to close</span>
           </div>
         </footer>
       </div>
