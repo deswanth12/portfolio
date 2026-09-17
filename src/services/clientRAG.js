@@ -784,7 +784,8 @@ export function searchClientKnowledge(query, sessionContext = {}) {
     }
 
     if (norm.includes("who is it for") || norm.includes("target")) {
-      const answer = `${proj.title} is designed for: ${proj.problem}`;
+      const audience = proj.targetAudience || proj.solution || proj.problem;
+      const answer = `${proj.title} is designed for: ${audience}`;
       return {
         answer,
         sources: [{ label: `${proj.title.toUpperCase()} CASE STUDY`, caseStudyId: proj.caseStudyId }],

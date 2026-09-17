@@ -13,7 +13,6 @@ import { CASE_STUDIES } from "./data/caseStudies";
 
 import WorkbenchCanvas from "./components/WorkbenchCanvas";
 import ProjectIndexTracker from "./components/ProjectIndexTracker";
-import WorkshopCursor from "./components/WorkshopCursor";
 import SoundEffects from "./components/SoundEffects";
 import JannuLauncher from "./components/JannuLauncher";
 
@@ -157,9 +156,6 @@ export default function App() {
 
   return (
     <div className="workshop-root">
-      {/* Desktop Precision Custom Cursor */}
-      <WorkshopCursor />
-
       {/* Floating Project Index Tracker */}
       <ProjectIndexTracker />
 

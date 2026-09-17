@@ -93,58 +93,6 @@ body {
   background-size: 48px 48px;
 }
 
-/* Custom Desktop Precision Cursor (Disabled on mobile) */
-.workshop-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 8px;
-  height: 8px;
-  background-color: var(--accent);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9999;
-  transform: translate3d(-100px, -100px, 0);
-  transition: width 0.18s cubic-bezier(0.16, 1, 0.3, 1),
-              height 0.18s cubic-bezier(0.16, 1, 0.3, 1),
-              background-color 0.18s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.workshop-cursor.hovered {
-  width: 24px;
-  height: 24px;
-  margin-top: -8px;
-  margin-left: -8px;
-  background-color: rgba(255, 85, 0, 0.25);
-  border: 1px solid var(--accent);
-}
-
-.workshop-cursor.has-text {
-  width: 58px;
-  height: 58px;
-  margin-top: -25px;
-  margin-left: -25px;
-  background-color: var(--accent);
-  border-radius: 50%;
-}
-
-.cursor-label {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  font-weight: var(--fw-bold);
-  color: #0c0e12;
-  letter-spacing: var(--ls-wide);
-}
-
-@media (pointer: coarse) {
-  .workshop-cursor {
-    display: none !important;
-  }
-}
-
 /* ==========================================================================
    PERSISTENT PROJECT INDEX TRACKER
    ========================================================================== */
@@ -3261,9 +3209,6 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-  .workshop-cursor {
-    display: none !important;
   }
 }
 

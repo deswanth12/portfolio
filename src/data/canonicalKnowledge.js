@@ -62,6 +62,8 @@ export const PROJECTS = {
       "Government welfare schemes in India are distributed across hundreds of fragmented state portals and bureaucratic PDF circulars, making eligibility hard to discover for non-technical citizens.",
     solution:
       "Engineered an offline-indexed RAG platform that vectorizes scheme guidelines into a FAISS index, offering natural-language eligibility verification with source-grounded citations.",
+    targetAudience:
+      "Citizens, rural applicants, and community workers seeking to discover and understand government welfare eligibility in regional languages.",
     techStack: ["React", "FastAPI", "Python", "FAISS", "Pinecone", "OpenAI / Gemini", "Web Speech API", "Tailwind CSS"],
     features: [
       "Semantic eligibility matching across central and state welfare programs",
@@ -93,6 +95,8 @@ export const PROJECTS = {
       "Indoor autonomous mobile robots often suffer from high compute latencies and fragile localization without costly cloud offloading.",
     solution:
       "Built a self-contained mobile robot running ROS 2 on an edge Raspberry Pi 4 B, fusing RPLIDAR 360° laser scans, IMU data, and wheel odometry for local mapping.",
+    targetAudience:
+      "Robotics engineers and researchers exploring autonomous 2D SLAM mapping, ROS 2 distributed nodes, and edge vision on embedded hardware.",
     hardware: [
       "Raspberry Pi 4 B (High-level compute, ROS 2, and vision)",
       "Arduino Mega / ESP32 (Low-level motor control and PWM)",
@@ -132,6 +136,8 @@ export const PROJECTS = {
       "Many modern finance apps monetize user transaction habits through tracking SDKs, require constant cloud connectivity, and break in offline environments.",
     solution:
       "Engineered an offline-first Android ledger using Kotlin and Room ORM, storing all transactions locally on device with exportable encrypted backups.",
+    targetAudience:
+      "Individuals seeking privacy-first, offline personal expense tracking without cloud tracking, third-party SDKs, or account requirements.",
     techStack: ["Android Native", "Kotlin", "SQLite", "Room DB", "Jetpack Compose", "Coroutines"],
     features: [
       "Local-first synchronous SQLite transaction storage",
@@ -163,6 +169,8 @@ export const PROJECTS = {
       "Deploying RAG pipelines without continuous automated testing leads to undetected hallucinations and context dilution as underlying document collections grow.",
     solution:
       "Engineered an evaluation harness combining Ragas metrics, prompt regression suites, and SQLite benchmark storage with a visual comparison dashboard.",
+    targetAudience:
+      "AI engineers, RAG developers, and researchers benchmarking context recall, precision, and hallucination rates across retrieval pipelines.",
     techStack: ["Python", "FastAPI", "React", "Ragas", "Pandas", "Scikit-Learn", "SQLite"],
     features: [
       "Context precision and context recall evaluation for vector search",
@@ -194,6 +202,8 @@ export const PROJECTS = {
       "Developers and security students often need lightweight, scriptable utilities to inspect local network traffic and audit open ports without configuring heavyweight enterprise monitoring suites.",
     solution:
       "Developed a focused Python utility using raw socket programming, multi-threaded workers, and SQLite logging with both CLI and Tkinter GUI interfaces.",
+    targetAudience:
+      "Network administrators and security students looking for a lightweight, scriptable utility to audit open ports and inspect subnet packets locally.",
     techStack: ["Python", "SQLite", "Socket Programming", "Networking", "Tkinter"],
     features: [
       "Multi-threaded TCP/UDP port scanner with banner grabbing",
@@ -224,6 +234,8 @@ export const PROJECTS = {
       "School and departmental administrative workflows need lightweight, dependable offline tools for managing student records without complex database server setups.",
     solution:
       "Built a self-contained desktop application with Python and Tkinter providing validated CRUD operations against an embedded SQLite database.",
+    targetAudience:
+      "Academic departments and administrators needing dependable, zero-setup offline database management for student records and courses.",
     techStack: ["Python", "SQLite3", "Tkinter GUI", "CRUD Architecture"],
     features: [
       "Real-time search filtering across student names, roll numbers, and departments",
