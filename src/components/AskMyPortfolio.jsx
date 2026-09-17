@@ -20,7 +20,9 @@ import {
   FaEnvelope,
   FaMagic,
   FaDownload,
-  FaExternalLinkAlt
+  FaExternalLinkAlt,
+  FaChartBar,
+  FaFileAlt
 } from "react-icons/fa";
 import { searchClientKnowledge } from "../services/clientRAG";
 
@@ -49,7 +51,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
     {
       id: "welcome-1",
       sender: "bot",
-      text: "Hi! I'm Jannu 🤖, Deswanth's AI companion. Ask me anything about his projects (JanAI, Zeus Robot, Security Toolkit), technical skills, resume, or background!",
+      text: "Hi! I'm Jannu, Deswanth's AI companion. Ask me anything about his projects (JanAI, Zeus Robot, Security Toolkit), technical skills, resume, or background!",
       sources: ["Resume", "Portfolio Data"],
       timestamp: formatTimestamp()
     }
@@ -179,7 +181,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
       {
         id: "welcome-reset",
         sender: "bot",
-        text: "Hey! I'm Jannu 🤖. Conversation reset! What else would you like to know about K Deswanth?",
+        text: "Hey! I'm Jannu. Conversation reset! What else would you like to know about K Deswanth?",
         sources: ["Portfolio Data"],
         timestamp: formatTimestamp()
       }
@@ -251,12 +253,12 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
   };
 
   const getSourceIcon = (src) => {
-    if (src.includes("JanAI")) return "🚀";
-    if (src.includes("EvalMesh")) return "📊";
-    if (src.includes("Zeus")) return "🤖";
-    if (src.includes("Resume")) return "📄";
-    if (src.includes("GitHub")) return "💻";
-    return "💡";
+    if (src.includes("JanAI")) return <FaRocket className="source-icon" aria-hidden="true" />;
+    if (src.includes("EvalMesh")) return <FaChartBar className="source-icon" aria-hidden="true" />;
+    if (src.includes("Zeus")) return <FaRobot className="source-icon" aria-hidden="true" />;
+    if (src.includes("Resume")) return <FaFileAlt className="source-icon" aria-hidden="true" />;
+    if (src.includes("GitHub")) return <FaCode className="source-icon" aria-hidden="true" />;
+    return <FaLightbulb className="source-icon" aria-hidden="true" />;
   };
 
   const renderFormattedText = (text) => {
@@ -287,7 +289,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
         <div className="rag-header">
           <div className="rag-header-info">
             <div className="rag-avatar jannu-avatar">
-              <span className="jannu-emoji" aria-hidden="true">🤖</span>
+              <FaRobot className="jannu-emoji" aria-hidden="true" />
               <span className="online-indicator"></span>
             </div>
             <div>
@@ -338,7 +340,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
             >
               {msg.sender === "bot" && (
                 <div className="bot-msg-avatar jannu-msg-avatar" aria-hidden="true">
-                  🤖
+                  <FaRobot size={15} />
                 </div>
               )}
 
@@ -403,7 +405,7 @@ export default function AskMyPortfolio({ isOpen, onClose }) {
           {isTyping && (
             <div className="rag-message-row bot-row">
               <div className="bot-msg-avatar jannu-msg-avatar" aria-hidden="true">
-                🤖
+                <FaRobot size={15} />
               </div>
               <div className="rag-msg-bubble bot typing-bubble">
                 <div className="typing-dots">

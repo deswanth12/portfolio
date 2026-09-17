@@ -29,6 +29,7 @@ import JanAiSimulator from "./components/JanAiSimulator";
 import ParticleCanvas from "./components/ParticleCanvas";
 import SoundEffects from "./components/SoundEffects";
 import ZeusVisualizer from "./components/ZeusVisualizer";
+import SpotlightCard from "./components/SpotlightCard";
 
 // Lazy-loaded Modals for Code Splitting & Instant Initial Load
 const AskMyPortfolio = lazy(() => import("./components/AskMyPortfolio"));
@@ -238,7 +239,7 @@ export default function App() {
               title="Chat with Jannu RAG AI"
             >
               <FaRobot className="btn-icon" />
-              <span>Ask Jannu 🤖</span>
+              <span>Ask Jannu AI</span>
             </button>
           </div>
         </div>
@@ -272,7 +273,7 @@ export default function App() {
                 className="btn btn-jannu-hero"
               >
                 <FaRobot aria-hidden="true" />
-                Ask Jannu 🤖
+                Ask Jannu AI
               </button>
 
               <button
@@ -408,11 +409,16 @@ export default function App() {
 
             <div className="workflow-grid">
               {engineeringWorkflow.map((item) => (
-                <div key={item.step} className="workflow-step-card">
+                <SpotlightCard
+                  key={item.step}
+                  className="workflow-step-card"
+                  spotlightColor="rgba(0, 212, 255, 0.12)"
+                  borderColor="rgba(0, 212, 255, 0.35)"
+                >
                   <span className="workflow-step-num">{item.step}</span>
                   <h3>{item.name}</h3>
                   <p>{item.desc}</p>
-                </div>
+                </SpotlightCard>
               ))}
             </div>
           </div>
@@ -430,9 +436,11 @@ export default function App() {
               {services.map((service, i) => {
                 const Icon = service.icon;
                 return (
-                  <motion.div
+                  <SpotlightCard
                     key={service.title}
                     className="capability-card"
+                    spotlightColor="rgba(0, 212, 255, 0.12)"
+                    borderColor="rgba(0, 212, 255, 0.35)"
                     variants={fadeUp}
                     initial="hidden"
                     whileInView="show"
@@ -449,7 +457,7 @@ export default function App() {
                         <span key={tag}>{tag}</span>
                       ))}
                     </div>
-                  </motion.div>
+                  </SpotlightCard>
                 );
               })}
             </div>
@@ -481,9 +489,11 @@ export default function App() {
             <div className="project-grid">
               <AnimatePresence>
                 {filteredProjects.map((project, i) => (
-                  <motion.div
+                  <SpotlightCard
                     key={project.id}
                     className="project-card"
+                    spotlightColor="rgba(0, 212, 255, 0.14)"
+                    borderColor="rgba(0, 212, 255, 0.4)"
                     initial={{ opacity: 0, scale: 0.95 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.95 }}
@@ -512,7 +522,7 @@ export default function App() {
                         View Architecture & Case Study <FaArrowRight />
                       </button>
                     </div>
-                  </motion.div>
+                  </SpotlightCard>
                 ))}
               </AnimatePresence>
             </div>
@@ -529,11 +539,19 @@ export default function App() {
 
             <div className="vitals-grid">
               {webVitals.map((item) => (
-                <div key={item.metric} className="vital-card">
+                <SpotlightCard
+                  key={item.metric}
+                  className="vital-card"
+                  spotlightColor="rgba(16, 185, 129, 0.12)"
+                  borderColor="rgba(16, 185, 129, 0.35)"
+                >
                   <div className="vital-score">{item.score}</div>
                   <div className="vital-name">{item.metric}</div>
-                  <span className="vital-status">🟢 {item.status}</span>
-                </div>
+                  <span className="vital-status">
+                    <span className="status-dot-pulse" aria-hidden="true" />
+                    {item.status}
+                  </span>
+                </SpotlightCard>
               ))}
             </div>
           </div>
@@ -546,7 +564,7 @@ export default function App() {
               <div className="banner-badge">
                 <FaRobot /> RAG Vector Assistant
               </div>
-              <h2>Query Jannu 🤖 for factual answers on Deswanth's work</h2>
+              <h2>Query Jannu for factual answers on Deswanth's work</h2>
               <p>
                 Trained on Deswanth's resume, JanAI, EvalMesh, Zeus Robot, and GitHub repositories with cited sources.
               </p>
@@ -555,7 +573,7 @@ export default function App() {
               onClick={() => setIsRagOpen(true)}
               className="btn btn-jannu-hero banner-btn"
             >
-              <FaRobot /> Talk to Jannu 🤖
+              <FaRobot /> Talk to Jannu AI
             </button>
           </div>
         </section>

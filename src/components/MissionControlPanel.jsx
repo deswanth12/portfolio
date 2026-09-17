@@ -1,4 +1,5 @@
 import { Radio } from "lucide-react";
+import SpotlightCard from "./SpotlightCard";
 
 export default function MissionControlPanel() {
   const nodes = [
@@ -46,7 +47,12 @@ export default function MissionControlPanel() {
 
       <div className="mission-nodes-grid">
         {nodes.map((node) => (
-          <div key={node.name} className="mission-node-card">
+          <SpotlightCard
+            key={node.name}
+            className="mission-node-card"
+            spotlightColor={node.color === "#00d4ff" ? "rgba(0, 212, 255, 0.12)" : "rgba(16, 185, 129, 0.12)"}
+            borderColor={node.color === "#00d4ff" ? "rgba(0, 212, 255, 0.35)" : "rgba(16, 185, 129, 0.35)"}
+          >
             <div className="node-top">
               <span className="node-name">{node.name}</span>
               <span className="node-status" style={{ color: node.color }}>
@@ -55,7 +61,7 @@ export default function MissionControlPanel() {
             </div>
             <div className="node-metric">{node.metric}</div>
             <div className="node-tech">{node.tech}</div>
-          </div>
+          </SpotlightCard>
         ))}
       </div>
     </div>

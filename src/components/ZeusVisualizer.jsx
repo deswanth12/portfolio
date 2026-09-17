@@ -194,7 +194,10 @@ export default function ZeusVisualizer() {
             <h3>Zeus Robot — 360° LiDAR SLAM Navigator (ROS 2 Humble)</h3>
           </div>
         </div>
-        <span className="zeus-status-badge">🟢 360° RPLiDAR S2 (30Hz)</span>
+        <span className="zeus-status-badge">
+          <span className="status-dot-pulse" aria-hidden="true" />
+          360° RPLiDAR S2 (30Hz)
+        </span>
       </div>
 
       <div className="zeus-grid">

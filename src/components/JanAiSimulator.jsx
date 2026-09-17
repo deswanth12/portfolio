@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Sparkles, Search, ShieldCheck, ArrowRight, RefreshCw } from "lucide-react";
+import { Sparkles, Search, ShieldCheck, ArrowRight, RefreshCw, FileText, Target, Wheat, GraduationCap, Users } from "lucide-react";
 
 export default function JanAiSimulator() {
   const [query, setQuery] = useState("What agricultural subsidies are available for small farmers in AP?");
@@ -9,14 +9,14 @@ export default function JanAiSimulator() {
     matchScore: "98.4%",
     latency: "1.12s",
     answer: "Eligible small farmers receive ₹13,500 annually in financial assistance, input subsidies on fertilizers, and 9-hour free agricultural electricity.",
-    sources: ["📄 AP Agri Dept Guideline §3.1", "📄 PM-KISAN Portal Rules"],
+    sources: ["AP Agri Dept Guideline §3.1", "PM-KISAN Portal Rules"],
     confidence: "High (Zero Hallucination)"
   });
 
   const samplePrompts = [
-    { label: "🌾 Agriculture Subsidy", q: "What agricultural subsidies are available for small farmers in AP?" },
-    { label: "🎓 Higher Education", q: "What scholarships support B.Tech CSE engineering students?" },
-    { label: "⚡ Women SHG Loans", q: "What are the eligibility rules for Women Self-Help Group zero-interest loans?" }
+    { icon: Wheat, label: "Agriculture Subsidy", q: "What agricultural subsidies are available for small farmers in AP?" },
+    { icon: GraduationCap, label: "Higher Education", q: "What scholarships support B.Tech CSE engineering students?" },
+    { icon: Users, label: "Women SHG Loans", q: "What are the eligibility rules for Women Self-Help Group zero-interest loans?" }
   ];
 
   const handleSimulate = (promptQuery) => {
@@ -31,7 +31,7 @@ export default function JanAiSimulator() {
           matchScore: "97.8%",
           latency: "1.05s",
           answer: "Provides 100% full fee reimbursement directly to college accounts plus ₹20,000 yearly hostel/food support for eligible students.",
-          sources: ["📄 AP Higher Education Dept Circular #44", "📄 Vidya Deevena Policy"],
+          sources: ["AP Higher Education Dept Circular #44", "Vidya Deevena Policy"],
           confidence: "High (Zero Hallucination)"
         });
       } else if (targetQ.includes("Women") || targetQ.includes("SHG")) {
@@ -40,7 +40,7 @@ export default function JanAiSimulator() {
           matchScore: "99.1%",
           latency: "0.98s",
           answer: "Offers 0% interest loan subvention for SHG women prompt bank loan repayments up to ₹3,00,00, with direct bank account transfer.",
-          sources: ["📄 SERP AP Rural Development §12", "📄 Sunna Vaddi Guidelines"],
+          sources: ["SERP AP Rural Development §12", "Sunna Vaddi Guidelines"],
           confidence: "High (Zero Hallucination)"
         });
       } else {
@@ -49,7 +49,7 @@ export default function JanAiSimulator() {
           matchScore: "98.4%",
           latency: "1.12s",
           answer: "Eligible small farmers receive ₹13,500 annually in financial assistance, input subsidies on fertilizers, and 9-hour free agricultural electricity.",
-          sources: ["📄 AP Agri Dept Guideline §3.1", "📄 PM-KISAN Portal Rules"],
+          sources: ["AP Agri Dept Guideline §3.1", "PM-KISAN Portal Rules"],
           confidence: "High (Zero Hallucination)"
         });
       }
@@ -73,15 +73,19 @@ export default function JanAiSimulator() {
       {/* Preset Prompts */}
       <div className="sim-presets">
         <span className="preset-label">Try Prompt:</span>
-        {samplePrompts.map((p) => (
-          <button
-            key={p.label}
-            className="preset-btn"
-            onClick={() => handleSimulate(p.q)}
-          >
-            {p.label}
-          </button>
-        ))}
+        {samplePrompts.map((p) => {
+          const Icon = p.icon;
+          return (
+            <button
+              key={p.label}
+              className="preset-btn"
+              onClick={() => handleSimulate(p.q)}
+            >
+              <Icon size={13} aria-hidden="true" style={{ display: "inline-block", marginRight: "6px", verticalAlign: "middle" }} />
+              <span>{p.label}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Input Bar */}
@@ -110,7 +114,10 @@ export default function JanAiSimulator() {
       {/* RAG Result Output */}
       <div className="sim-output-box" role="region" aria-label="Search Result" aria-live="polite">
         <div className="sim-meta-row">
-          <span className="sim-scheme-name">🎯 {activeResult.scheme}</span>
+          <span className="sim-scheme-name">
+            <Target size={14} aria-hidden="true" style={{ display: "inline-block", marginRight: "6px", verticalAlign: "middle" }} />
+            {activeResult.scheme}
+          </span>
           <div className="sim-stats-pills">
             <span className="sim-stat">Match: <strong>{activeResult.matchScore}</strong></span>
             <span className="sim-stat">Latency: <strong>{activeResult.latency}</strong></span>
@@ -122,7 +129,10 @@ export default function JanAiSimulator() {
         <div className="sim-sources-row">
           <span className="sources-label"><ShieldCheck size={14} aria-hidden="true" /> Grounded Sources:</span>
           {activeResult.sources.map((src) => (
-            <span key={src} className="src-pill">{src}</span>
+            <span key={src} className="src-pill">
+              <FileText size={11} aria-hidden="true" style={{ display: "inline-block", marginRight: "4px", verticalAlign: "middle" }} />
+              {src}
+            </span>
           ))}
         </div>
       </div>

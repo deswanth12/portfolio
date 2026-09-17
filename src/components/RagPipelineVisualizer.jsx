@@ -45,7 +45,7 @@ export default function RagPipelineVisualizer() {
       title: "6. Answer + Source Citation",
       icon: CheckCircle2,
       desc: "Produces verified answer with official scheme source links & document checklist.",
-      detail: "Final Output + Cited Source Badges: [📄 Rythu Bharosa Scheme Policy Guideline §4.2]"
+      detail: "Final Output + Cited Source Badges: [Rythu Bharosa Scheme Policy Guideline §4.2]"
     }
   ];
 
