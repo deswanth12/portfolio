@@ -150,8 +150,8 @@ body {
    ========================================================================== */
 .project-index-tracker {
   position: fixed;
-  bottom: 28px;
-  right: 28px;
+  bottom: 84px;
+  right: 24px;
   z-index: 900;
   display: flex;
   flex-direction: column;
@@ -2479,358 +2479,538 @@ body {
 }
 
 /* ==========================================================================
-   JANNU AI ASSISTANT MODAL (Vector Search & Citations)
+   JANNU WORKSHOP LAUNCHER & RAG KNOWLEDGE DRAWER
+   Physical workshop control & grounded engineering drawer
    ========================================================================== */
-.rag-modal-backdrop {
+.jannu-launcher-dock {
   position: fixed;
-  inset: 0;
-  z-index: 2000;
-  background: rgba(6, 8, 11, 0.85);
-  backdrop-filter: blur(12px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  animation: fadeIn 0.15s ease-out;
+  bottom: 24px;
+  right: 24px;
+  z-index: 850;
+  pointer-events: auto;
 }
 
-.rag-chat-card {
-  width: min(720px, 100%);
-  height: 640px;
-  max-height: 90vh;
-  max-height: 90dvh;
-  background: #11141b;
-  border: 1px solid var(--line-strong);
-  border-radius: 8px;
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.7);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  transition: width 0.25s ease, height 0.25s ease;
-}
-
-.rag-chat-card.expanded {
-  width: min(960px, 96vw);
-  height: 86vh;
-  height: 86dvh;
-}
-
-.rag-header {
-  padding: 16px 20px;
-  background: var(--surface-1);
-  border-bottom: 1px solid var(--line);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.rag-header-info {
+.jannu-launcher-btn {
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 8px 14px;
+  background: #11141c;
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  color: var(--text-primary);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+  min-height: 44px;
 }
 
-.rag-avatar {
-  width: 38px;
-  height: 38px;
-  border-radius: 6px;
-  background: var(--surface-2);
-  border: 1px solid var(--line);
+.jannu-launcher-btn:hover {
+  border-color: var(--accent);
+  background: #161a24;
+  transform: translateY(-2px);
+}
+
+.jannu-launcher-btn:active {
+  transform: translateY(0);
+}
+
+.launcher-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.15;
+}
+
+.launcher-title {
+  font-size: 0.74rem;
+  font-weight: var(--fw-bold);
+  color: #fff;
+  letter-spacing: var(--ls-wide);
+}
+
+.launcher-subtitle {
+  font-size: 0.6rem;
+  color: var(--accent);
+  letter-spacing: var(--ls-wider);
+}
+
+.launcher-action {
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: var(--accent);
-  position: relative;
+  gap: 6px;
+  padding-left: 10px;
+  border-left: 1px solid var(--line);
 }
 
-.online-indicator {
-  position: absolute;
-  bottom: -2px;
-  right: -2px;
-  width: 8px;
-  height: 8px;
+.action-label {
+  font-size: 0.72rem;
+  font-weight: var(--fw-semibold);
+  color: var(--text-secondary);
+}
+
+.action-dot {
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: #10b981;
-  border: 2px solid #11141b;
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(255, 85, 0, 0.7);
 }
 
-.rag-title-row {
+/* Jannu Drawer Modal */
+.jannu-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 2100;
+  display: flex;
+  justify-content: flex-end;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.jannu-drawer {
+  background: #0c0e12;
+  border-left: 1px solid var(--line-strong);
+  width: 100%;
+  max-width: 520px;
+  height: 100%;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.85);
+  animation: slideDrawer 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.jannu-header {
+  padding: 20px 24px;
+  background: #10131a;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.jannu-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.jannu-eyebrow-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+}
+
+.jannu-tag {
+  color: var(--accent);
+  font-weight: var(--fw-bold);
+}
+
+.jannu-status {
+  color: var(--text-tertiary);
+  padding-left: 8px;
+  border-left: 1px solid var(--line);
+}
+
+.jannu-name {
+  font-family: var(--font-sans);
+  font-size: 1.4rem;
+  font-weight: var(--fw-bold);
+  color: #fff;
+  letter-spacing: var(--ls-tight);
+}
+
+.jannu-sub {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.jannu-actions {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.rag-title-row h3 {
-  font-family: var(--font-sans);
-  font-size: 0.98rem;
-  font-weight: var(--fw-bold);
-  color: #fff;
-}
-
-.rag-badge {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  font-weight: var(--fw-bold);
-  padding: 2px 6px;
-  border-radius: 3px;
-  background: rgba(255, 85, 0, 0.1);
-  border: 1px solid var(--accent-border);
-  color: var(--accent);
-  letter-spacing: var(--ls-wide);
-}
-
-.rag-subtitle {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--text-tertiary);
-}
-
-.rag-header-actions {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.icon-btn {
-  background: rgba(255, 255, 255, 0.04);
+.jannu-icon-btn {
+  background: var(--surface-2);
   border: 1px solid var(--line);
   color: var(--text-secondary);
-  width: 32px;
-  height: 32px;
+  padding: 8px;
   border-radius: 4px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   transition: all 0.2s ease;
+  min-width: 36px;
+  min-height: 36px;
 }
 
-.icon-btn:hover {
+.jannu-icon-btn:hover {
   color: #fff;
   border-color: var(--line-strong);
 }
 
-.rag-presets-bar {
-  padding: 10px 16px;
-  background: #090c10;
-  border-bottom: 1px solid var(--line);
-}
-
-.presets-label {
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  font-weight: var(--fw-bold);
-  color: var(--text-tertiary);
-  margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.presets-scroll {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  padding-bottom: 2px;
-}
-
-.preset-pill {
-  background: rgba(255, 255, 255, 0.04);
+.jannu-close-btn {
+  background: var(--surface-2);
   border: 1px solid var(--line);
-  color: var(--text-secondary);
+  color: var(--text-primary);
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  padding: 4px 10px;
-  border-radius: 4px;
-  white-space: nowrap;
-  cursor: pointer;
+  font-weight: var(--fw-bold);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   transition: all 0.2s ease;
+  min-height: 36px;
 }
 
-.preset-pill:hover:not(:disabled) {
-  color: #fff;
+.jannu-close-btn:hover {
   border-color: var(--accent);
+  color: var(--accent);
 }
 
-.rag-messages-body {
+/* Body & Thread */
+.jannu-body {
   flex: 1;
-  padding: 20px;
+  padding: 24px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
-.rag-message-row {
-  display: flex;
-  gap: 10px;
-  max-width: 86%;
-}
-
-.rag-message-row.user-row {
-  align-self: flex-end;
-  flex-direction: row-reverse;
-}
-
-.rag-message-row.bot-row {
-  align-self: flex-start;
-}
-
-.bot-msg-avatar {
-  width: 28px;
-  height: 28px;
-  border-radius: 4px;
-  background: var(--surface-2);
-  border: 1px solid var(--line);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--accent);
-  flex-shrink: 0;
-  margin-top: 4px;
-}
-
-.rag-msg-bubble-wrap {
+.jannu-empty-state {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 24px;
 }
 
-.rag-msg-bubble {
-  padding: 12px 16px;
+.empty-heading-block {
+  background: #11151d;
+  border: 1px solid var(--line);
   border-radius: 6px;
-  font-size: 0.88rem;
-  line-height: var(--lh-relaxed);
+  padding: 18px 20px;
+  position: relative;
 }
 
-.rag-msg-bubble.user {
-  background: #202530;
-  color: #fff;
-  border: 1px solid var(--line-strong);
+.empty-indicator {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  margin-bottom: 10px;
 }
 
-.rag-msg-bubble.bot {
-  background: var(--surface-1);
-  border: 1px solid var(--line);
-  color: var(--text-primary);
-}
-
-.typing-cursor {
-  color: var(--accent);
-  animation: blink 0.8s infinite;
-}
-
-.rag-sources-bar {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  margin-top: 4px;
-  padding: 6px 10px;
-  background: #080a0e;
-  border-radius: 4px;
-  border: 1px solid var(--line);
-}
-
-.sources-title {
+.empty-heading-block h3 {
   font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-size: 0.92rem;
+  color: #fff;
+  margin-bottom: 6px;
+  letter-spacing: var(--ls-wide);
+}
+
+.empty-heading-block p {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.jannu-prompt-suggestions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.suggestions-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-tertiary);
+  letter-spacing: var(--ls-wider);
+}
+
+.suggestions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.suggestion-chip {
+  background: #11151e;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  color: #cbd5e1;
+  padding: 10px 14px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.suggestion-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(255, 85, 0, 0.06);
+}
+
+.jannu-sample-queries {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.sample-label {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--text-tertiary);
+  letter-spacing: var(--ls-wider);
+}
+
+.sample-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sample-list li {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 3px;
+  transition: all 0.15s ease;
+}
+
+.sample-list li:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Thread Messages */
+.jannu-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.jannu-msg-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: #10131a;
+}
+
+.jannu-msg-block.user-msg {
+  background: #141924;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.jannu-msg-block.jannu-msg {
+  border-left: 2px solid var(--accent);
+}
+
+.msg-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+}
+
+.msg-author {
   font-weight: var(--fw-bold);
   color: var(--accent);
+  letter-spacing: var(--ls-wide);
+}
+
+.user-msg .msg-author {
+  color: #93c5fd;
+}
+
+.msg-time {
+  color: var(--text-tertiary);
+}
+
+.msg-text {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #e2e8f0;
+  white-space: pre-wrap;
+}
+
+.msg-sources-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.sources-tag {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: var(--fw-bold);
+  color: var(--text-tertiary);
+  letter-spacing: var(--ls-wider);
+}
+
+.sources-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.source-chip {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  color: var(--accent);
+  background: rgba(255, 85, 0, 0.08);
+  border: 1px solid var(--accent-border);
+  padding: 4px 10px;
+  border-radius: 3px;
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  cursor: default;
 }
 
-.source-tag {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  color: #cbd5e1;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--line);
-  padding: 2px 6px;
-  border-radius: 3px;
-}
-
-.bubble-actions {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 2px;
-}
-
-.mini-action-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-tertiary);
-  cursor: pointer;
-  padding: 2px;
-  font-size: 0.72rem;
-  transition: color 0.2s ease;
-}
-
-.mini-action-btn:hover {
-  color: #fff;
-}
-
-.rag-input-form {
-  padding: 14px 20px;
-  background: var(--surface-1);
-  border-top: 1px solid var(--line);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.rag-text-input {
-  flex: 1;
-  background: #080a0e;
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  padding: 10px 14px;
-  color: #fff;
-  font-size: 0.88rem;
-  outline: none;
-  transition: border-color 0.2s ease;
-}
-
-.rag-text-input:focus {
-  border-color: var(--accent);
-}
-
-.rag-send-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 4px;
-  background: #fff;
-  border: none;
-  color: #0c0e12;
-  font-size: 0.95rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.source-chip.interactive {
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.rag-send-btn:hover:not(:disabled) {
-  background: var(--accent);
+.source-chip.interactive:hover {
+  background: rgba(255, 85, 0, 0.2);
   color: #fff;
+  border-color: var(--accent);
 }
 
-.rag-send-btn:disabled {
-  opacity: 0.3;
+.loading-indicator-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+}
+
+.loading-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+/* Jannu Footer Input */
+.jannu-footer {
+  padding: 16px 20px;
+  background: #090c10;
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.jannu-input-form {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #11141c;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 0 12px;
+  height: 44px;
+}
+
+.input-wrap:focus-within {
+  border-color: var(--accent);
+}
+
+.input-search-icon {
+  color: var(--text-tertiary);
+  flex-shrink: 0;
+}
+
+.jannu-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.jannu-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.jannu-send-btn {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: var(--fw-bold);
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.jannu-send-btn:hover:not(:disabled) {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #0c0e12;
+}
+
+.jannu-send-btn:disabled {
+  opacity: 0.35;
   cursor: not-allowed;
 }
 
-.rag-footer-note {
+.jannu-footer-guard {
   font-family: var(--font-mono);
   font-size: 0.62rem;
-  text-align: center;
   color: var(--text-tertiary);
-  padding: 6px 12px;
-  background: #080a0e;
-  border-top: 1px solid var(--line);
+  letter-spacing: var(--ls-wider);
+  text-align: center;
 }
 
 /* ==========================================================================
@@ -3007,7 +3187,26 @@ body {
   .workbench-grid {
     grid-template-columns: 1fr;
   }
-  .rag-chat-card,
+  .jannu-launcher-dock {
+    bottom: 16px;
+    right: 16px;
+  }
+  .jannu-drawer {
+    max-width: 100%;
+    border-left: none;
+  }
+  .jannu-header {
+    padding: 16px;
+  }
+  .jannu-body {
+    padding: 16px;
+  }
+  .suggestions-grid {
+    grid-template-columns: 1fr;
+  }
+  .project-index-tracker {
+    display: none;
+  }
   .terminal-dialog {
     width: 100%;
     height: 94vh;
@@ -3015,9 +3214,9 @@ body {
     border-radius: 6px;
   }
   .cmd-backdrop,
-  .rag-modal-backdrop,
+  .jannu-backdrop,
   .terminal-backdrop {
-    padding: 12px;
+    padding: 0;
   }
   .casestudy-header,
   .casestudy-body,

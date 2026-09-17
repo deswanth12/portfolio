@@ -1,492 +1,309 @@
 import { useState, useEffect, useRef } from "react";
-import {
-  FaRobot,
-  FaPaperPlane,
-  FaTrash,
-  FaChevronDown,
-  FaLightbulb,
-  FaBookOpen,
-  FaCheckCircle,
-  FaLayerGroup,
-  FaCopy,
-  FaVolumeUp,
-  FaVolumeMute,
-  FaCompress,
-  FaExpand,
-  FaThumbsUp,
-  FaUserAlt,
-  FaCode,
-  FaRocket,
-  FaEnvelope,
-  FaMagic,
-  FaDownload,
-  FaExternalLinkAlt,
-  FaChartBar,
-  FaFileAlt
-} from "react-icons/fa";
+import { X, CornerDownLeft, Trash2, ArrowUpRight, Search } from "lucide-react";
 import { searchClientKnowledge } from "../services/clientRAG";
 
-const PRESET_CATEGORIES = [
-  { icon: FaUserAlt, text: "Who is Deswanth?" },
-  { icon: FaRocket, text: "What is JanAI?" },
-  { icon: FaMagic, text: "Describe EvalMesh" },
-  { icon: FaRobot, text: "Describe Zeus Robot" },
-  { icon: FaCode, text: "Skills in React?" },
-  { icon: FaEnvelope, text: "How can I contact him?" }
+const INITIAL_SUGGESTIONS = [
+  { label: "PROJECTS", query: "What projects has Deswanth built?" },
+  { label: "ZEUS", query: "Tell me about Zeus and ROS 2." },
+  { label: "JANAI", query: "What is JanAI and how does its RAG work?" },
+  { label: "SAGIRO", query: "What is Sagiro and why is it offline-first?" }
 ];
 
-const formatTimestamp = () => {
+let msgIdCounter = 0;
+const getMsgId = (prefix) => `${prefix}-${++msgIdCounter}`;
+const getTimeString = () => {
   try {
     return new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" });
   } catch {
-    return "Just now";
+    return "";
   }
 };
 
-let msgCounter = 0;
-const generateId = (prefix) => `${prefix}-${++msgCounter}`;
-
-export default function AskMyPortfolio({ isOpen, onClose }) {
-  const [messages, setMessages] = useState([
-    {
-      id: "welcome-1",
-      sender: "bot",
-      text: "Hi! I'm Jannu, Deswanth's AI companion. Ask me anything about his projects (JanAI, Zeus Robot, Security Toolkit), technical skills, resume, or background!",
-      sources: ["Resume", "Portfolio Data"],
-      timestamp: formatTimestamp()
-    }
-  ]);
+export default function AskMyPortfolio({ isOpen, onClose, onOpenCaseStudy, triggerRef }) {
+  const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
-  const [isExpanded, setIsExpanded] = useState(false);
-  const [copiedId, setCopiedId] = useState(null);
-  const [likedIds, setLikedIds] = useState([]);
-  const [speakingId, setSpeakingId] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
   const inputRef = useRef(null);
+  const drawerRef = useRef(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
+  // Focus management & Escape key trap
   useEffect(() => {
+    const triggerEl = triggerRef?.current;
     const handleKeyDown = (e) => {
       if (e.key === "Escape" && isOpen) {
-        if ('speechSynthesis' in window) {
-          window.speechSynthesis.cancel();
-        }
         onClose();
       }
     };
     window.addEventListener("keydown", handleKeyDown);
+
     if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 100);
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 80);
     }
+
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel();
+      // Return focus to trigger button if provided
+      if (triggerEl) {
+        triggerEl.focus();
       }
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, triggerRef]);
 
+  // Auto-scroll messages
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, isTyping]);
+    if (messages.length > 0) {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages, isLoading]);
+
+  if (!isOpen) return null;
 
   const handleSend = async (queryText) => {
-    const textToSend = queryText || inputValue;
-    if (!textToSend.trim() || isTyping) return;
+    const textToSend = (queryText || inputValue).trim();
+    if (!textToSend || isLoading) return;
 
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      setSpeakingId(null);
-    }
-
-    const userMsgId = generateId("user");
     const userMsg = {
-      id: userMsgId,
+      id: getMsgId("user"),
       sender: "user",
       text: textToSend,
-      timestamp: formatTimestamp()
+      time: getTimeString()
     };
 
     setMessages((prev) => [...prev, userMsg]);
     setInputValue("");
-    setIsTyping(true);
+    setIsLoading(true);
 
-    let botResponse = null;
-    try {
-      const response = await fetch("http://localhost:8000/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: textToSend })
-      });
+    // Synchronous deterministic retrieval with a minimal 180ms delay for natural visual stability
+    await new Promise((resolve) => setTimeout(resolve, 180));
 
-      if (response.ok) {
-        botResponse = await response.json();
-      }
-    } catch {
-      console.log("Jannu AI using Client-side RAG Vector Engine");
-    }
+    const result = searchClientKnowledge(textToSend);
 
-    if (!botResponse) {
-      await new Promise((resolve) => setTimeout(resolve, 250));
-      botResponse = searchClientKnowledge(textToSend);
-    }
+    const botMsg = {
+      id: getMsgId("jannu"),
+      sender: "jannu",
+      text: result.answer,
+      sources: result.sources || [],
+      time: getTimeString()
+    };
 
-    const botMsgId = generateId("bot");
-    const fullText = botResponse.answer;
-    const sources = botResponse.sources || [];
-
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: botMsgId,
-        sender: "bot",
-        text: "",
-        sources: sources,
-        timestamp: formatTimestamp(),
-        isStreaming: true
-      }
-    ]);
-
-    setIsTyping(false);
-
-    let currentText = "";
-    const words = fullText.split(" ");
-    
-    for (let i = 0; i < words.length; i++) {
-      currentText += (i === 0 ? "" : " ") + words[i];
-      const updatedText = currentText;
-      
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.id === botMsgId
-            ? { ...msg, text: updatedText, isStreaming: i < words.length - 1 }
-            : msg
-        )
-      );
-      
-      await new Promise((resolve) => setTimeout(resolve, 18));
-    }
+    setMessages((prev) => [...prev, botMsg]);
+    setIsLoading(false);
   };
 
-  const handleClearHistory = () => {
-    if ('speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
-      setSpeakingId(null);
+  const handleClear = () => {
+    setMessages([]);
+  };
+
+  const handleSourceClick = (src) => {
+    if (src.caseStudyId && onOpenCaseStudy) {
+      onOpenCaseStudy(src.caseStudyId);
+      onClose();
     }
-    setMessages([
-      {
-        id: "welcome-reset",
-        sender: "bot",
-        text: "Hey! I'm Jannu. Conversation reset! What else would you like to know about K Deswanth?",
-        sources: ["Portfolio Data"],
-        timestamp: formatTimestamp()
-      }
-    ]);
   };
-
-  const handleCopy = (id, text) => {
-    try {
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText(text);
-      }
-    } catch {
-      console.log("Clipboard write failed");
-    }
-    setCopiedId(id);
-    setTimeout(() => setCopiedId(null), 2000);
-  };
-
-  const handleLike = (id) => {
-    setLikedIds((prev) =>
-      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
-    );
-  };
-
-  const handleSpeak = (id, text) => {
-    if (!('speechSynthesis' in window)) return;
-
-    if (speakingId === id) {
-      window.speechSynthesis.cancel();
-      setSpeakingId(null);
-      return;
-    }
-
-    window.speechSynthesis.cancel();
-
-    const cleanText = text
-      .replace(/\*\*/g, '')
-      .replace(/https?:\/\/\S+/g, '')
-      .replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '')
-      .replace(/•/g, '')
-      .replace(/#{1,6}\s*/g, '')
-      .replace(/\n+/g, ' ')
-      .trim();
-
-    if (!cleanText) return;
-
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.rate = 1.0;
-    utterance.pitch = 1.0;
-
-    try {
-      const voices = window.speechSynthesis.getVoices();
-      const englishVoice = voices.find(
-        (v) => v.lang.includes("en") && (v.name.includes("Natural") || v.name.includes("Google") || v.name.includes("David") || v.name.includes("Zira"))
-      ) || voices.find((v) => v.lang && v.lang.startsWith("en"));
-
-      if (englishVoice) {
-        utterance.voice = englishVoice;
-      }
-    } catch {
-      console.log("Voice selection fallback");
-    }
-
-    utterance.onend = () => setSpeakingId(null);
-    utterance.onerror = () => setSpeakingId(null);
-
-    setSpeakingId(id);
-    window.speechSynthesis.speak(utterance);
-  };
-
-  const getSourceIcon = (src) => {
-    if (src.includes("JanAI")) return <FaRocket className="source-icon" aria-hidden="true" />;
-    if (src.includes("EvalMesh")) return <FaChartBar className="source-icon" aria-hidden="true" />;
-    if (src.includes("Zeus")) return <FaRobot className="source-icon" aria-hidden="true" />;
-    if (src.includes("Resume")) return <FaFileAlt className="source-icon" aria-hidden="true" />;
-    if (src.includes("GitHub")) return <FaCode className="source-icon" aria-hidden="true" />;
-    return <FaLightbulb className="source-icon" aria-hidden="true" />;
-  };
-
-  const renderFormattedText = (text) => {
-    const parts = text.split(/(\*\*.*?\*\*)/g);
-    return parts.map((part, i) => {
-      if (part.startsWith("**") && part.endsWith("**")) {
-        return <strong key={i} style={{ color: "#39d3c7" }}>{part.slice(2, -2)}</strong>;
-      }
-      return part;
-    });
-  };
-
-  if (!isOpen) return null;
 
   return (
     <div
-      className={`rag-modal-backdrop ${isExpanded ? "expanded" : ""}`}
+      className="jannu-backdrop"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
-      aria-label="Jannu AI Assistant"
+      aria-label="Jannu Portfolio RAG Knowledge Tool"
+      data-cursor="default"
     >
       <div
-        className={`rag-chat-card ${isExpanded ? "expanded" : ""}`}
+        ref={drawerRef}
+        className="jannu-drawer"
         onClick={(e) => e.stopPropagation()}
+        data-cursor="default"
       >
-        {/* Chat Header */}
-        <div className="rag-header">
-          <div className="rag-header-info">
-            <div className="rag-avatar jannu-avatar">
-              <FaRobot className="jannu-emoji" aria-hidden="true" />
-              <span className="online-indicator"></span>
+        {/* Drawer Masthead */}
+        <header className="jannu-header">
+          <div className="jannu-title-group">
+            <div className="jannu-eyebrow-row">
+              <span className="jannu-tag">[ TOOL // RAG-01 ]</span>
+              <span className="jannu-status">GROUNDED KNOWLEDGE BASE</span>
             </div>
-            <div>
-              <div className="rag-title-row">
-                <h3>Ask Jannu</h3>
-                <span className="rag-badge jannu-badge">Jannu AI</span>
-              </div>
-              <p className="rag-subtitle">
-                Deswanth's RAG Vector Assistant
-              </p>
-            </div>
+            <h2 className="jannu-name">JANNU</h2>
+            <p className="jannu-sub">PORTFOLIO RAG — Ask questions about Deswanth's work.</p>
           </div>
 
-          <div className="rag-header-actions">
-            <button
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="icon-btn"
-              title={isExpanded ? "Compress window (Esc)" : "Expand window (Esc)"}
-              aria-label="Toggle size"
-            >
-              {isExpanded ? <FaCompress /> : <FaExpand />}
-            </button>
-            <button
-              onClick={handleClearHistory}
-              className="icon-btn"
-              title="Clear chat history"
-              aria-label="Clear chat history"
-            >
-              <FaTrash />
-            </button>
+          <div className="jannu-actions">
+            {messages.length > 0 && (
+              <button
+                onClick={handleClear}
+                className="jannu-icon-btn"
+                title="Clear conversation"
+                aria-label="Clear conversation history"
+              >
+                <Trash2 size={14} aria-hidden="true" />
+              </button>
+            )}
             <button
               onClick={onClose}
-              className="icon-btn close-btn"
-              title="Close chat (Esc)"
-              aria-label="Close modal"
+              className="jannu-close-btn"
+              aria-label="Close Jannu drawer (Esc)"
             >
-              <FaChevronDown />
+              <span className="close-text">CLOSE</span>
+              <X size={15} aria-hidden="true" />
             </button>
           </div>
-        </div>
+        </header>
 
-        {/* Messages Body */}
-        <div className="rag-messages-body" role="log" aria-live="polite">
-          {messages.map((msg) => (
-            <div
-              key={msg.id}
-              className={`rag-message-row ${msg.sender === "user" ? "user-row" : "bot-row"}`}
-            >
-              {msg.sender === "bot" && (
-                <div className="bot-msg-avatar jannu-msg-avatar" aria-hidden="true">
-                  <FaRobot size={15} />
+        {/* Conversation Body */}
+        <div className="jannu-body" role="log" aria-live="polite">
+          {messages.length === 0 ? (
+            <div className="jannu-empty-state">
+              <div className="empty-heading-block">
+                <span className="empty-indicator"></span>
+                <h3>Portfolio Knowledge System</h3>
+                <p>
+                  Direct vector retrieval over Deswanth's verified codebases, systems architecture, robotics telemetry, and technical decisions.
+                </p>
+              </div>
+
+              <div className="jannu-prompt-suggestions">
+                <span className="suggestions-label">ASK ME ABOUT:</span>
+                <div className="suggestions-grid">
+                  {INITIAL_SUGGESTIONS.map((item) => (
+                    <button
+                      key={item.label}
+                      onClick={() => handleSend(item.query)}
+                      className="suggestion-chip"
+                      aria-label={`Ask: ${item.query}`}
+                    >
+                      <span>[ {item.label} ]</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="jannu-sample-queries">
+                <span className="sample-label">EXAMPLE QUERIES:</span>
+                <ul className="sample-list">
+                  <li onClick={() => handleSend("What did Deswanth build with ROS 2?")}>
+                    • "What did Deswanth build with ROS 2?"
+                  </li>
+                  <li onClick={() => handleSend("Tell me about Zeus.")}>
+                    • "Tell me about Zeus."
+                  </li>
+                  <li onClick={() => handleSend("What is JanAI?")}>
+                    • "What is JanAI?"
+                  </li>
+                  <li onClick={() => handleSend("Which projects use SQLite?")}>
+                    • "Which projects use SQLite?"
+                  </li>
+                  <li onClick={() => handleSend("What technologies does Deswanth use?")}>
+                    • "What technologies does Deswanth use?"
+                  </li>
+                  <li onClick={() => handleSend("What is Sagiro?")}>
+                    • "What is Sagiro?"
+                  </li>
+                </ul>
+              </div>
+            </div>
+          ) : (
+            <div className="jannu-thread">
+              {messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`jannu-msg-block ${msg.sender === "user" ? "user-msg" : "jannu-msg"}`}
+                >
+                  <div className="msg-meta-row">
+                    <span className="msg-author">
+                      {msg.sender === "user" ? "YOU" : "JANNU // RETRIEVED"}
+                    </span>
+                    <span className="msg-time">{msg.time}</span>
+                  </div>
+
+                  <div className="msg-content">
+                    <p className="msg-text">{msg.text}</p>
+                  </div>
+
+                  {msg.sender === "jannu" && msg.sources && msg.sources.length > 0 && (
+                    <div className="msg-sources-row">
+                      <span className="sources-tag">SOURCES:</span>
+                      <div className="sources-list">
+                        {msg.sources.map((src, sIdx) => (
+                          <button
+                            key={sIdx}
+                            onClick={() => handleSourceClick(src)}
+                            className={`source-chip ${src.caseStudyId ? "interactive" : ""}`}
+                            title={src.caseStudyId ? `Open ${src.label}` : src.label}
+                            disabled={!src.caseStudyId}
+                          >
+                            <span>[ {src.label} ]</span>
+                            {src.caseStudyId && <ArrowUpRight size={11} aria-hidden="true" />}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+
+              {isLoading && (
+                <div className="jannu-msg-block jannu-msg loading-msg">
+                  <div className="msg-meta-row">
+                    <span className="msg-author">JANNU // SEARCHING</span>
+                  </div>
+                  <div className="loading-indicator-row">
+                    <span className="loading-pulse-dot"></span>
+                    <span className="loading-text">Scanning verified portfolio index...</span>
+                  </div>
                 </div>
               )}
 
-              <div className="rag-msg-bubble-wrap">
-                <div className={`rag-msg-bubble ${msg.sender}`}>
-                  <div className="msg-text">{renderFormattedText(msg.text)}</div>
-                  {msg.isStreaming && <span className="typing-cursor">▌</span>}
-                </div>
-
-                {/* Sources Citation Bar */}
-                {msg.sender === "bot" && msg.sources && msg.sources.length > 0 && (
-                  <div className="rag-sources-bar">
-                    <span className="sources-title">
-                      <FaBookOpen /> Sources:
-                    </span>
-                    {msg.sources.map((src) => (
-                      <span key={src} className="source-tag jannu-tag">
-                        {getSourceIcon(src)} {src}
-                      </span>
-                    ))}
-                  </div>
-                )}
-
-                {/* Bubble Actions */}
-                {msg.sender === "bot" && (
-                  <div className="bubble-actions">
-                    <span className="timestamp">{msg.timestamp}</span>
-                    <button
-                      onClick={() => handleLike(msg.id)}
-                      className={`mini-action-btn ${likedIds.includes(msg.id) ? "liked" : ""}`}
-                      title="Helpful response"
-                      aria-label="Helpful response"
-                    >
-                      <FaThumbsUp style={{ color: likedIds.includes(msg.id) ? "#39d3c7" : "inherit" }} />
-                    </button>
-                    <button
-                      onClick={() => handleCopy(msg.id, msg.text)}
-                      className="mini-action-btn"
-                      title="Copy response"
-                      aria-label="Copy response"
-                    >
-                      {copiedId === msg.id ? <FaCheckCircle style={{ color: '#10b981' }} /> : <FaCopy />}
-                    </button>
-                    <button
-                      onClick={() => handleSpeak(msg.id, msg.text)}
-                      className={`mini-action-btn ${speakingId === msg.id ? "speaking" : ""}`}
-                      title={speakingId === msg.id ? "Stop reading" : "Read aloud"}
-                      aria-label={speakingId === msg.id ? "Stop reading" : "Read aloud"}
-                    >
-                      {speakingId === msg.id ? (
-                        <FaVolumeMute style={{ color: "#ef4444" }} />
-                      ) : (
-                        <FaVolumeUp />
-                      )}
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-
-          {isTyping && (
-            <div className="rag-message-row bot-row">
-              <div className="bot-msg-avatar jannu-msg-avatar" aria-hidden="true">
-                <FaRobot size={15} />
-              </div>
-              <div className="rag-msg-bubble bot typing-bubble">
-                <div className="typing-dots">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-                <span className="typing-status">Jannu is searching vector DB...</span>
-              </div>
+              <div ref={messagesEndRef} />
             </div>
           )}
-
-          <div ref={messagesEndRef} />
         </div>
 
-        {/* Preset Prompt Recommendations */}
-        <div className="rag-presets-bar">
-          <div className="presets-label">
-            <FaLightbulb className="preset-icon" /> Ask Jannu:
-          </div>
-          <div className="presets-scroll">
-            {PRESET_CATEGORIES.map((cat) => {
-              const Icon = cat.icon;
-              return (
-                <button
-                  key={cat.text}
-                  className="preset-pill jannu-pill"
-                  onClick={() => handleSend(cat.text)}
-                  disabled={isTyping}
-                >
-                  <Icon className="pill-icon" /> {cat.text}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Quick Shortcut Toolbar */}
-        <div className="rag-shortcuts-bar">
-          <a href="#projects" onClick={onClose} className="shortcut-btn">
-            <FaExternalLinkAlt className="shortcut-icon" /> Projects
-          </a>
-          <a href="/Deswanth_CV.pdf" download="Deswanth_CV.pdf" className="shortcut-btn">
-            <FaDownload className="shortcut-icon" /> Download CV
-          </a>
-          <a href="mailto:kdeswanth@gmail.com" className="shortcut-btn">
-            <FaEnvelope className="shortcut-icon" /> Email Deswanth
-          </a>
-        </div>
-
-        {/* Input Footer */}
-        <form
-          className="rag-input-form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSend();
-          }}
-        >
-          <input
-            ref={inputRef}
-            type="text"
-            className="rag-text-input"
-            placeholder="Ask Jannu anything about Deswanth..."
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            disabled={isTyping}
-            aria-label="Ask Jannu"
-          />
-          <button
-            type="submit"
-            className="rag-send-btn jannu-send-btn"
-            disabled={!inputValue.trim() || isTyping}
-            aria-label="Send message to Jannu"
+        {/* Input Bar */}
+        <footer className="jannu-footer">
+          <form
+            className="jannu-input-form"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSend();
+            }}
           >
-            <FaPaperPlane />
-          </button>
-        </form>
+            <div className="input-wrap">
+              <Search size={14} className="input-search-icon" aria-hidden="true" />
+              <input
+                ref={inputRef}
+                type="text"
+                className="jannu-input"
+                placeholder="Ask about my work..."
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend();
+                  }
+                }}
+                disabled={isLoading}
+                aria-label="Ask questions about Deswanth's work"
+              />
+            </div>
+            <button
+              type="submit"
+              className="jannu-send-btn"
+              disabled={!inputValue.trim() || isLoading}
+              aria-label="Submit query"
+            >
+              <span>SEND</span>
+              <CornerDownLeft size={13} aria-hidden="true" />
+            </button>
+          </form>
 
-        <div className="rag-footer-note">
-          <FaLayerGroup /> Jannu RAG System: Chunking ➔ Embeddings ➔ Vector DB ➔ Semantic Search ➔ Cited Sources
-        </div>
+          <div className="jannu-footer-guard">
+            <span>STRICT GROUNDING // NO SPECULATIVE RESPONSES</span>
+          </div>
+        </footer>
       </div>
     </div>
   );

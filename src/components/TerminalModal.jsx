@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Terminal, X, CornerDownLeft } from "lucide-react";
 
-export default function TerminalModal({ isOpen, onClose }) {
+export default function TerminalModal({ isOpen, onClose, onOpenJannu }) {
   const [inputVal, setInputVal] = useState("");
   const [history, setHistory] = useState([
     {
@@ -47,11 +47,20 @@ export default function TerminalModal({ isOpen, onClose }) {
 
     if (cmd === "deswanth --help" || cmd === "help" || cmd === "deswanth") {
       outputText = `Available Deswanth CLI Commands:
-  deswanth bio        - View professional background & AI positioning
-  deswanth products   - List active AI products (JanAI, EvalMesh, Zeus Robot)
+  deswanth bio        - View professional background & engineering focus
+  deswanth products   - List active engineering systems (JanAI, Zeus, Sagiro)
   deswanth metrics    - Display verified engineering benchmarks
-  deswanth contact    - Get email, phone, & GitHub links
+  deswanth contact    - Get email, phone, & LinkedIn links
+  deswanth jannu      - Open Jannu portfolio RAG knowledge drawer
   clear               - Clear terminal output screen`;
+    } else if (cmd === "deswanth jannu" || cmd === "jannu" || cmd === "rag") {
+      outputText = "Opening Jannu portfolio RAG knowledge drawer...";
+      if (onOpenJannu) {
+        setTimeout(() => {
+          onClose();
+          onOpenJannu();
+        }, 200);
+      }
     } else if (cmd === "deswanth bio") {
       outputText = `Kuchi Deswanth (K Deswanth / Kuchi Desvanth) — AI Product Builder & Full Stack Engineer
 Location: India

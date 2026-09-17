@@ -1,4 +1,4 @@
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import {
   ArrowRight,
   ArrowDown,
@@ -15,6 +15,7 @@ import WorkbenchCanvas from "./components/WorkbenchCanvas";
 import ProjectIndexTracker from "./components/ProjectIndexTracker";
 import WorkshopCursor from "./components/WorkshopCursor";
 import SoundEffects from "./components/SoundEffects";
+import JannuLauncher from "./components/JannuLauncher";
 
 import ZeusVisualizer from "./components/ZeusVisualizer";
 import JanAiSimulator from "./components/JanAiSimulator";
@@ -129,6 +130,7 @@ export default function App() {
   const [isCmdOpen, setIsCmdOpen] = useState(false);
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
   const [labTab, setLabTab] = useState("zeus"); // 'zeus' | 'rag' | 'code'
+  const launcherRef = useRef(null);
 
   // Global keyboard shortcuts (Cmd+K / Ctrl+K for command menu)
   useEffect(() => {
@@ -160,6 +162,12 @@ export default function App() {
 
       {/* Floating Project Index Tracker */}
       <ProjectIndexTracker />
+
+      {/* Subtle Persistent Workshop RAG Launcher */}
+      <JannuLauncher
+        onOpen={() => setIsRagOpen(true)}
+        launcherRef={launcherRef}
+      />
 
       {/* Workshop Masthead Navigation */}
       <header className="workshop-header">
@@ -688,6 +696,11 @@ export default function App() {
           <AskMyPortfolio
             isOpen={isRagOpen}
             onClose={() => setIsRagOpen(false)}
+            onOpenCaseStudy={(id) => {
+              setIsRagOpen(false);
+              setActiveCaseStudy(id);
+            }}
+            triggerRef={launcherRef}
           />
         )}
 
@@ -695,6 +708,8 @@ export default function App() {
           <CommandMenu
             isOpen={isCmdOpen}
             onClose={() => setIsCmdOpen(false)}
+            onOpenJannu={() => setIsRagOpen(true)}
+            onOpenTerminal={() => setIsTerminalOpen(true)}
             onOpenCaseStudy={(id) => {
               setIsCmdOpen(false);
               setActiveCaseStudy(id);
@@ -706,6 +721,7 @@ export default function App() {
           <TerminalModal
             isOpen={isTerminalOpen}
             onClose={() => setIsTerminalOpen(false)}
+            onOpenJannu={() => setIsRagOpen(true)}
           />
         )}
       </Suspense>
