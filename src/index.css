@@ -75,6 +75,7 @@ html {
 body {
   min-width: 320px;
   min-height: 100vh;
+  min-height: 100dvh;
   background-color: var(--bg);
   color: var(--text-primary);
   line-height: var(--lh-normal);
@@ -84,6 +85,7 @@ body {
 /* Subtle Architectural Grid Substrate */
 .workshop-root {
   min-height: 100vh;
+  min-height: 100dvh;
   position: relative;
   background-image: 
     linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
@@ -473,6 +475,7 @@ body {
    ========================================================================== */
 .opening-section {
   min-height: 86vh;
+  min-height: 86dvh;
   display: flex;
   align-items: center;
   padding: 80px 24px 60px;
@@ -2495,6 +2498,7 @@ body {
   width: min(720px, 100%);
   height: 640px;
   max-height: 90vh;
+  max-height: 90dvh;
   background: #11141b;
   border: 1px solid var(--line-strong);
   border-radius: 8px;
@@ -2508,6 +2512,7 @@ body {
 .rag-chat-card.expanded {
   width: min(960px, 96vw);
   height: 86vh;
+  height: 86dvh;
 }
 
 .rag-header {
@@ -2848,6 +2853,7 @@ body {
   width: min(720px, 100%);
   height: 520px;
   max-height: 85vh;
+  max-height: 85dvh;
   background: #07090d;
   border: 1px solid var(--line-strong);
   border-radius: 8px;
@@ -3005,6 +3011,7 @@ body {
   .terminal-dialog {
     width: 100%;
     height: 94vh;
+    height: 94dvh;
     border-radius: 6px;
   }
   .cmd-backdrop,
