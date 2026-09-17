@@ -19,6 +19,7 @@ import JannuLauncher from "./components/JannuLauncher";
 import ZeusVisualizer from "./components/ZeusVisualizer";
 import JanAiSimulator from "./components/JanAiSimulator";
 import InteractiveCodeViewer from "./components/InteractiveCodeViewer";
+import NotFoundPage from "./components/NotFoundPage";
 
 // Modals lazy-loaded for zero initial bundle overhead
 const CaseStudyModal = lazy(() => import("./components/CaseStudyModal"));
@@ -131,6 +132,58 @@ export default function App() {
   const [labTab, setLabTab] = useState("zeus"); // 'zeus' | 'rag' | 'code'
   const launcherRef = useRef(null);
 
+  // Path routing state (zero-dependency SPA routing)
+  const [currentPath, setCurrentPath] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.location.pathname || "/";
+    }
+    return "/";
+  });
+
+  const isRootPath = ["/", "/index.html", ""].includes(currentPath);
+
+  // Synchronize path and hash across popstate and hashchange
+  useEffect(() => {
+    const handleLocationChange = () => {
+      setCurrentPath(window.location.pathname || "/");
+      if (window.location.hash) {
+        const targetId = window.location.hash.replace("#", "");
+        const el = document.getElementById(targetId);
+        if (el) {
+          setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 50);
+        }
+      }
+    };
+
+    window.addEventListener("popstate", handleLocationChange);
+    window.addEventListener("hashchange", handleLocationChange);
+
+    // Initial hash scroll if loaded on a section like #work
+    if (window.location.hash) {
+      handleLocationChange();
+    }
+
+    return () => {
+      window.removeEventListener("popstate", handleLocationChange);
+      window.removeEventListener("hashchange", handleLocationChange);
+    };
+  }, []);
+
+  const navigateTo = (path, hash = "") => {
+    const targetUrl = hash ? `${path}#${hash}` : path;
+    window.history.pushState(null, "", targetUrl);
+    setCurrentPath(path);
+
+    if (hash) {
+      setTimeout(() => {
+        const el = document.getElementById(hash);
+        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 50);
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
   // Global keyboard shortcuts (Cmd+K / Ctrl+K for command menu)
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -153,6 +206,21 @@ export default function App() {
       el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
+
+  // Render "Workshop Misfiled" (REF-404) for any non-root path
+  if (!isRootPath) {
+    return (
+      <NotFoundPage
+        path={currentPath}
+        onNavigateHome={() => navigateTo("/")}
+        onNavigateProjects={() => navigateTo("/", "work")}
+        onOpenCaseStudy={(id) => {
+          navigateTo("/", "work");
+          setActiveCaseStudy(id);
+        }}
+      />
+    );
+  }
 
   return (
     <div className="workshop-root">
