@@ -1,15 +1,17 @@
 export const CASE_STUDIES = {
   janai: {
     id: "janai",
-    title: "JanAI — AI Civic Scheme Discovery Platform",
-    category: "AI & RAG Systems",
-    tagline: "Multi-lingual RAG AI assistant that matches citizens with 500+ government welfare schemes.",
+    number: "01",
+    title: "JanAI",
+    subtitle: "AI Civic Scheme Discovery Platform",
+    year: "2026",
+    category: "AI Systems & Semantic Retrieval",
+    tagline: "Multilingual RAG platform matching citizens with government welfare schemes using semantic vector search.",
     problem:
-      "Information asymmetry prevents millions of non-technical citizens and rural communities from discovering eligible government welfare schemes buried across complex gazettes and state portals.",
+      "Government welfare schemes in India are published across hundreds of fragmented state portals, official gazettes, and PDF circulars. Non-technical citizens and rural communities struggle to discover eligibility criteria due to bureaucratic language, lack of regional translation, and complex criteria cross-referencing.",
     solution:
-      "JanAI indexes 500+ official scheme guidelines into a FAISS vector database and uses multi-lingual RAG to provide natural language eligibility matching and document checklists in regional languages without hallucination.",
-    architecture: `
-+-----------------------------------------------------------------------------------+
+      "Engineered an offline-indexed RAG platform that parses official welfare gazettes into chunked vector embeddings stored in a FAISS index. Developed a multilingual retrieval pipeline via FastAPI and React that provides natural-language eligibility verification with strict source grounding to prevent LLM hallucinations.",
+    architecture: `+-----------------------------------------------------------------------------------+
 |                            JanAI System Architecture                              |
 +-----------------------------------------------------------------------------------+
 |  Citizen Query (Voice / Text in Regional Languages)                               |
@@ -18,176 +20,254 @@ export const CASE_STUDIES = {
 |  [ Multilingual Normalizer & Vector Embedding Generator ]                          |
 |        │                                                                          |
 |        ▼                                                                          |
-|  [ Semantic Vector Retriever (FAISS Index / Cosine Matrix) ] ◄── Scheme Datasets  |
+|  [ Semantic Vector Retriever (FAISS Index / Cosine Matrix) ] ◄── Scheme Guidelines |
 |        │                                                                          |
 |        ▼                                                                          |
-|  [ Top-K Context Formatting & Strict Grounding Rules ]                            |
+|  [ Top-K Context Formatting & Strict Hallucination Guardrails ]                    |
 |        │                                                                          |
 |        ▼                                                                          |
-|  [ LLM Inference Engine (OpenAI GPT-4o / Gemini Flash) ]                          |
+|  [ LLM Inference Engine (Grounded Prompt Context) ]                               |
 |        │                                                                          |
 |        ▼                                                                          |
-|  Eligible Schemes Answer + Official Portal Sources Citation Badges                |
-+-----------------------------------------------------------------------------------+
-`,
+|  Eligible Schemes Answer + Official Gazetted Source Citation Badges               |
++-----------------------------------------------------------------------------------+`,
+    decisions: [
+      "FAISS over remote vector DBs: Chose local FAISS index for deterministic cosine similarity queries and sub-10ms retrieval without recurring SaaS database costs.",
+      "Strict Grounding Boundary: System prompt instructs the model to refuse answering if the retrieved chunk does not contain verifiable eligibility criteria, driving zero hallucinations.",
+      "Multilingual Pre-Processing: Normalizes regional query phrasing into English semantic tokens before FAISS lookup, preserving local colloquialisms."
+    ],
     metrics: [
-      { label: "RAG Response Latency", value: "1.2s Average" },
-      { label: "Schemes Indexed", value: "500+ Verified" },
-      { label: "Factual Accuracy", value: "Ragas Benchmarked" },
-      { label: "Multilingual Support", value: "English, Hindi, Telugu" }
+      { label: "Vector Search", value: "FAISS Cosine Matrix" },
+      { label: "Backend API", value: "FastAPI Asynchronous" },
+      { label: "Frontend", value: "React 19 & Tailwind" },
+      { label: "Grounding", value: "Source Citations" }
     ],
     features: [
-      "Natural language eligibility checking based on demographic profile",
-      "Strict context grounding to prevent AI hallucinations",
-      "Step-by-step document application checklists & administrative locator",
-      "Voice query input support via Web Speech API"
+      "Natural language eligibility checking based on demographic and income profile",
+      "Strict context grounding against official government circulars",
+      "Step-by-step required document checklist generation",
+      "Voice query input support via Web Speech API in regional dialects"
     ],
-    tech: ["React 19", "FastAPI", "RAG Engine", "FAISS", "OpenAI / Gemini API", "Tailwind CSS"],
+    tech: ["React 19", "FastAPI", "Python", "FAISS", "OpenAI / Gemini API", "Tailwind CSS"],
     github: "https://github.com/deswanth12",
     demo: "https://portfolio-plum-sigma-etfrkmq5t9.vercel.app/"
   },
-  evalmesh: {
-    id: "evalmesh",
-    title: "EvalMesh — AI & RAG Evaluation Framework",
-    category: "AI Evaluation & Guardrails",
-    tagline: "Automated benchmarking suite for measuring RAG retrieval precision, context recall, and hallucination rates.",
-    problem:
-      "Deploying RAG pipelines without automated regression testing leads to silent hallucinations, degraded retrieval precision, and unmonitored API latency spikes.",
-    solution:
-      "EvalMesh provides automated evaluation pipelines that run Ragas precision metrics, faithfulness checks, and latency benchmarks across model prompts before production deployment.",
-    architecture: `
-+-----------------------------------------------------------------------------------+
-|                           EvalMesh Architecture Pipeline                          |
-+-----------------------------------------------------------------------------------+
-|  RAG Application Context & Generated Outputs                                      |
-|        │                                                                          |
-|        ▼                                                                          |
-|  [ Ragas Evaluation Engine: Faithfulness, Context Precision, Context Recall ]      |
-|        │                                                                          |
-|        ▼                                                                          |
-|  [ Guardrails Validator: Hallucination Detection & Toxicity Filter ]               |
-|        │                                                                          |
-|        ▼                                                                          |
-|  [ Latency & TTFT Tracker: Token Speed & API Response Benchmarking ]              |
-|        │                                                                          |
-|        ▼                                                                          |
-|  [ SQLite Metrics Store ] ──► [ React & Chart.js Visual Radar Dashboard ]         |
-+-----------------------------------------------------------------------------------+
-`,
-    metrics: [
-      { label: "Evaluation Suite", value: "Automated Ragas" },
-      { label: "Metrics Tracked", value: "Faithfulness & Precision" },
-      { label: "Model Providers", value: "OpenAI, Gemini, Ollama" },
-      { label: "Dashboard", value: "Real-time Radar Charts" }
-    ],
-    features: [
-      "Automated prompt regression testing across model versions",
-      "Real-time hallucination & ungrounded output detection",
-      "Time-to-first-token (TTFT) and throughput benchmarking",
-      "Interactive radar charts & comparative run history"
-    ],
-    tech: ["Python", "FastAPI", "React", "Ragas", "Pandas", "Scikit-Learn", "Recharts"],
-    github: "https://github.com/deswanth12",
-    demo: "https://portfolio-plum-sigma-etfrkmq5t9.vercel.app/"
-  },
+
   zeus: {
     id: "zeus",
-    title: "Zeus Robot — Autonomous Robotics Platform",
+    number: "02",
+    title: "Zeus Robot",
+    subtitle: "Autonomous Robotics & SLAM Platform",
+    year: "2026",
     category: "Autonomous Systems & Edge AI",
-    tagline: "Multipurpose ROS 2 robotics system featuring SLAM navigation and real-time edge AI object vision.",
+    tagline: "Multipurpose indoor robotics system integrating ROS 2 SLAM navigation, 360° LiDAR, and edge computer vision.",
     problem:
-      "Indoor autonomous mobile robots require low-latency spatial mapping, sensor fusion, and edge object classification without relying on cloud processing.",
+      "Indoor autonomous mobile robots typically suffer from high compute latencies, fragile localization in dynamic environments, and reliance on tethered compute or cloud offloading for spatial mapping and object classification.",
     solution:
-      "Zeus Robot integrates ROS 2 Humble SLAM navigation, LiDAR + IMU sensor fusion, and lightweight YOLO v8 edge vision on Raspberry Pi 4 B connected to a React WebSockets telemetry dashboard.",
-    architecture: `
+      "Architected a standalone differential-drive mobile robotics platform powered by a Raspberry Pi 4 B running ROS 2 Humble. Integrated an RPLIDAR S2 360° laser scanner with IMU sensor fusion for Cartographer SLAM, paired with an Arduino Mega PID motor controller and edge YOLO v8 object classification.",
+    architecture: `+-----------------------------------------------------------------------------------+
+|                           Zeus Robot Hardware Architecture                        |
 +-----------------------------------------------------------------------------------+
-|                           Zeus Robot Hardware Architecture                         |
-+-----------------------------------------------------------------------------------+
-|  Sensors: LiDAR + IMU + Wheel Encoders + Camera                                   |
+|  Sensors: 360° RPLiDAR S2 + MPU-6050 IMU + Hall Wheel Encoders + Camera          |
 |        │                                                                          |
 |        ▼                                                                          |
-|  [ Raspberry Pi 4 B (ROS 2 Humble) ]                                              |
-|     ├── 1. SLAM Indoor Mapping & Waypoint Path Planner                            |
-|     └── 2. Edge YOLO v8 & OpenCV Object Detection (30 FPS)                         |
+|  [ Raspberry Pi 4 B (ROS 2 Humble / Ubuntu 22.04 LTS) ]                           |
+|     ├── 1. Cartographer SLAM Indoor 2D Mapping Node                               |
+|     ├── 2. Nav2 Costmap & Waypoint Path Planning Node                             |
+|     └── 3. Edge YOLO v8 & OpenCV Object Classification                            |
 |        │                                                                          |
 |        ▼                                                                          |
-|  [ Arduino Mega / ESP32 PID Motor Controller ] ──► Differential Drive Wheels      |
+|  [ Arduino Mega / ESP32 PID Motor Controller ] ──► Differential Drive Motors       |
 |        │                                                                          |
 |        ▼                                                                          |
-|  [ WebSockets & MQTT Telemetry Bridge ] ──► [ React Web Telemetry Dashboard ]     |
-+-----------------------------------------------------------------------------------+
-`,
+|  [ WebSockets Telemetry Bridge ] ──► [ React Real-Time Telemetry Radar Canvas ]    |
++-----------------------------------------------------------------------------------+`,
+    decisions: [
+      "ROS 2 Humble over ROS 1: Selected ROS 2 for native DDS publish/subscribe communication and deterministic real-time executor capabilities on edge Linux.",
+      "Separation of Concerns: Delegated closed-loop PID motor PWM to an Arduino microcontroller via serial UART to keep the Raspberry Pi CPU dedicated to SLAM and vision pipelines.",
+      "Local Telemetry Bridge: Built a lightweight WebSocket bridge streaming LiDAR scan angles and obstacle distances to a browser-based radar canvas."
+    ],
     metrics: [
-      { label: "ROS 2 Version", value: "Humble Hawksbill" },
-      { label: "Vision Frame Rate", value: "30 FPS Edge YOLO" },
-      { label: "Compute Hardware", value: "Raspberry Pi 4 B" },
-      { label: "Telemetry Protocol", value: "WebSockets / MQTT" }
+      { label: "Core Architecture", value: "ROS 2 Humble" },
+      { label: "LiDAR Hardware", value: "RPLIDAR S2 360°" },
+      { label: "Edge Computer", value: "Raspberry Pi 4 B" },
+      { label: "Motor Control", value: "Closed-loop PID" }
     ],
     features: [
       "Simultaneous Localization and Mapping (SLAM) for indoor navigation",
-      "Edge AI object classification using YOLO v8 & OpenCV acceleration",
-      "Closed-loop PID motor speed control with wheel encoder feedback",
-      "Real-time video streaming & telemetry web dashboard"
+      "Edge AI obstacle and object classification using YOLO v8 & OpenCV",
+      "Closed-loop PID velocity control with optical encoder feedback",
+      "Real-time LiDAR point-cloud telemetry visualizer over WebSockets"
     ],
-    tech: ["ROS 2", "Python", "OpenCV", "YOLO v8", "Raspberry Pi 4", "Arduino", "WebSockets"],
+    tech: ["ROS 2 Humble", "Python", "OpenCV", "YOLO v8", "Raspberry Pi 4", "Arduino", "WebSockets"],
     github: "https://github.com/deswanth12",
     demo: "https://portfolio-plum-sigma-etfrkmq5t9.vercel.app/"
   },
-  "security-toolkit": {
-    id: "security-toolkit",
-    title: "Cyber Security Toolkit",
-    category: "Network Security & Tooling",
-    tagline: "Python security utility for network inspection, port scanning, packet analysis, and audit logging.",
+
+  sagiro: {
+    id: "sagiro",
+    number: "03",
+    title: "Sagiro",
+    subtitle: "Personal Finance & Ledger Application",
+    year: "2025",
+    category: "Mobile Architecture & Systems",
+    tagline: "Offline-first personal expense tracker engineered with local-first persistence and zero external trackers.",
     problem:
-      "Security developers require modular, lightweight CLI utilities to inspect local network traffic, audit open ports, and record persistent security logs.",
+      "Most contemporary personal finance applications require persistent cloud connectivity, monetize user spending behaviors through third-party tracking SDKs, or fail completely when users are in offline or low-connectivity environments.",
     solution:
-      "Developed a modular Python toolkit combining socket programming, packet analysis, port scanning, and SQLite audit logging in a clean interface.",
-    architecture: `
+      "Engineered Sagiro as an offline-first Android financial tracker built on a local SQLite / Room database. Architected a deterministic transaction ledger, local cryptographic backups, and real-time expense velocity calculations without sending a single byte of telemetry to external servers.",
+    architecture: `+-----------------------------------------------------------------------------------+
+|                         Sagiro Local-First Architecture                           |
 +-----------------------------------------------------------------------------------+
-|                         Cyber Security Toolkit Pipeline                           |
-+-----------------------------------------------------------------------------------+
-|  Target Network Range / IP Address Input                                           |
+|  User Transaction Entry / Recurring Rule / Budget Allocation                      |
 |        │                                                                          |
 |        ▼                                                                          |
-|  [ Python Socket Scanner & Packet Inspector Module ]                              |
+|  [ UI Layer (Jetpack Compose / Android Native Architecture) ]                     |
 |        │                                                                          |
 |        ▼                                                                          |
-|  [ Network Port Auditor & Service Signature Analyzer ]                            |
+|  [ Financial Ledger Engine & Velocity Calculator ]                                |
 |        │                                                                          |
 |        ▼                                                                          |
-|  [ SQLite Audit Logger ] ──► [ Command Line & Tkinter Security Interface ]        |
-+-----------------------------------------------------------------------------------+
-`,
+|  [ Room ORM / DAO Transaction Boundary with Invariants Validation ]               |
+|        │                                                                          |
+|        ▼                                                                          |
+|  [ SQLite Local Database (Encrypted Local Storage) ] ──► [ Local JSON/CSV Backup ]|
++-----------------------------------------------------------------------------------+`,
+    decisions: [
+      "Offline-First by Design: Every read and write transaction touches local SQLite synchronously, guaranteeing zero network latency and complete privacy.",
+      "Deterministic Ledger: Transactions use immutable balance delta entries to prevent calculation drift and race conditions during rapid entry.",
+      "Zero SDK Tracking: Deliberately removed all advertising and analytics dependencies, resulting in instant startup and minimal battery drain."
+    ],
     metrics: [
-      { label: "Scan Mode", value: "Multi-threaded Port Scanner" },
-      { label: "Database", value: "SQLite Audit Log" },
-      { label: "Language", value: "Python 3.12" },
-      { label: "Interface", value: "CLI + Desktop GUI" }
+      { label: "Architecture", value: "Offline-First Local" },
+      { label: "Persistence", value: "SQLite / Room DB" },
+      { label: "Network State", value: "Zero External Calls" },
+      { label: "Platform", value: "Android Native" }
     ],
     features: [
-      "Multi-threaded TCP/UDP port scanner with service detection",
+      "Deterministic transaction ledger with categorization velocity charts",
+      "Recurring expense rules and automated budget threshold tracking",
+      "Local cryptographic export and import backup functionality",
+      "Clean, tactile dark interface designed for fast single-handed logging"
+    ],
+    tech: ["Android Native", "Kotlin", "SQLite", "Room DB", "Jetpack Compose", "Coroutines"],
+    github: "https://github.com/deswanth12",
+    demo: "https://github.com/deswanth12"
+  },
+
+  evalmesh: {
+    id: "evalmesh",
+    number: "04",
+    title: "EvalMesh",
+    subtitle: "AI & RAG Evaluation Framework",
+    year: "2025",
+    category: "AI Evaluation & Guardrails",
+    tagline: "Automated benchmarking suite measuring RAG precision, context recall, and hallucination rates.",
+    problem:
+      "Deploying RAG pipelines without continuous automated regression testing leads to silent hallucinations, unmonitored context dilution, and degraded retrieval accuracy as document collections evolve.",
+    solution:
+      "Built an automated evaluation pipeline that computes Ragas faithfulness metrics, context precision, and latency benchmarks against prompt regression test suites before production deployment.",
+    architecture: `+-----------------------------------------------------------------------------------+
+|                           EvalMesh Architecture Pipeline                          |
++-----------------------------------------------------------------------------------+
+|  RAG Application Context & Generated Grounded Outputs                             |
+|        │                                                                          |
+|        ▼                                                                          |
+|  [ Ragas Metric Engine: Faithfulness, Context Precision, Context Recall ]         |
+|        │                                                                          |
+|        ▼                                                                          |
+|  [ Guardrails Validator: Hallucination Detection & Context Drift Check ]          |
+|        │                                                                          |
+|        ▼                                                                          |
+|  [ Latency & TTFT Tracker: Token Speed & Benchmark Telemetry ]                    |
+|        │                                                                          |
+|        ▼                                                                          |
+|  [ SQLite Benchmark Store ] ──► [ Visual Comparative Radar Dashboard ]           |
++-----------------------------------------------------------------------------------+`,
+    decisions: [
+      "Automated Regression Harness: Tests every prompt variation against a ground-truth QA dataset to catch subtle context drift before pushing to production.",
+      "Dual-Metric Scoring: Separates retrieval precision (did we find the right chunks?) from generator faithfulness (did the LLM invent facts?), pinpointing bugs immediately."
+    ],
+    metrics: [
+      { label: "Evaluation Suite", value: "Ragas Framework" },
+      { label: "Metrics Tracked", value: "Precision & Recall" },
+      { label: "Storage", value: "SQLite Benchmark DB" },
+      { label: "Visualizer", value: "Radar Metrics Chart" }
+    ],
+    features: [
+      "Automated prompt regression testing across model versions",
+      "Real-time hallucination & ungrounded statement detection",
+      "Time-to-first-token (TTFT) and throughput latency benchmarking",
+      "Comparative visual radar metrics for RAG pipeline versions"
+    ],
+    tech: ["Python", "FastAPI", "React", "Ragas", "Pandas", "Scikit-Learn"],
+    github: "https://github.com/deswanth12",
+    demo: "https://portfolio-plum-sigma-etfrkmq5t9.vercel.app/"
+  },
+
+  "security-toolkit": {
+    id: "security-toolkit",
+    number: "05",
+    title: "Cyber Security Toolkit",
+    subtitle: "Network Inspection & Audit Utility",
+    year: "2025",
+    category: "Network Security & Tooling",
+    tagline: "Python security utility for network inspection, multi-threaded port scanning, and audit logging.",
+    problem:
+      "Security students and developers frequently need lightweight, modular utilities to inspect local network traffic, audit open ports, and record persistent security logs without configuring heavyweight enterprise monitoring suites.",
+    solution:
+      "Developed a modular Python utility combining raw socket programming, packet header analysis, multi-threaded port auditing, and SQLite audit logging in a focused CLI and GUI interface.",
+    architecture: `+-----------------------------------------------------------------------------------+
+|                         Cyber Security Toolkit Pipeline                           |
++-----------------------------------------------------------------------------------+
+|  Target Network Range / Host IP Input                                             |
+|        │                                                                          |
+|        ▼                                                                          |
+|  [ Python Raw Socket Scanner & Multi-Threaded Worker Pool ]                       |
+|        │                                                                          |
+|        ▼                                                                          |
+|  [ Service Banner Grabber & TCP/UDP Port Auditor ]                                |
+|        │                                                                          |
+|        ▼                                                                          |
+|  [ SQLite Audit Logger ] ──► [ Structured CLI Terminal & GUI Table ]              |
++-----------------------------------------------------------------------------------+`,
+    decisions: [
+      "Threaded Worker Pool: Implemented concurrent worker threads using Python's threading library to reduce subnet scan times from minutes to seconds.",
+      "Persistent Event Logging: Logged every scan attempt, open socket, and banner into an offline SQLite database for chronological audit analysis."
+    ],
+    metrics: [
+      { label: "Language", value: "Python 3.12" },
+      { label: "Architecture", value: "Multi-threaded Sockets" },
+      { label: "Database", value: "SQLite Audit Log" },
+      { label: "Interface", value: "CLI + Tkinter GUI" }
+    ],
+    features: [
+      "Multi-threaded TCP/UDP port scanner with banner grabbing",
       "Packet header inspection and network interface analyzer",
       "Persistent SQLite security event audit database",
-      "Modular python package structure"
+      "Modular Python package structure suitable for CLI workflows"
     ],
-    tech: ["Python", "SQLite", "Socket Programming", "Networking", "Security"],
+    tech: ["Python", "SQLite", "Socket Programming", "Networking", "Tkinter"],
     github: "https://github.com/deswanth12/Cyber-Security-Toolkit",
     demo: "https://github.com/deswanth12/Cyber-Security-Toolkit"
   },
+
   "student-db": {
     id: "student-db",
+    number: "06",
     title: "Student Database System",
-    category: "Desktop Systems & Databases",
-    tagline: "Desktop GUI application for managing student academic records with SQLite persistence.",
+    subtitle: "Desktop Records Management System",
+    year: "2024",
+    category: "Desktop Systems & Persistence",
+    tagline: "Desktop database application for managing student academic records with SQLite persistence.",
     problem:
-      "Educational administrative workflows require fast, offline local database systems with reliable CRUD forms and instant search filtering.",
+      "Educational administrative workflows require fast, offline local database systems with dependable CRUD forms, instant search filtering, and zero cloud lock-in.",
     solution:
       "Built a desktop database application using Python Tkinter and SQLite supporting instant student record lookups, registration management, and CSV data exports.",
-    architecture: `
-+-----------------------------------------------------------------------------------+
+    architecture: `+-----------------------------------------------------------------------------------+
 |                       Student Database System Architecture                        |
 +-----------------------------------------------------------------------------------+
-|  User Action (Create, Search, Edit, Delete Student Record)                        |
+|  Administrative User Action (Create, Search, Edit, Delete Record)                 |
 |        │                                                                          |
 |        ▼                                                                          |
 |  [ Tkinter Desktop Form UI & Form Input Validator ]                               |
@@ -196,23 +276,27 @@ export const CASE_STUDIES = {
 |  [ Python Database Abstraction Layer ]                                            |
 |        │                                                                          |
 |        ▼                                                                          |
-|  [ SQLite3 Relational Database Engine ] ──► CSV / Report Exporter                 |
-+-----------------------------------------------------------------------------------+
-`,
+|  [ SQLite3 Relational Engine ] ──► CSV / Report Exporter                          |
++-----------------------------------------------------------------------------------+`,
+    decisions: [
+      "Pure Offline Persistence: Selected SQLite3 to eliminate external database servers and provide immediate file portability.",
+      "Input Validation Boundary: Sanitized and validated all student IDs and phone numbers in memory before executing parameterized SQL statements."
+    ],
     metrics: [
-      { label: "GUI Framework", value: "Python Tkinter" },
-      { label: "Database", value: "SQLite3" },
-      { label: "Operations", value: "Full CRUD & Realtime Filter" },
-      { label: "Execution", value: "Offline Desktop App" }
+      { label: "Framework", value: "Python Tkinter" },
+      { label: "Database Engine", value: "SQLite3" },
+      { label: "Data Integrity", value: "Parameterized SQL" },
+      { label: "Export Format", value: "CSV Reports" }
     ],
     features: [
-      "Real-time search filtering across student names and IDs",
-      "Validated input forms to prevent database constraint errors",
-      "CSV export for administrative report generation",
-      "Clean dark desktop interface design"
+      "Real-time search filtering across student names, roll numbers, and departments",
+      "Validated input forms to prevent database constraint violations",
+      "Instant CSV export for administrative report compilation",
+      "Self-contained zero-configuration local desktop application"
     ],
     tech: ["Python", "SQLite3", "Tkinter GUI", "CRUD Architecture"],
     github: "https://github.com/deswanth12/studentdatabase",
     demo: "https://github.com/deswanth12/studentdatabase"
   }
 };
+

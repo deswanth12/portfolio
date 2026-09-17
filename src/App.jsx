@@ -1,662 +1,697 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import {
-  FaArrowRight,
-  FaDownload,
-  FaEnvelope,
-  FaGithub,
-  FaMapMarkerAlt,
-  FaPhoneAlt,
-  FaTools,
-  FaDatabase,
-  FaRobot,
-  FaCode,
-  FaCheck,
-  FaCopy,
-  FaTerminal,
-  FaMicrochip,
-  FaMagic,
-  FaSearch,
-  FaChartLine,
-  FaServer,
-  FaLinkedin
-} from "react-icons/fa";
-import { motion, AnimatePresence } from "framer-motion";
-import MissionControlPanel from "./components/MissionControlPanel";
-import RagPipelineVisualizer from "./components/RagPipelineVisualizer";
-import InteractiveCodeViewer from "./components/InteractiveCodeViewer";
-import InteractiveSkillMatrix from "./components/InteractiveSkillMatrix";
-import JanAiSimulator from "./components/JanAiSimulator";
-import ParticleCanvas from "./components/ParticleCanvas";
-import SoundEffects from "./components/SoundEffects";
-import ZeusVisualizer from "./components/ZeusVisualizer";
-import SpotlightCard from "./components/SpotlightCard";
+  ArrowRight,
+  ArrowDown,
+  ArrowUpRight,
+  Terminal as TerminalIcon,
+  Search,
+  Download,
+  Mail
+} from "lucide-react";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
+import { CASE_STUDIES } from "./data/caseStudies";
 
-// Lazy-loaded Modals for Code Splitting & Instant Initial Load
+import WorkbenchCanvas from "./components/WorkbenchCanvas";
+import ProjectIndexTracker from "./components/ProjectIndexTracker";
+import WorkshopCursor from "./components/WorkshopCursor";
+import SoundEffects from "./components/SoundEffects";
+
+import ZeusVisualizer from "./components/ZeusVisualizer";
+import JanAiSimulator from "./components/JanAiSimulator";
+import InteractiveCodeViewer from "./components/InteractiveCodeViewer";
+
+// Modals lazy-loaded for zero initial bundle overhead
+const CaseStudyModal = lazy(() => import("./components/CaseStudyModal"));
 const AskMyPortfolio = lazy(() => import("./components/AskMyPortfolio"));
 const CommandMenu = lazy(() => import("./components/CommandMenu"));
 const TerminalModal = lazy(() => import("./components/TerminalModal"));
-const CaseStudyModal = lazy(() => import("./components/CaseStudyModal"));
 
-const profile = "/profile.jpeg";
+const profileImg = "/profile.jpeg";
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  show: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.45, ease: "easeOut" },
-  },
-};
-
-const engineeringWorkflow = [
-  { step: "01", name: "Problem & Research", desc: "Analyzing civic, robotics, or system pain points & requirements." },
-  { step: "02", name: "System Architecture", desc: "Designing data flow, DB schema, RAG pipelines, & API contracts." },
-  { step: "03", name: "Development", desc: "Building modular Python, React 19, FastAPI, & ROS 2 codebases." },
-  { step: "04", name: "RAG & AI Testing", desc: "Evaluating precision, context recall, & guardrails via EvalMesh." },
-  { step: "05", name: "Deployment", desc: "Configuring production build, Vercel edge, & hardware telemetry." }
-];
-
-const services = [
+const PROJECT_LIST = [
   {
-    icon: FaTools,
-    title: "Agentic AI & RAG Systems",
-    description: "Multi-lingual RAG search, vector database chunking (FAISS), prompt engineering, and grounded context retrieval.",
-    tags: ["RAG", "FAISS", "OpenAI", "Gemini", "FastAPI"]
+    ...CASE_STUDIES.janai,
+    domId: "project-janai",
+    visualType: "architecture",
+    image: "/assets/cybertoolkit.png"
   },
   {
-    icon: FaChartLine,
-    title: "AI Evaluation & Guardrails",
-    description: "RAG precision evaluation, context recall benchmarks, hallucination detection, and prompt regression testing (EvalMesh).",
-    tags: ["EvalMesh", "Ragas", "Pandas", "Guardrails"]
+    ...CASE_STUDIES.zeus,
+    domId: "project-zeus",
+    visualType: "hardware",
+    image: "/assets/cybertoolkit.png"
   },
   {
-    icon: FaMicrochip,
-    title: "Autonomous Robotics & Vision",
-    description: "ROS 2 Humble SLAM navigation, LiDAR sensor fusion, and edge YOLO v8 object classification on Raspberry Pi 4 B.",
-    tags: ["ROS 2", "Python", "OpenCV", "YOLO v8", "WebSockets"]
+    ...CASE_STUDIES.sagiro,
+    domId: "project-sagiro",
+    visualType: "mobile",
+    image: "/assets/cybertoolkit.png"
   },
   {
-    icon: FaCode,
-    title: "Full Stack Web Engineering",
-    description: "High-performance React 19 interfaces, TypeScript, Tailwind CSS, Vite, and asynchronous FastAPI / SSE endpoints.",
-    tags: ["React 19", "Vite", "TypeScript", "Tailwind CSS"]
+    ...CASE_STUDIES.evalmesh,
+    domId: "project-evalmesh",
+    visualType: "benchmark",
+    image: "/assets/cybertoolkit.png"
   },
   {
-    icon: FaDatabase,
-    title: "SQLite & Desktop Apps",
-    description: "Offline-first desktop application engineering with Python Tkinter and SQLite database persistence.",
-    tags: ["Python", "Tkinter", "SQLite3", "CRUD Systems"]
+    ...CASE_STUDIES["security-toolkit"],
+    domId: "project-security",
+    visualType: "terminal",
+    image: "/assets/cybertoolkit.png"
   },
   {
-    icon: FaServer,
-    title: "MCP & API Integration",
-    description: "Model Context Protocol tools, RESTful API architecture, and microservice backend orchestration.",
-    tags: ["MCP", "REST APIs", "Python", "JSON Schemas"]
+    ...CASE_STUDIES["student-db"],
+    domId: "project-student-db",
+    visualType: "desktop",
+    image: "/assets/student.png"
   }
 ];
 
-const projects = [
+const TIMELINE_ENTRIES = [
   {
-    id: "janai",
-    category: "AI & RAG",
-    img: "/assets/cybertoolkit.png",
-    title: "JanAI — AI Civic Scheme Platform",
-    description: "Multi-lingual RAG AI platform matching citizens with government welfare schemes using semantic vector search and natural language eligibility checking.",
-    impact: "Empowers citizens to discover 500+ public schemes in regional languages.",
-    tech: ["React", "FastAPI", "RAG", "FAISS", "OpenAI"],
-    badge: "Featured AI Product"
+    year: "2026",
+    title: "Autonomous Robotics & Production RAG",
+    summary: "Built JanAI for citizen welfare discovery, Sagiro offline-first finance ledger, Zeus ROS 2 SLAM robotics platform, and EvalMesh AI evaluation suites."
   },
   {
-    id: "evalmesh",
-    category: "AI & RAG",
-    img: "/assets/cybertoolkit.png",
-    title: "EvalMesh — AI & RAG Evaluation Framework",
-    description: "Automated evaluation & benchmarking framework measuring RAG precision, context recall, hallucination rates, and LLM latency.",
-    impact: "Provides automated prompt regression suites and real-time evaluation radar dashboards.",
-    tech: ["Python", "FastAPI", "React", "Ragas", "Pandas"],
-    badge: "AI Guardrails"
+    year: "2025",
+    title: "Full-Stack Web & Systems Engineering",
+    summary: "Focused on high-performance React applications, asynchronous FastAPI microservices, network security tooling, and edge IoT computing."
   },
   {
-    id: "zeus",
-    category: "Robotics",
-    img: "/assets/cybertoolkit.png",
-    title: "Zeus Robot — Autonomous Robotics Platform",
-    description: "Autonomous multipurpose robotics system featuring ROS 2 SLAM indoor navigation, edge YOLO v8 object detection, and WebSockets telemetry.",
-    impact: "Combines LiDAR sensor fusion and low-latency motor control for edge spatial navigation.",
-    tech: ["ROS 2", "Python", "OpenCV", "Raspberry Pi", "WebSockets"],
-    badge: "Robotics System"
+    year: "2024",
+    title: "Diploma Projects & Desktop Database Systems",
+    summary: "Constructed offline desktop applications using Python Tkinter and SQLite. Studied Android architecture and computational structures."
   },
   {
-    id: "security-toolkit",
-    category: "Security",
-    img: "/assets/cybertoolkit.png",
-    title: "Cyber Security Toolkit",
-    description: "Python toolkit for practical security workflows, network inspection, port scanning, packet analysis, and SQLite audit logging.",
-    impact: "Organizes network security utilities into one unified CLI/GUI experience.",
-    tech: ["Python", "SQLite", "Networking", "Security"],
-    badge: "Security Utility"
-  },
-  {
-    id: "student-db",
-    category: "Python & Desktop",
-    img: "/assets/student.png",
-    title: "Student Database System",
-    description: "Desktop database application for managing student academic records with a focused Tkinter interface and SQLite database persistence.",
-    impact: "Supports everyday administrative operations with real-time search filtering.",
-    tech: ["Python", "SQLite", "Tkinter"],
-    badge: "Desktop App"
+    year: "2023",
+    title: "Foundations & Code Craft",
+    summary: "Wrote first production scripts in Python, explored algorithms, computational mathematics, and Linux environments."
   }
 ];
 
-const webVitals = [
-  { metric: "Lighthouse Score", score: "98/100", status: "Optimal" },
-  { metric: "Accessibility", score: "98/100", status: "Optimal" },
-  { metric: "First Contentful Paint", score: "0.6s", status: "Fast" },
-  { metric: "Largest Contentful Paint", score: "1.1s", status: "Fast" }
+const SKILL_DISCIPLINES = [
+  {
+    category: "BUILD",
+    tagline: "Application layers & client interfaces",
+    items: ["React 19", "JavaScript (ES6+)", "Python", "FastAPI", "Android (Kotlin)", "Tailwind CSS", "Vite"]
+  },
+  {
+    category: "SYSTEMS",
+    tagline: "Data architecture & transport contracts",
+    items: ["SQLite3", "Room ORM", "FAISS Vector Index", "REST APIs", "WebSockets", "Local-First Ledgers"]
+  },
+  {
+    category: "AI & RETRIEVAL",
+    tagline: "Grounded context & evaluation suites",
+    items: ["RAG Pipelines", "LLM Integration", "Ragas Benchmarks", "Prompt Engineering", "Cosine Similarity"]
+  },
+  {
+    category: "HARDWARE",
+    tagline: "Robotics, physical compute & sensors",
+    items: ["ROS 2 Humble", "Raspberry Pi 4 B", "RPLIDAR S2 360°", "ESP32", "OpenCV", "PID Motor Control"]
+  }
+];
+
+const CRAFT_STEPS = [
+  { num: "01", name: "Research", desc: "Identify systemic failure points, user friction, and real physical constraints." },
+  { num: "02", name: "Understand", desc: "Formulate data flow models, invariants, and local persistence boundaries." },
+  { num: "03", name: "Design", desc: "Architect deterministic APIs, component trees, and tactile interfaces." },
+  { num: "04", name: "Build", desc: "Write clean, modular, typed code in Python, React, Kotlin, and ROS 2." },
+  { num: "05", name: "Measure", desc: "Benchmark retrieval precision, sensor latency, and SQLite query speed." },
+  { num: "06", name: "Iterate", desc: "Eliminate silent failure modes, tighten boundaries, and remove slop." },
+  { num: "07", name: "Ship", desc: "Deploy production code, physical firmware, and verify end-to-end execution." }
 ];
 
 export default function App() {
+  const [activeCaseStudy, setActiveCaseStudy] = useState(null);
   const [isRagOpen, setIsRagOpen] = useState(false);
   const [isCmdOpen, setIsCmdOpen] = useState(false);
   const [isTerminalOpen, setIsTerminalOpen] = useState(false);
-  const [activeCaseStudy, setActiveCaseStudy] = useState(null);
-  const [activeFilter, setActiveFilter] = useState("All");
-  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [labTab, setLabTab] = useState("zeus"); // 'zeus' | 'rag' | 'code'
 
-  const categories = ["All", "AI & RAG", "Robotics", "Python & Desktop", "Security"];
-
+  // Global keyboard shortcuts (Cmd+K / Ctrl+K for command menu)
   useEffect(() => {
-    const handleGlobalKeyDown = (e) => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
+    const handleKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
         e.preventDefault();
         setIsCmdOpen((prev) => !prev);
       }
+      if (e.key === "`" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setIsTerminalOpen((prev) => !prev);
+      }
     };
-    window.addEventListener("keydown", handleGlobalKeyDown);
-    return () => window.removeEventListener("keydown", handleGlobalKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  const filteredProjects =
-    activeFilter === "All"
-      ? projects
-      : projects.filter((p) => p.category === activeFilter);
-
-  const handleCopyEmail = () => {
-    try {
-      if (navigator.clipboard) {
-        navigator.clipboard.writeText("kdeswanth@gmail.com");
-      }
-    } catch {
-      console.log("Copy failed");
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
     }
-    setCopiedEmail(true);
-    setTimeout(() => setCopiedEmail(false), 2000);
   };
 
   return (
-    <div className="site-shell">
-      {/* Interactive Mouse-Reactive Particle Canvas Background */}
-      <ParticleCanvas />
+    <div className="workshop-root">
+      {/* Desktop Precision Custom Cursor */}
+      <WorkshopCursor />
 
-      {/* Background Ambient Mesh Glows */}
-      <div className="bg-glow bg-glow-1" />
-      <div className="bg-glow bg-glow-2" />
+      {/* Floating Project Index Tracker */}
+      <ProjectIndexTracker />
 
-      {/* Header Navigation */}
-      <nav className="nav" aria-label="Primary navigation">
-        <div className="container nav-inner">
-          <a className="logo" href="#home" aria-label="Deswanth portfolio home">
-            <img src="/logo.png" alt="KD Logo" className="brand-logo-img" width="38" height="38" />
-            <span>Deswanth<span className="logo-accent">.dev</span></span>
-          </a>
+      {/* Workshop Masthead Navigation */}
+      <header className="workshop-header">
+        <div className="header-container">
+          <div className="brand-group">
+            <a href="#home" className="brand-title" aria-label="Deswanth's Workshop Home">
+              DESWANTH<span className="brand-accent-dot">.</span>
+            </a>
+            <span className="brand-badge">STUDIO // TIRUPATI, IN</span>
+          </div>
 
-          <div className="nav-links">
-            <a href="#about">About</a>
-            <a href="#demo">RAG AI</a>
-            <a href="#robotics">Robotics</a>
-            <a href="#projects">Products</a>
-            <a href="#contact">Contact</a>
+          <nav className="workshop-nav" aria-label="Primary Workshop Navigation">
+            <a href="#work" className="nav-item">01 WORK</a>
+            <a href="#workbench" className="nav-item">02 WORKBENCH</a>
+            <a href="#lab" className="nav-item">03 LAB</a>
+            <a href="#timeline" className="nav-item">04 TIMELINE</a>
+            <a href="#about" className="nav-item">05 ABOUT</a>
+            <a href="#contact" className="nav-item">06 CONTACT</a>
+          </nav>
 
-            {/* Sound FX Synthesizer Toggle */}
+          <div className="header-actions">
+            {/* Subtle mechanical sound toggle (Default OFF) */}
             <SoundEffects />
 
-            {/* Command Menu Pill */}
+            {/* Quick Command Palette Trigger */}
             <button
-              id="cmd-menu-trigger"
               onClick={() => setIsCmdOpen(true)}
-              className="nav-cmd-btn"
+              className="cmd-trigger-btn"
               title="Open Command Palette (Ctrl+K)"
+              aria-label="Open command palette"
             >
-              <FaSearch className="btn-icon-sm" />
-              <span>Search...</span>
-              <kbd className="cmd-kbd">Ctrl+K</kbd>
+              <Search size={13} aria-hidden="true" />
+              <span className="cmd-label">SEARCH</span>
+              <kbd className="cmd-kbd">⌘K</kbd>
             </button>
 
-            {/* Ask Jannu AI Button */}
+            {/* Subtle Jannu AI Drawer Trigger */}
             <button
               onClick={() => setIsRagOpen(true)}
-              className="nav-jannu-btn"
-              title="Chat with Jannu RAG AI"
+              className="jannu-trigger-btn"
+              title="Query Jannu RAG Assistant"
+              aria-label="Open Jannu RAG Assistant"
             >
-              <FaRobot className="btn-icon" />
-              <span>Ask Jannu AI</span>
+              <span>ASK JANNU</span>
             </button>
           </div>
         </div>
-      </nav>
+      </header>
 
       <main>
-        {/* Hero Section — AI Engineering Lab & Mission Control */}
-        <section id="home" className="container hero">
-          <motion.div variants={fadeUp} initial="hidden" animate="show">
-            <div className="availability-badge">
-              <span className="status-dot"></span>
-              AI Engineering Workspace • Mission Control Active
+        {/* =================================================================
+            1. THE OPENING (Hero)
+            ================================================================= */}
+        <section id="home" className="opening-section" aria-label="Introduction">
+          <div className="opening-container">
+            <div className="opening-meta-top">
+              <span className="opening-tag">[ DESWANTH'S WORKSHOP ]</span>
+              <span className="opening-subtag">PERSONAL STUDIO & ENGINEERING LAB</span>
             </div>
 
-            <h1 className="title">
-              I'm <span className="gradient-text">Deswanth</span>.
-            </h1>
-
-            <h2 className="hero-subheadline">
-              I build AI products, autonomous systems, and production-ready full-stack applications.
-            </h2>
-
-            <div className="building-now-box">
-              <span className="building-label"><FaMagic /> Currently Building:</span>
-              <span className="building-products">JanAI • EvalMesh • Zeus Robot</span>
+            <div className="opening-hero-block">
+              <h1 className="hero-name">DESWANTH</h1>
+              <div className="hero-statement">
+                <p className="hero-headline">I BUILD THINGS.</p>
+                <div className="hero-disciplines">
+                  <span>Software.</span>
+                  <span>Products.</span>
+                  <span>Systems.</span>
+                  <span>Experiments.</span>
+                </div>
+              </div>
             </div>
 
-            <div className="hero-actions" aria-label="Portfolio actions">
+            <p className="hero-philosophy">
+              A personal atelier operating at the intersection of full-stack software, autonomous robotics hardware, and local-first architecture. Building things that work outside a tutorial.
+            </p>
+
+            <div className="hero-actions">
               <button
-                onClick={() => setIsRagOpen(true)}
-                className="btn btn-jannu-hero"
+                onClick={() => scrollToSection("workbench")}
+                className="btn btn-primary"
               >
-                <FaRobot aria-hidden="true" />
-                Ask Jannu AI
+                ENTER WORKSHOP <ArrowDown size={14} aria-hidden="true" />
+              </button>
+
+              <button
+                onClick={() => scrollToSection("work")}
+                className="btn btn-secondary"
+              >
+                VIEW WORK <ArrowRight size={14} aria-hidden="true" />
               </button>
 
               <button
                 onClick={() => setIsTerminalOpen(true)}
-                className="btn btn-primary"
+                className="btn btn-secondary terminal-trigger"
+                title="Open developer terminal"
               >
-                <FaTerminal aria-hidden="true" />
-                deswanth --help
+                <TerminalIcon size={14} aria-hidden="true" />
+                <span>deswanth --help</span>
               </button>
-
-              <a href="#projects" className="btn btn-secondary">
-                View Case Studies
-                <FaArrowRight aria-hidden="true" />
-              </a>
-
-              <a href="/Deswanth_CV.pdf" download className="btn btn-secondary">
-                Download CV
-                <FaDownload aria-hidden="true" />
-              </a>
             </div>
 
-            {/* Real Verifiable Engineering Metrics Bar */}
-            <div className="hero-metrics-bar">
-              <div className="metric-item">
-                <strong>6+ Verified</strong>
-                <span>Production & RAG Systems</span>
+            <div className="opening-footer-note">
+              <span>DIGITAL WORKSHOP</span>
+              <span className="divider">•</span>
+              <span>EST. 2023</span>
+              <span className="divider">•</span>
+              <span>LOCAL // TIRUPATI, ANDHRA PRADESH</span>
+            </div>
+          </div>
+        </section>
+
+        {/* =================================================================
+            2. FEATURED WORKS (Editorial Case Studies — The Centerpiece)
+            ================================================================= */}
+        <section id="work" className="works-section" aria-label="Featured Works">
+          <div className="works-header-container">
+            <div className="section-label-wrap">
+              <span className="section-num">01</span>
+              <span className="section-slug">FEATURED WORKS</span>
+            </div>
+            <h2 className="section-main-heading">Selected Products & Systems.</h2>
+            <p className="section-description">
+              In-depth case studies of engineered systems. Real architecture, genuine technical trade-offs, and verified codebases.
+            </p>
+          </div>
+
+          <div className="projects-editorial-list">
+            {PROJECT_LIST.map((project, idx) => (
+              <article
+                key={project.id}
+                id={project.domId}
+                className={`project-editorial-row ${idx < 3 ? "lead-project" : "standard-project"}`}
+                data-cursor="project"
+                onClick={() => setActiveCaseStudy(project.id)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    setActiveCaseStudy(project.id);
+                  }
+                }}
+                aria-label={`View ${project.title} case study`}
+              >
+                <div className="project-left">
+                  <div className="project-index-row">
+                    <span className="project-num">{project.number}</span>
+                    <span className="project-cat">{project.category}</span>
+                    <span className="project-year">// {project.year}</span>
+                  </div>
+
+                  <h3 className="project-title">{project.title}</h3>
+                  <p className="project-tagline">{project.tagline}</p>
+
+                  <div className="project-brief-block">
+                    <div className="brief-label">THE PROBLEM</div>
+                    <p className="brief-text">{project.problem}</p>
+                  </div>
+
+                  <div className="project-brief-block">
+                    <div className="brief-label">ARCHITECTURE</div>
+                    <div className="arch-flow-summary">
+                      {project.id === "janai" && "React 19 → FastAPI → FAISS Cosine Retrieval → LLM Inference → Grounded Sources"}
+                      {project.id === "zeus" && "Sensors (LiDAR+IMU) → Raspberry Pi 4 (ROS 2) → SLAM Navigation → Edge YOLO"}
+                      {project.id === "sagiro" && "Kotlin UI → Ledger Engine → Room ORM → Local SQLite → Zero Outbound Telemetry"}
+                      {project.id === "evalmesh" && "RAG Output → Ragas Evaluator → Hallucination Validator → Benchmark Telemetry"}
+                      {project.id === "security-toolkit" && "Raw Sockets → Multi-Threaded Port Scanner → SQLite Audit Logger"}
+                      {project.id === "student-db" && "Tkinter GUI → Python DB Abstraction → SQLite3 Relational Engine"}
+                    </div>
+                  </div>
+
+                  <div className="project-tech-tokens">
+                    {project.tech.map((t) => (
+                      <span key={t} className="tech-pill">{t}</span>
+                    ))}
+                  </div>
+
+                  <div className="project-action-row">
+                    <span className="open-study-link">
+                      OPEN CASE STUDY <ArrowRight size={14} aria-hidden="true" />
+                    </span>
+                  </div>
+                </div>
+
+                <div className="project-right">
+                  <div className="project-spec-card">
+                    <div className="spec-card-header">
+                      <span>SPECIFICATION OVERVIEW</span>
+                      <span className="spec-ref">REF-{project.number}</span>
+                    </div>
+
+                    <div className="spec-card-metrics">
+                      {project.metrics.map((m, mIdx) => (
+                        <div key={mIdx} className="spec-item">
+                          <span className="spec-key">{m.label}</span>
+                          <span className="spec-val">{m.value}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="spec-card-features">
+                      <span className="spec-features-title">KEY TECHNICAL DECISIONS:</span>
+                      <ul className="spec-features-list">
+                        {project.decisions.slice(0, 2).map((dec, dIdx) => (
+                          <li key={dIdx}>• {dec}</li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className="spec-card-footer">
+                      <span className="spec-stamp">VERIFIED REPOSITORY ARTIFACT</span>
+                      <ArrowUpRight size={14} aria-hidden="true" />
+                    </div>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        {/* =================================================================
+            3. THE WORKBENCH (Editorial Artifact Canvas)
+            ================================================================= */}
+        <section id="workbench" className="workbench-section" aria-label="The Workbench">
+          <div className="section-header-container">
+            <div className="section-label-wrap">
+              <span className="section-num">02</span>
+              <span className="section-slug">PHYSICAL & DIGITAL ARTIFACTS</span>
+            </div>
+            <h2 className="section-main-heading">The Workbench.</h2>
+            <p className="section-description">
+              A curated canvas of physical and software engineering artifacts. Technical drawings, hardware architecture, and local system ledgers.
+            </p>
+          </div>
+          <WorkbenchCanvas onOpenCaseStudy={setActiveCaseStudy} />
+        </section>
+
+        {/* =================================================================
+            4. THE LAB (Experimental Workbench & Live Telemetry)
+            ================================================================= */}
+        <section id="lab" className="lab-section" aria-label="The Engineering Lab">
+          <div className="section-header-container">
+            <div className="section-label-wrap">
+              <span className="section-num">03</span>
+              <span className="section-slug">EXPERIMENTAL LAB</span>
+            </div>
+            <h2 className="section-main-heading">Working Prototypes & Telemetry.</h2>
+            <p className="section-description">
+              Live functional systems. Interactive 360° LiDAR radar point-clouds, client-side RAG vector retrieval, and code architecture.
+            </p>
+
+            {/* Lab Mode Selector Tabs */}
+            <div className="lab-tabs" role="tablist" aria-label="Lab modules">
+              <button
+                onClick={() => setLabTab("zeus")}
+                className={`lab-tab ${labTab === "zeus" ? "active" : ""}`}
+                role="tab"
+                aria-selected={labTab === "zeus"}
+              >
+                01 // ZEUS 360° LIDAR RADAR (ROS 2)
+              </button>
+              <button
+                onClick={() => setLabTab("rag")}
+                className={`lab-tab ${labTab === "rag" ? "active" : ""}`}
+                role="tab"
+                aria-selected={labTab === "rag"}
+              >
+                02 // JANAI RAG SEMANTIC RETRIEVAL
+              </button>
+              <button
+                onClick={() => setLabTab("code")}
+                className={`lab-tab ${labTab === "code" ? "active" : ""}`}
+                role="tab"
+                aria-selected={labTab === "code"}
+              >
+                03 // ARCHITECTURE CODE INSPECTOR
+              </button>
+            </div>
+          </div>
+
+          <div className="lab-content-wrap">
+            {labTab === "zeus" && (
+              <div className="lab-panel">
+                <ZeusVisualizer />
               </div>
-              <div className="metric-divider" />
-              <div className="metric-item">
-                <strong>1.2s Average</strong>
-                <span>RAG Retrieval Latency</span>
+            )}
+
+            {labTab === "rag" && (
+              <div className="lab-panel">
+                <JanAiSimulator />
               </div>
-              <div className="metric-divider" />
-              <div className="metric-item">
-                <strong>8+ Repos</strong>
-                <span>GitHub Open Source</span>
+            )}
+
+            {labTab === "code" && (
+              <div className="lab-panel">
+                <InteractiveCodeViewer />
               </div>
-              <div className="metric-divider" />
-              <div className="metric-item">
-                <strong>98+ Score</strong>
-                <span>Lighthouse Performance</span>
+            )}
+          </div>
+        </section>
+
+        {/* =================================================================
+            5. DEVELOPMENT TIMELINE (Personal Evolution Wall)
+            ================================================================= */}
+        <section id="timeline" className="timeline-section" aria-label="Development Timeline">
+          <div className="section-header-container">
+            <div className="section-label-wrap">
+              <span className="section-num">04</span>
+              <span className="section-slug">CHRONOLOGY</span>
+            </div>
+            <h2 className="section-main-heading">Development Timeline.</h2>
+            <p className="section-description">
+              A personal evolution of self-directed engineering, systems architecture, and physical hardware development.
+            </p>
+          </div>
+
+          <div className="timeline-grid">
+            {TIMELINE_ENTRIES.map((entry) => (
+              <div key={entry.year} className="timeline-node">
+                <div className="timeline-year-badge">{entry.year}</div>
+                <div className="timeline-content">
+                  <h3 className="timeline-entry-title">{entry.title}</h3>
+                  <p className="timeline-entry-summary">{entry.summary}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* =================================================================
+            6. ABOUT & NATURAL SKILLS (The Craftsman)
+            ================================================================= */}
+        <section id="about" className="about-section" aria-label="About Deswanth">
+          <div className="section-header-container">
+            <div className="section-label-wrap">
+              <span className="section-num">05</span>
+              <span className="section-slug">THE BUILDER</span>
+            </div>
+            <h2 className="section-main-heading">About Deswanth.</h2>
+          </div>
+
+          <div className="about-split-grid">
+            <div className="about-narrative-col">
+              <div className="narrative-lead">
+                I'm Deswanth. I like building things that work outside a tutorial.
+              </div>
+              <p className="narrative-body">
+                My work sits between full-stack software, autonomous robotics, and local-first architecture. I believe the most resilient software is built through hands-on measurement: designing schemas, inspecting serial telemetry packets, and evaluating LLM outputs with strict grounding.
+              </p>
+              <p className="narrative-body">
+                Based in Tirupati, India. Currently focused on building production-ready RAG platforms, local-first Android mobile ledgers, and edge ROS 2 robotics navigation.
+              </p>
+
+              <div className="about-contact-chips">
+                <a href="mailto:kdeswanth@gmail.com" className="contact-chip">
+                  <Mail size={14} aria-hidden="true" /> kdeswanth@gmail.com
+                </a>
+                <a href="/Deswanth_CV.pdf" download className="contact-chip">
+                  <Download size={14} aria-hidden="true" /> Download Curriculum Vitae
+                </a>
               </div>
             </div>
 
-            <div className="icons" aria-label="Social links">
+            <div className="about-profile-col">
+              <div className="profile-frame">
+                <img
+                  src={profileImg}
+                  alt="Kuchi Deswanth"
+                  className="profile-photo"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <div className="profile-caption">
+                  <span className="caption-name">KUCHI DESWANTH</span>
+                  <span className="caption-sub">BUILDER // SOFTWARE • SYSTEMS • ROBOTICS</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Categorized Skills (Zero Fake Percentage Bars!) */}
+          <div className="skills-editorial-grid">
+            <div className="skills-heading-row">
+              <span className="skills-section-tag">VERIFIED TECHNICAL DISCIPLINES</span>
+            </div>
+
+            <div className="disciplines-grid">
+              {SKILL_DISCIPLINES.map((d) => (
+                <div key={d.category} className="discipline-card">
+                  <div className="discipline-head">
+                    <h3 className="discipline-title">{d.category}</h3>
+                    <span className="discipline-tagline">{d.tagline}</span>
+                  </div>
+                  <ul className="discipline-items">
+                    {d.items.map((item) => (
+                      <li key={item} className="discipline-item">
+                        <span className="item-dash">—</span> {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* =================================================================
+            7. ENGINEERING CRAFT (The Workflow)
+            ================================================================= */}
+        <section className="craft-section" aria-label="Engineering Methodology">
+          <div className="section-header-container">
+            <div className="section-label-wrap">
+              <span className="section-num">06</span>
+              <span className="section-slug">CRAFT & METHODOLOGY</span>
+            </div>
+            <h2 className="section-main-heading">How I Approach Building.</h2>
+            <p className="section-description">
+              A systematic engineering loop emphasizing problem decomposition, strict boundaries, and empirical measurement.
+            </p>
+          </div>
+
+          <div className="craft-steps-track">
+            {CRAFT_STEPS.map((step) => (
+              <div key={step.num} className="craft-step-card">
+                <span className="craft-step-num">{step.num}</span>
+                <h3 className="craft-step-name">{step.name}</h3>
+                <p className="craft-step-desc">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* =================================================================
+            8. CONTACT & CLOSING
+            ================================================================= */}
+        <section id="contact" className="contact-closing-section" aria-label="Contact">
+          <div className="closing-container">
+            <div className="closing-manifesto">
+              <span className="closing-tag">STATUS // OPEN FOR HIGH-IMPACT ROLES</span>
+              <h2 className="closing-headline">KEEP BUILDING.</h2>
+              <p className="closing-subheadline">
+                Let's make something useful. Reach out directly for systems engineering, product development, or autonomous robotics collaborations.
+              </p>
+            </div>
+
+            <div className="closing-actions">
+              <a
+                href="mailto:kdeswanth@gmail.com"
+                className="btn btn-primary btn-large"
+              >
+                <Mail size={16} aria-hidden="true" /> kdeswanth@gmail.com
+              </a>
+
               <a
                 href="https://github.com/deswanth12"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="GitHub profile"
-                title="GitHub"
+                className="btn btn-secondary btn-large"
               >
-                <FaGithub />
+                <FaGithub size={16} aria-hidden="true" /> GitHub
               </a>
 
               <a
                 href="https://in.linkedin.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="LinkedIn profile"
-                title="LinkedIn"
+                className="btn btn-secondary btn-large"
               >
-                <FaLinkedin />
+                <FaLinkedin size={16} aria-hidden="true" /> LinkedIn
               </a>
 
               <a
-                href="mailto:kdeswanth@gmail.com"
-                aria-label="Email Deswanth"
-                title="Email"
+                href="/Deswanth_CV.pdf"
+                download
+                className="btn btn-secondary btn-large"
               >
-                <FaEnvelope />
+                <Download size={16} aria-hidden="true" /> Download CV
               </a>
-            </div>
-          </motion.div>
-
-          <motion.aside
-            className="profile-panel"
-            initial={{ opacity: 0, scale: 0.96 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-            aria-label="Profile summary"
-          >
-            <div className="profile-img-wrap">
-              <img src={profile} alt="Deswanth" loading="eager" fetchPriority="high" decoding="async" />
-              <div className="img-border-glow"></div>
-            </div>
-            <div className="profile-card">
-              <strong>Kuchi Deswanth</strong>
-              <span>
-                AI Product Builder • RAG & Vector DBs • ROS 2 Robotics • Full Stack React/Python
-              </span>
-            </div>
-          </motion.aside>
-        </section>
-
-        {/* AI Mission Control Telemetry Panel */}
-        <section id="about" className="container section">
-          <MissionControlPanel />
-        </section>
-
-        {/* Zeus Robot ROS 2 360° LiDAR Telemetry Radar Section */}
-        <section id="robotics" className="container section">
-          <ZeusVisualizer />
-        </section>
-
-        {/* Live JanAI RAG Simulator Playground Section */}
-        <section id="demo" className="container section">
-          <JanAiSimulator />
-        </section>
-
-        {/* Interactive RAG Pipeline Visualization Section */}
-        <section id="pipeline" className="container section">
-          <RagPipelineVisualizer />
-        </section>
-
-        {/* Interactive Code Viewer Section */}
-        <section id="code" className="container section">
-          <InteractiveCodeViewer />
-        </section>
-
-        {/* Interactive Skill Matrix Section */}
-        <section id="skills" className="container section">
-          <InteractiveSkillMatrix />
-        </section>
-
-        {/* Engineering Workflow Pipeline Section */}
-        <section id="workflow" className="section muted-section">
-          <div className="container">
-            <div className="section-heading">
-              <p className="eyebrow">Methodology</p>
-              <h2>Engineering Development Pipeline.</h2>
-            </div>
-
-            <div className="workflow-grid">
-              {engineeringWorkflow.map((item) => (
-                <SpotlightCard
-                  key={item.step}
-                  className="workflow-step-card"
-                  spotlightColor="rgba(0, 212, 255, 0.12)"
-                  borderColor="rgba(0, 212, 255, 0.35)"
-                >
-                  <span className="workflow-step-num">{item.step}</span>
-                  <h3>{item.name}</h3>
-                  <p>{item.desc}</p>
-                </SpotlightCard>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Services & Solutions Section */}
-        <section id="services" className="section">
-          <div className="container">
-            <div className="section-heading">
-              <p className="eyebrow">Capabilities & Solutions</p>
-              <h2>What I engineering & build for production.</h2>
-            </div>
-
-            <div className="capability-grid">
-              {services.map((service, i) => {
-                const Icon = service.icon;
-                return (
-                  <SpotlightCard
-                    key={service.title}
-                    className="capability-card"
-                    spotlightColor="rgba(0, 212, 255, 0.12)"
-                    borderColor="rgba(0, 212, 255, 0.35)"
-                    variants={fadeUp}
-                    initial="hidden"
-                    whileInView="show"
-                    viewport={{ once: true, amount: 0.2 }}
-                    transition={{ delay: i * 0.05 }}
-                  >
-                    <div className="capability-icon">
-                      <Icon aria-hidden="true" />
-                    </div>
-                    <h3>{service.title}</h3>
-                    <p>{service.description}</p>
-                    <div className="tech-list">
-                      {service.tags.map((tag) => (
-                        <span key={tag}>{tag}</span>
-                      ))}
-                    </div>
-                  </SpotlightCard>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* Projects & Interactive Case Studies Section */}
-        <section id="projects" className="section muted-section">
-          <div className="container">
-            <div className="section-heading">
-              <p className="eyebrow">Product Showcase</p>
-              <h2>Interactive Case Studies & Architecture.</h2>
-            </div>
-
-            {/* Filter Tabs */}
-            <div className="filter-tabs">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  className={`filter-tab ${activeFilter === cat ? "active" : ""}`}
-                  onClick={() => setActiveFilter(cat)}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-
-            {/* Projects Grid */}
-            <div className="project-grid">
-              <AnimatePresence>
-                {filteredProjects.map((project, i) => (
-                  <SpotlightCard
-                    key={project.id}
-                    className="project-card"
-                    spotlightColor="rgba(0, 212, 255, 0.14)"
-                    borderColor="rgba(0, 212, 255, 0.4)"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.3, delay: i * 0.05 }}
-                  >
-                    <div className="card-img">
-                      <img src={project.img} alt={`${project.title} preview`} loading="lazy" decoding="async" />
-                      {project.badge && <span className="project-badge">{project.badge}</span>}
-                    </div>
-
-                    <div className="project-body">
-                      <h3>{project.title}</h3>
-                      <p>{project.description}</p>
-                      <p className="project-impact">{project.impact}</p>
-
-                      <div className="tech-list" style={{ marginBottom: "16px" }}>
-                        {project.tech.map((tech) => (
-                          <span key={tech}>{tech}</span>
-                        ))}
-                      </div>
-
-                      <button
-                        onClick={() => setActiveCaseStudy(project.id)}
-                        className="btn btn-primary btn-casestudy"
-                      >
-                        View Architecture & Case Study <FaArrowRight />
-                      </button>
-                    </div>
-                  </SpotlightCard>
-                ))}
-              </AnimatePresence>
-            </div>
-          </div>
-        </section>
-
-        {/* Live Performance & Web Vitals Dashboard */}
-        <section id="performance" className="section">
-          <div className="container">
-            <div className="section-heading">
-              <p className="eyebrow">Audit & Quality</p>
-              <h2>Live Performance & Web Vitals Dashboard.</h2>
-            </div>
-
-            <div className="vitals-grid">
-              {webVitals.map((item) => (
-                <SpotlightCard
-                  key={item.metric}
-                  className="vital-card"
-                  spotlightColor="rgba(16, 185, 129, 0.12)"
-                  borderColor="rgba(16, 185, 129, 0.35)"
-                >
-                  <div className="vital-score">{item.score}</div>
-                  <div className="vital-name">{item.metric}</div>
-                  <span className="vital-status">
-                    <span className="status-dot-pulse" aria-hidden="true" />
-                    {item.status}
-                  </span>
-                </SpotlightCard>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Jannu RAG Banner */}
-        <section className="container section">
-          <div className="jannu-cta-banner">
-            <div className="banner-content">
-              <div className="banner-badge">
-                <FaRobot /> RAG Vector Assistant
-              </div>
-              <h2>Query Jannu for factual answers on Deswanth's work</h2>
-              <p>
-                Trained on Deswanth's resume, JanAI, EvalMesh, Zeus Robot, and GitHub repositories with cited sources.
-              </p>
-            </div>
-            <button
-              onClick={() => setIsRagOpen(true)}
-              className="btn btn-jannu-hero banner-btn"
-            >
-              <FaRobot /> Talk to Jannu AI
-            </button>
-          </div>
-        </section>
-
-        {/* Contact Section */}
-        <section id="contact" className="section contact-section">
-          <div className="container contact-card">
-            <div>
-              <p className="eyebrow">Contact</p>
-              <h2>Let us build an AI product together.</h2>
-              <p>
-                Reach out for full-stack engineering, RAG AI systems, ROS 2 robotics projects, or technical inquiries.
-              </p>
-            </div>
-
-            <div className="contact-links">
-              <a href="mailto:kdeswanth@gmail.com" className="contact-link">
-                <FaEnvelope aria-hidden="true" />
-                kdeswanth@gmail.com
-              </a>
-              <button onClick={handleCopyEmail} className="copy-email-btn" title="Copy email address">
-                {copiedEmail ? <FaCheck style={{ color: "#10b981" }} /> : <FaCopy />}
-                <span>{copiedEmail ? "Copied Email!" : "Copy Email"}</span>
-              </button>
-              <a href="tel:+918374646073" className="contact-link">
-                <FaPhoneAlt aria-hidden="true" />
-                8374646073
-              </a>
-              <span className="contact-link">
-                <FaMapMarkerAlt aria-hidden="true" />
-                India
-              </span>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="footer">
-        <div className="container footer-inner">
-          <span>Copyright 2026 Kuchi Deswanth. All rights reserved.</span>
-          <span className="footer-built">Built with React 19, TypeScript & RAG AI</span>
+      {/* Minimal Footer */}
+      <footer className="workshop-footer">
+        <div className="footer-container">
+          <div className="footer-left">
+            <strong>DESWANTH.DEV</strong>
+            <span>SOFTWARE • PRODUCTS • SYSTEMS • EXPERIMENTS</span>
+          </div>
+          <div className="footer-right">
+            <span>© 2026 K. DESWANTH • DESIGNED & ENGINEERED IN TIRUPATI, INDIA</span>
+          </div>
         </div>
       </footer>
 
-      {/* Floating RAG Trigger Button */}
-      {!isRagOpen && (
-        <button
-          className="floating-rag-trigger"
-          onClick={() => setIsRagOpen(true)}
-          title="Ask Jannu AI Chatbot"
-          aria-label="Open Ask Jannu Chatbot"
-        >
-          <span className="pulse-dot"></span>
-          <FaRobot className="trigger-icon" />
-          <span>Ask Jannu 🤖</span>
-        </button>
-      )}
-
-      {/* Lazy-Loaded Modals & Overlays wrapped in Suspense */}
+      {/* =================================================================
+          LAZY-LOADED CASE STUDY & TOOL MODALS
+          ================================================================= */}
       <Suspense fallback={null}>
-        <AskMyPortfolio
-          isOpen={isRagOpen}
-          onClose={() => setIsRagOpen(false)}
-        />
+        {activeCaseStudy && (
+          <CaseStudyModal
+            caseStudyId={activeCaseStudy}
+            onClose={() => setActiveCaseStudy(null)}
+          />
+        )}
 
-        <CommandMenu
-          isOpen={isCmdOpen}
-          onClose={() => setIsCmdOpen(false)}
-          onOpenJannu={() => setIsRagOpen(true)}
-          onOpenTerminal={() => setIsTerminalOpen(true)}
-          onOpenCaseStudy={(id) => setActiveCaseStudy(id)}
-        />
+        {isRagOpen && (
+          <AskMyPortfolio
+            isOpen={isRagOpen}
+            onClose={() => setIsRagOpen(false)}
+          />
+        )}
 
-        <TerminalModal
-          isOpen={isTerminalOpen}
-          onClose={() => setIsTerminalOpen(false)}
-          onOpenCaseStudy={(id) => setActiveCaseStudy(id)}
-        />
+        {isCmdOpen && (
+          <CommandMenu
+            isOpen={isCmdOpen}
+            onClose={() => setIsCmdOpen(false)}
+            onOpenCaseStudy={(id) => {
+              setIsCmdOpen(false);
+              setActiveCaseStudy(id);
+            }}
+          />
+        )}
 
-        <CaseStudyModal
-          caseStudyId={activeCaseStudy}
-          onClose={() => setActiveCaseStudy(null)}
-        />
+        {isTerminalOpen && (
+          <TerminalModal
+            isOpen={isTerminalOpen}
+            onClose={() => setIsTerminalOpen(false)}
+          />
+        )}
       </Suspense>
     </div>
   );

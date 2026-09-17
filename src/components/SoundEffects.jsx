@@ -13,8 +13,7 @@ export default function SoundEffects() {
       if (AudioContextClass) {
         audioCtx = new AudioContextClass();
       }
-    } catch (err) {
-      console.error("Web Audio initialization failed", err);
+    } catch {
       return;
     }
 
@@ -24,23 +23,24 @@ export default function SoundEffects() {
         if (audioCtx.state === "suspended") {
           audioCtx.resume();
         }
+        // Very subtle mechanical click (tactile switch)
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
 
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.05);
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(440, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(180, audioCtx.currentTime + 0.03);
 
-        gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+        gain.gain.setValueAtTime(0.025, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.03);
 
         osc.connect(gain);
         gain.connect(audioCtx.destination);
 
         osc.start();
-        osc.stop(audioCtx.currentTime + 0.05);
-      } catch (err) {
-        console.error("Audio playback error", err);
+        osc.stop(audioCtx.currentTime + 0.03);
+      } catch {
+        // Ignore audio playback exceptions
       }
     };
 
@@ -62,12 +62,16 @@ export default function SoundEffects() {
   return (
     <button
       onClick={() => setEnabled((prev) => !prev)}
-      className={`sound-toggle-btn ${enabled ? "active" : ""}`}
-      title={enabled ? "Mute High-Tech Audio SFX" : "Enable High-Tech Audio SFX"}
-      aria-label={enabled ? "Mute audio effects" : "Enable audio effects"}
+      className={`workshop-sound-btn ${enabled ? "active" : ""}`}
+      title={enabled ? "Mute workshop audio" : "Enable tactile mechanical audio"}
+      aria-label={enabled ? "Mute audio" : "Enable audio"}
     >
-      {enabled ? <Volume2 size={15} style={{ color: "#00d4ff" }} aria-hidden="true" /> : <VolumeX size={15} aria-hidden="true" />}
-      <span>{enabled ? "SFX: ON" : "SFX: OFF"}</span>
+      {enabled ? (
+        <Volume2 size={13} style={{ color: "var(--accent)" }} aria-hidden="true" />
+      ) : (
+        <VolumeX size={13} aria-hidden="true" />
+      )}
+      <span>{enabled ? "SOUND: ON" : "SOUND: OFF"}</span>
     </button>
   );
 }
