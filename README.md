@@ -50,11 +50,10 @@ The portfolio is designed with responsiveness, smooth animations, and performanc
 
 ## 📞 Contact
 
-- Email
-- Phone
-- GitHub
-- LinkedIn
-- Contact Section
+- **Email**: [kdeswanth@gmail.com](mailto:kdeswanth@gmail.com)
+- **GitHub**: [github.com/deswanth12](https://github.com/deswanth12)
+- **LinkedIn**: [linkedin.com/in/deswanth](https://www.linkedin.com/in/deswanth)
+- **Portfolio**: [portfolio-deswanth12s-projects.vercel.app](https://portfolio-deswanth12s-projects.vercel.app/)
 
 ---
 

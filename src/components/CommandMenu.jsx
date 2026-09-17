@@ -13,7 +13,7 @@ import {
   Shield,
   BarChart2
 } from "lucide-react";
-import { FaGithub } from "react-icons/fa";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 export default function CommandMenu({
   isOpen,
@@ -136,6 +136,17 @@ export default function CommandMenu({
       action: () => {
         onClose();
         window.open("https://github.com/deswanth12", "_blank", "noopener,noreferrer");
+      }
+    },
+    {
+      id: "action-linkedin",
+      title: "Connect on LinkedIn",
+      subtitle: "linkedin.com/in/deswanth",
+      icon: FaLinkedin,
+      category: "Actions",
+      action: () => {
+        onClose();
+        window.open("https://www.linkedin.com/in/deswanth", "_blank", "noopener,noreferrer");
       }
     },
     {

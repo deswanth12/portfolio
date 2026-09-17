@@ -518,6 +518,22 @@ export default function App() {
                 <a href="mailto:kdeswanth@gmail.com" className="contact-chip">
                   <Mail size={14} aria-hidden="true" /> kdeswanth@gmail.com
                 </a>
+                <a
+                  href="https://www.linkedin.com/in/deswanth"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-chip"
+                >
+                  <FaLinkedin size={14} aria-hidden="true" /> LinkedIn
+                </a>
+                <a
+                  href="https://github.com/deswanth12"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="contact-chip"
+                >
+                  <FaGithub size={14} aria-hidden="true" /> GitHub
+                </a>
                 <a href="/Deswanth_CV.pdf" download className="contact-chip">
                   <Download size={14} aria-hidden="true" /> Download Curriculum Vitae
                 </a>
@@ -624,7 +640,7 @@ export default function App() {
               </a>
 
               <a
-                href="https://in.linkedin.com"
+                href="https://www.linkedin.com/in/deswanth"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-secondary btn-large"

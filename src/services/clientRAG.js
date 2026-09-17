@@ -37,7 +37,7 @@ export const KNOWLEDGE_BASE = [
   {
     source: "Resume",
     heading: "Profile & Summary",
-    text: "K Deswanth is a Full Stack Developer and Python/AI Systems Builder based in India. He specializes in Python, React, vector databases, RAG architecture, LLM evaluation (EvalMesh), SQLite desktop application engineering, and cybersecurity utilities. Contact: kdeswanth@gmail.com, Phone: +91 8374646073."
+    text: "K Deswanth is a Full Stack Developer and Python/AI Systems Builder based in India. He specializes in Python, React, vector databases, RAG architecture, LLM evaluation (EvalMesh), SQLite desktop application engineering, and cybersecurity utilities. Contact: kdeswanth@gmail.com, Phone: +91 8374646073, LinkedIn: https://www.linkedin.com/in/deswanth."
   },
   {
     source: "Resume",

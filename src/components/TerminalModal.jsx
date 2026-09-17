@@ -75,7 +75,8 @@ Key Tech: Python, React 19, FastAPI, RAG / Vector DBs, ROS 2 Humble, SQLite.`;
   Email: kdeswanth@gmail.com
   Phone: +91 8374646073
   GitHub: https://github.com/deswanth12
-  Portfolio: https://portfolio-plum-sigma-etfrkmq5t9.vercel.app/`;
+  LinkedIn: https://www.linkedin.com/in/deswanth
+  Portfolio: https://portfolio-deswanth12s-projects.vercel.app/`;
     } else {
       outputText = `zsh: command not found: ${rawCmd}. Type 'deswanth --help' for available commands.`;
     }
